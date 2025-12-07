@@ -1,0 +1,8 @@
+{
+  "/certifications/page": "app/certifications/page.js",
+  "/gallery/page": "app/gallery/page.js",
+  "/resume/page": "app/resume/page.js",
+  "/about/page": "app/about/page.js",
+  "/github-activities/page": "app/github-activities/page.js",
+  "/contact/page": "app/contact/page.js"
+}
