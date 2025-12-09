@@ -1,0 +1,107 @@
+[
+  {
+    "id": 1,
+    "name": "E-Commerce Platform",
+    "description": "Full-stack e-commerce solution with payment integration, admin dashboard, real-time inventory management, and customer analytics.",
+    "longDescription": "A comprehensive e-commerce platform built with modern technologies. Features include product management, shopping cart, checkout process with Stripe integration, order tracking, admin dashboard with analytics, and email notifications.",
+    "techStack": ["Next.js", "Node.js", "MongoDB", "Stripe", "Redis", "Docker"],
+    "liveLink": "https://example.com",
+    "githubLink": "https://github.com/yourusername/ecommerce-platform",
+    "buildTime": "3 months",
+    "category": "Web Development",
+    "featured": true,
+    "status": "completed",
+    "startDate": "2023-10-01",
+    "endDate": "2023-12-31",
+    "highlights": [
+      "Handles 10K+ transactions per month",
+      "99.9% uptime",
+      "Mobile-responsive design",
+      "SEO optimized"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "AI Chat Application",
+    "description": "Real-time chat application with AI-powered responses, file sharing, and group conversations using OpenAI GPT.",
+    "longDescription": "An intelligent chat application that combines real-time messaging with AI capabilities. Users can chat with AI assistants, share files, create groups, and get smart suggestions.",
+    "techStack": ["React", "Socket.io", "OpenAI", "PostgreSQL", "Redis", "AWS S3"],
+    "liveLink": "https://example.com",
+    "githubLink": "https://github.com/yourusername/ai-chat",
+    "buildTime": "2 months",
+    "category": "Web Development",
+    "featured": true,
+    "status": "completed",
+    "startDate": "2023-08-01",
+    "endDate": "2023-09-30",
+    "highlights": [
+      "Real-time messaging",
+      "AI-powered responses",
+      "File sharing up to 100MB",
+      "Group chat support"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Portfolio Dashboard",
+    "description": "Analytics dashboard for tracking portfolio performance with interactive charts, real-time data, and customizable widgets.",
+    "longDescription": "A beautiful and functional dashboard for tracking investment portfolios. Features real-time stock data, interactive charts, portfolio analysis, and performance metrics.",
+    "techStack": ["Vue.js", "Firebase", "Chart.js", "Tailwind CSS", "Alpha Vantage API"],
+    "liveLink": "https://example.com",
+    "githubLink": "https://github.com/yourusername/portfolio-dashboard",
+    "buildTime": "1.5 months",
+    "category": "Web Development",
+    "featured": true,
+    "status": "completed",
+    "startDate": "2023-06-15",
+    "endDate": "2023-07-31",
+    "highlights": [
+      "Real-time stock prices",
+      "Custom widgets",
+      "Export reports",
+      "Mobile app available"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Task Management App",
+    "description": "Collaborative task management with drag-and-drop, real-time updates, team chat, and project timelines.",
+    "longDescription": "A comprehensive project management tool designed for teams. Features include kanban boards, task assignments, time tracking, team collaboration, and reporting.",
+    "techStack": ["React", "Node.js", "MongoDB", "Socket.io", "Redux"],
+    "liveLink": "https://example.com",
+    "githubLink": "https://github.com/yourusername/task-manager",
+    "buildTime": "2 months",
+    "category": "Web Development",
+    "featured": false,
+    "status": "completed",
+    "startDate": "2023-04-01",
+    "endDate": "2023-05-31",
+    "highlights": [
+      "Drag-and-drop interface",
+      "Real-time collaboration",
+      "Time tracking",
+      "Gantt charts"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Weather Forecast App",
+    "description": "Beautiful weather app with 7-day forecast, location search, weather maps, and severe weather alerts.",
+    "longDescription": "A modern weather application providing accurate forecasts and weather information. Features include current conditions, hourly and daily forecasts, weather maps, and notifications.",
+    "techStack": ["React Native", "OpenWeather API", "Redux", "MapBox"],
+    "liveLink": "https://example.com",
+    "githubLink": "https://github.com/yourusername/weather-app",
+    "buildTime": "3 weeks",
+    "category": "Mobile App",
+    "featured": false,
+    "status": "completed",
+    "startDate": "2023-02-15",
+    "endDate": "2023-03-10",
+    "highlights": [
+      "7-day forecast",
+      "Weather radar",
+      "Push notifications",
+      "Offline support"
+    ]
+  }
+]

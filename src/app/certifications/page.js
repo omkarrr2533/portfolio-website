@@ -6,63 +6,31 @@ export default function CertificationsPage() {
   const certifications = [
     {
       id: 1,
-      title: 'AWS Certified Solutions Architect',
-      issuer: 'Amazon Web Services',
-      date: 'January 2024',
-      credentialId: 'AWS-123456',
-      link: 'https://aws.amazon.com/verification',
-      skills: ['Cloud Architecture', 'AWS', 'Infrastructure'],
+      title: 'Artificial Intelligence Fundamentals',
+      issuer: 'IBM',
+      date: 'Augest 2025',
+      link: 'https://www.credly.com/badges/33511d2d-4bbf-4716-a021-4548025fa128',
+      skills: ['AI', 'Basic Of Artificial Intelligence'],
       color: 'from-orange-500 to-yellow-500'
     },
     {
       id: 2,
-      title: 'Google Cloud Professional Developer',
-      issuer: 'Google Cloud',
-      date: 'November 2023',
-      credentialId: 'GCP-789012',
-      link: 'https://google.com/verification',
-      skills: ['GCP', 'Cloud Computing', 'DevOps'],
+      title: 'Rapid Application Development with Large Language Models(LLMs)',
+      issuer: 'NVIDIA',
+      date: 'Augest 2025',
+      credentialId: 'RpH1b8OtRK2Kg4KNsOyO4g',
+      link: 'https://learn.nvidia.com/certificates?id=RpH1b8OtRK2Kg4KNsOyO4g',
+      skills: ['LLM Fundamentals','Prompt Engineering','Few-Shot Learning','Application Prototyping','Fine-Tuning Models','API Integration','Real-Time Communication','Enterprise System Integration','Cloud Deployment','Containerization (Docker)','Scaling Strategies','Business Applications of LLMs'],
       color: 'from-blue-500 to-cyan-500'
     },
     {
       id: 3,
-      title: 'Meta Front-End Developer',
-      issuer: 'Meta (Facebook)',
-      date: 'September 2023',
-      credentialId: 'META-345678',
-      link: 'https://coursera.org/verification',
-      skills: ['React', 'JavaScript', 'UI/UX'],
+      title: 'The Ultimate Job Ready Data Science Course',
+      issuer: 'Code with Harry',
+      date: 'October 2025',
+      credentialId: 'CWH-THE-ULTIMATE-JOB-READY-DATA-SCIENCE-COURSE-JGXUEIGY',
+      skills: ['Python Programming','Anaconda & Jupyter Setup','NumPy for Numerical Computing','Pandas for Data Analysis','Matplotlib for Visualization','Seaborn for Statistical Graphics','Statistics & Probability','Data Science Project Work','Real-world Applications','Career Readiness in Data Science'],
       color: 'from-blue-600 to-indigo-600'
-    },
-    {
-      id: 4,
-      title: 'MongoDB Certified Developer',
-      issuer: 'MongoDB University',
-      date: 'July 2023',
-      credentialId: 'MONGO-901234',
-      link: 'https://university.mongodb.com/verification',
-      skills: ['MongoDB', 'Database', 'NoSQL'],
-      color: 'from-green-500 to-emerald-500'
-    },
-    {
-      id: 5,
-      title: 'Kubernetes Administrator (CKA)',
-      issuer: 'Cloud Native Computing Foundation',
-      date: 'May 2023',
-      credentialId: 'CNCF-567890',
-      link: 'https://training.linuxfoundation.org/verification',
-      skills: ['Kubernetes', 'Container Orchestration', 'DevOps'],
-      color: 'from-purple-500 to-pink-500'
-    },
-    {
-      id: 6,
-      title: 'Microsoft Azure Fundamentals',
-      issuer: 'Microsoft',
-      date: 'March 2023',
-      credentialId: 'AZURE-234567',
-      link: 'https://microsoft.com/verification',
-      skills: ['Azure', 'Cloud Services', 'Microsoft'],
-      color: 'from-sky-500 to-blue-600'
     }
   ]
 

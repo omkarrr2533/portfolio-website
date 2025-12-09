@@ -14,27 +14,23 @@ export default function ProjectsPage() {
   const sampleProjects = [
     {
       id: 1,
-      name: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with payment integration, admin dashboard, and real-time inventory management.',
-      techStack: ['Next.js', 'Node.js', 'MongoDB', 'Stripe'],
+      name: 'Hand Sign Detection Using Python',
+      description: 'Hand sign detection is a computer vision technique that identifies and interprets gestures made with the hand. Using Python, libraries like OpenCV for image processing and TensorFlow/Keras for deep learning, a system can capture real-time video from a webcam, detect the hand region, and classify gestures into predefined categories (e.g., numbers, alphabets, or commands). This technology is widely applied in sign language recognition, human-computer interaction, and assistive communication tools.',
+      techStack: ['Python','OpenCV','MediaPipe','TensorFlow','Keras','PyTorch','NumPy','Pandas','Scikit-learn','Matplotlib','Seaborn','Flask','FastAPI','Streamlit','Gradio','Docker','Webcam','GPU (CUDA/cuDNN)'],
       liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project1',
+      githubLink: 'https://github.com/omkarrr2533/Hand_Sign_Detection_Using_Python.git',
       buildTime: '3 months',
-      stars: 45,
-      forks: 12,
-      language: 'JavaScript'
+      language: 'Python'
     },
     {
       id: 2,
-      name: 'AI Chat Application',
-      description: 'Real-time chat application with AI-powered responses, file sharing, and group conversations.',
-      techStack: ['React', 'Socket.io', 'OpenAI', 'PostgreSQL'],
+      name: 'City-Bus Tracking System',
+      description: 'This project is a real-time city bus tracking application designed to improve public transport visibility and user convenience. The backend is powered by Java with Spring Boot, which manages APIs, data flow, and WebSocket connections for live updates. Maven ensures smooth dependency management and build automation.',
+      techStack: ['Java','HTML','CSS','JavaScript','Spring Boot','Maven','WebSocket','Leaflet Map'],
       liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project2',
+      githubLink: 'https://github.com/omkarrr2533/BUS-ETA.git',
       buildTime: '2 months',
-      stars: 78,
-      forks: 23,
-      language: 'TypeScript'
+      language: 'Java'
     },
     {
       id: 3,
@@ -44,45 +40,7 @@ export default function ProjectsPage() {
       liveLink: 'https://example.com',
       githubLink: 'https://github.com/yourusername/project3',
       buildTime: '1.5 months',
-      stars: 34,
-      forks: 8,
       language: 'JavaScript'
-    },
-    {
-      id: 4,
-      name: 'Task Management App',
-      description: 'Collaborative task management with drag-and-drop, real-time updates, and team chat.',
-      techStack: ['React', 'Node.js', 'MongoDB', 'Socket.io'],
-      liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project4',
-      buildTime: '2 months',
-      stars: 56,
-      forks: 15,
-      language: 'JavaScript'
-    },
-    {
-      id: 5,
-      name: 'Weather Forecast App',
-      description: 'Beautiful weather app with 7-day forecast, location search, and weather maps.',
-      techStack: ['React', 'Weather API', 'Tailwind', 'Recharts'],
-      liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project5',
-      buildTime: '3 weeks',
-      stars: 89,
-      forks: 34,
-      language: 'JavaScript'
-    },
-    {
-      id: 6,
-      name: 'Blockchain Explorer',
-      description: 'Explore blockchain transactions, blocks, and addresses with real-time data.',
-      techStack: ['Next.js', 'Web3.js', 'Ethereum', 'GraphQL'],
-      liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project6',
-      buildTime: '4 months',
-      stars: 123,
-      forks: 45,
-      language: 'TypeScript'
     }
   ]
 
