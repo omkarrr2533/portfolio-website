@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "title": "Application Development using Large Language Models",
+    "issuer": "Nvidia",
+    "date": "2024",
+    "credentialId": "NVIDIA-LLM-2024",
+    "link": "#",
+    "skills": ["LLMs", "AI", "Application Development"],
+    "color": "from-green-500 to-emerald-500"
+  },
+  {
+    "id": 2,
+    "title": "AI Fundamentals",
+    "issuer": "IBM",
+    "date": "2024",
+    "credentialId": "IBM-AI-2024",
+    "link": "#",
+    "skills": ["Diffusion Models", "NLP", "Machine Learning"],
+    "color": "from-blue-500 to-cyan-500"
+  },
+  {
+    "id": 3,
+    "title": "Data Science",
+    "issuer": "Code with Harry",
+    "date": "2024",
+    "credentialId": "CWH-DS-2024",
+    "link": "#",
+    "skills": ["Data Science", "Python", "Analytics"],
+    "color": "from-purple-500 to-pink-500"
+  },
+  {
+    "id": 4,
+    "title": "AI/ML and Data Science",
+    "issuer": "Apna College",
+    "date": "2024",
+    "credentialId": "APNA-AIML-2024",
+    "link": "#",
+    "skills": ["AI/ML", "Data Science", "Python"],
+    "color": "from-orange-500 to-red-500"
+  },
+  {
+    "id": 5,
+    "title": "Java Programming",
+    "issuer": "Certification Authority",
+    "date": "2023",
+    "credentialId": "JAVA-2023",
+    "link": "#",
+    "skills": ["Java", "OOP", "Programming"],
+    "color": "from-red-500 to-pink-500"
+  },
+  {
+    "id": 6,
+    "title": "Advanced Java",
+    "issuer": "Certification Authority",
+    "date": "2023",
+    "credentialId": "ADV-JAVA-2023",
+    "link": "#",
+    "skills": ["Advanced Java", "Spring", "Backend"],
+    "color": "from-indigo-500 to-purple-500"
+  },
+  {
+    "id": 7,
+    "title": "Python Programming",
+    "issuer": "Certification Authority",
+    "date": "2023",
+    "credentialId": "PYTHON-2023",
+    "link": "#",
+    "skills": ["Python", "Programming", "Scripting"],
+    "color": "from-yellow-500 to-orange-500"
+  },
+  {
+    "id": 8,
+    "title": "C Programming Language",
+    "issuer": "Offline Certification",
+    "date": "2023",
+    "credentialId": "C-PROG-2023",
+    "link": "#",
+    "skills": ["C", "Programming", "Systems"],
+    "color": "from-gray-500 to-blue-500"
+  },
+  {
+    "id": 9,
+    "title": "Data Structures",
+    "issuer": "Offline Certification",
+    "date": "2023",
+    "credentialId": "DS-2023",
+    "link": "#",
+    "skills": ["Data Structures", "Algorithms", "DSA"],
+    "color": "from-teal-500 to-green-500"
+  },
+  {
+    "id": 10,
+    "title": "Database Management (RDBMS)",
+    "issuer": "Certification Authority",
+    "date": "2023",
+    "credentialId": "RDBMS-2023",
+    "link": "#",
+    "skills": ["RDBMS", "SQL", "Database"],
+    "color": "from-blue-600 to-indigo-600"
+  }
+]

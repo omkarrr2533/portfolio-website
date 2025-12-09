@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "LLM Application Project",
+    "category": "Projects",
+    "date": "2024-01-15",
+    "description": "Built application using Large Language Models with Nvidia certification",
+    "color": "from-green-500 to-teal-500"
+  },
+  {
+    "id": 2,
+    "title": "Spring Boot REST API",
+    "category": "Projects",
+    "date": "2023-12-10",
+    "description": "Developed scalable REST API using Spring Boot framework",
+    "color": "from-blue-500 to-purple-500"
+  },
+  {
+    "id": 3,
+    "title": "AI/ML Certification",
+    "category": "Achievements",
+    "date": "2024-01-20",
+    "description": "Completed AI/ML and Data Science certification from Apna College",
+    "color": "from-purple-500 to-pink-500"
+  },
+  {
+    "id": 4,
+    "title": "Top 5% Academic Achievement",
+    "category": "Achievements",
+    "date": "2024-01-01",
+    "description": "Achieved top 5% ranking in college with 8.11 CGPA",
+    "color": "from-yellow-500 to-orange-500"
+  },
+  {
+    "id": 5,
+    "title": "IBM AI Fundamentals",
+    "category": "Achievements",
+    "date": "2024-01-10",
+    "description": "Completed IBM certification in AI Fundamentals covering NLP and ML",
+    "color": "from-blue-600 to-cyan-500"
+  },
+  {
+    "id": 6,
+    "title": "Data Science Project",
+    "category": "Projects",
+    "date": "2023-11-15",
+    "description": "Data analysis and visualization project using Pandas and Matplotlib",
+    "color": "from-indigo-500 to-purple-500"
+  },
+  {
+    "id": 7,
+    "title": "LeetCode Problem Solving",
+    "category": "Achievements",
+    "date": "2024-01-25",
+    "description": "Active problem solver focusing on DSA and Dynamic Programming",
+    "color": "from-orange-500 to-red-500"
+  },
+  {
+    "id": 8,
+    "title": "Socket.io Real-time App",
+    "category": "Projects",
+    "date": "2023-10-20",
+    "description": "Built real-time communication application using Socket.io",
+    "color": "from-cyan-500 to-blue-500"
+  },
+  {
+    "id": 9,
+    "title": "Database Design Project",
+    "category": "Projects",
+    "date": "2023-09-15",
+    "description": "Designed and implemented complex database schema with PostgreSQL",
+    "color": "from-teal-500 to-green-500"
+  }
+]

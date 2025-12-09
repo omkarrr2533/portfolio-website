@@ -1,0 +1,91 @@
+{
+  "name": "Om Shripad Kapale",
+  "title": "Computer Science Student & Backend Developer",
+  "subtitle": "AI/ML Enthusiast | Open Source Contributor",
+  "bio": "Passionate Computer Science student ranked in the top 5% of my college with a strong focus on backend development, AI/ML, and clean code. I love solving complex problems with scalable solutions.",
+  "avatar": "/images/profile.jpg",
+  "email": "omshripadkapale@gmail.com",
+  "phone": "+91-XXXXXXXXXX",
+  "location": "Mumbai, Maharashtra, India",
+  "availability": "Open to opportunities",
+  
+  "social": {
+    "github": "https://github.com/omkarrr2533",
+    "linkedin": "https://www.linkedin.com/in/om-kapale-b861a228a",
+    "leetcode": "https://leetcode.com/u/omi_/",
+    "instagram": "https://www.instagram.com/its_omkarrrrrr/?hl=en",
+    "email": "mailto:omshripadkapale@gmail.com"
+  },
+  
+  "education": {
+    "degree": "Bachelor of Science in Computer Science",
+    "school": "Your College Name",
+    "location": "Mumbai, Maharashtra",
+    "period": "2023 - Present",
+    "cgpa": "8.11",
+    "rank": "Top 5% of College",
+    "details": "First Year CGPA: 8.11, Outstanding Academic Performance"
+  },
+  
+  "experience": [
+    {
+      "title": "Backend Developer (Learning Phase)",
+      "company": "Personal Projects",
+      "location": "Remote",
+      "period": "2023 - Present",
+      "responsibilities": [
+        "Building REST APIs with Spring Boot and Java",
+        "Working with databases: MySQL, PostgreSQL, Oracle",
+        "Implementing real-time features with Socket.io and WebSocket",
+        "Learning and applying AI/ML concepts with PyTorch and Pandas"
+      ]
+    }
+  ],
+  
+  "achievements": [
+    "Top 5% of College with 8.11 CGPA",
+    "Nvidia Certified in Application Development using LLMs",
+    "IBM Certified in AI Fundamentals (Diffusion Models, NLP, ML)",
+    "Completed 6+ professional certifications",
+    "Active LeetCode problem solver",
+    "Strong foundation in Data Structures and Algorithms"
+  ],
+  
+  "skills": {
+    "languages": ["Java", "Python", "C", "JavaScript", "Ruby", "SQL"],
+    "frameworks": ["Spring Boot", "Express.js"],
+    "databases": ["MySQL", "PostgreSQL", "Oracle"],
+    "aiml": ["PyTorch", "Pandas", "NumPy", "Matplotlib", "NLP"],
+    "tools": ["Git", "Socket.io", "REST API", "WebSocket"],
+    "concepts": ["DSA", "OOP", "Database Design", "Backend Development"]
+  },
+  
+  "interests": [
+    "Problem Solving",
+    "Clean Code",
+    "Scalable Solutions",
+    "Data Science",
+    "AI/ML",
+    "Backend Development",
+    "Open Source",
+    "Innovation"
+  ],
+  
+  "languages_spoken": ["English", "Hindi"],
+  
+  "currentFocus": [
+    "Data Science",
+    "AI/ML",
+    "Backend Development",
+    "Large Language Models",
+    "Advanced Java"
+  ],
+  
+  "openTo": [
+    "Collaboration",
+    "Open Source Contributions",
+    "Innovative Projects",
+    "Internship Opportunities",
+    "Freelance Work"
+  ]
+}
