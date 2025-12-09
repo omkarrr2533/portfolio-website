@@ -193,7 +193,7 @@ Contributions are welcome! Please open an issue or submit a PR.
 ## 📧 Contact
 
 - Email: omshripadkapale@gmail.com
-- GitHub: [@yourusername](omkarrr2533)
+- GitHub: [@omkarrr2533]
 - LinkedIn: [Om Kapale](in/om-kapale-b861a228a)
 
 ---
