@@ -188,7 +188,7 @@ MIT License - feel free to use this for your own portfolio!
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please open an issue or submit a PR.
+Contributions are welcome! Please open an issue or submit a PR
 
 ## 📧 Contact
 
@@ -199,3 +199,5 @@ Contributions are welcome! Please open an issue or submit a PR.
 ---
 
 Made with ❤️ by [Om Kapale](https://yourportfolio.com)
+
+
