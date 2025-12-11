@@ -3,18 +3,7 @@
     {
       "name": "Frontend Development",
       "skills": [
-        {
-          "name": "React",
-          "level": 95,
-          "yearsOfExperience": 4,
-          "description": "Building complex UIs with hooks, context, and state management"
-        },
-        {
-          "name": "Next.js",
-          "level": 90,
-          "yearsOfExperience": 3,
-          "description": "SSR, SSG, API routes, and full-stack applications"
-        },
+      
         {
           "name": "TypeScript",
           "level": 85,
@@ -26,30 +15,13 @@
           "level": 90,
           "yearsOfExperience": 2,
           "description": "Rapid UI development with utility-first CSS"
-        },
-        {
-          "name": "Vue.js",
-          "level": 75,
-          "yearsOfExperience": 2,
-          "description": "Component-based development with Composition API"
         }
+      
       ]
     },
     {
       "name": "Backend Development",
       "skills": [
-        {
-          "name": "Node.js",
-          "level": 90,
-          "yearsOfExperience": 4,
-          "description": "RESTful APIs, microservices, and real-time applications"
-        },
-        {
-          "name": "Express.js",
-          "level": 88,
-          "yearsOfExperience": 4,
-          "description": "Building scalable web servers and APIs"
-        },
         {
           "name": "Python",
           "level": 80,
@@ -96,12 +68,7 @@
     {
       "name": "DevOps & Cloud",
       "skills": [
-        {
-          "name": "AWS",
-          "level": 82,
-          "yearsOfExperience": 3,
-          "description": "EC2, S3, Lambda, RDS, CloudFront"
-        },
+        
         {
           "name": "Docker",
           "level": 85,
@@ -113,12 +80,6 @@
           "level": 75,
           "yearsOfExperience": 2,
           "description": "Container orchestration and deployment"
-        },
-        {
-          "name": "CI/CD",
-          "level": 80,
-          "yearsOfExperience": 3,
-          "description": "GitHub Actions, Jenkins, automated deployments"
         }
       ]
     }
