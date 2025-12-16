@@ -1,25 +1,5 @@
 [
-  {
-    "id": 1,
-    "name": "E-Commerce Platform",
-    "description": "Full-stack e-commerce solution with payment integration, admin dashboard, real-time inventory management, and customer analytics.",
-    "longDescription": "A comprehensive e-commerce platform built with modern technologies. Features include product management, shopping cart, checkout process with Stripe integration, order tracking, admin dashboard with analytics, and email notifications.",
-    "techStack": ["Next.js", "Node.js", "MongoDB", "Stripe", "Redis", "Docker"],
-    "liveLink": "https://example.com",
-    "githubLink": "https://github.com/yourusername/ecommerce-platform",
-    "buildTime": "3 months",
-    "category": "Web Development",
-    "featured": true,
-    "status": "completed",
-    "startDate": "2023-10-01",
-    "endDate": "2023-12-31",
-    "highlights": [
-      "Handles 10K+ transactions per month",
-      "99.9% uptime",
-      "Mobile-responsive design",
-      "SEO optimized"
-    ]
-  },
+  
   {
     "id": 2,
     "name": "AI Chat Application",
