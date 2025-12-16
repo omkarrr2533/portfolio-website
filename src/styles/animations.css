@@ -185,7 +185,7 @@
   animation: gradient 15s ease infinite;
 }
 
-/* Text Animations */
+ 
 @keyframes typing {
   from {
     width: 0;
