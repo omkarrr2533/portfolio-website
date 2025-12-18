@@ -4,9 +4,7 @@ const GITHUB_API = 'https://api.github.com'
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME
 
-/**
- * Fetch user profile information
- */
+
 export async function getGitHubProfile() {
   try {
     const response = await fetch(`${GITHUB_API}/users/${GITHUB_USERNAME}`, {
@@ -37,9 +35,7 @@ export async function getGitHubProfile() {
   }
 }
 
-/**
- * Fetch user's repositories
- */
+
 export async function getGitHubRepos(options = {}) {
   const { 
     sort = 'updated', 
