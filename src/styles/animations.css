@@ -167,7 +167,7 @@
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
 }
 
-/* Gradient Animations */
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
