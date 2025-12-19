@@ -33,8 +33,8 @@ export default function CertCard({ cert, index = 0 }) {
           </div>
         </div>
 
-        {/* Skills Tags */}
-        {cert.skills && (
+        {/* Skills Tags  */}
+        {cert.skills &&  (
           <div className="flex flex-wrap gap-2">
             {cert.skills.map((skill) => (
               <span
