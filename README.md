@@ -198,6 +198,6 @@ Contributions are welcome! Please open an issue or submit a PR
 
 ---
 
-Made with ❤️ by [Om Kapale](https://yourportfolio.com)
+Made with ❤️ by [Om Kapale](https://yourportfolio.com.
 
 
