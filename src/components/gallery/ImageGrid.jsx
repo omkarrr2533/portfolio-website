@@ -22,6 +22,7 @@ export default function ImageGrid({ images, onImageClick }) {
             </div>
           </div>
 
+          
           {/* Image Info Overlay */}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform">
             <h3 className="text-lg font-bold mb-2">{image.title}</h3>
