@@ -1,133 +1,202 @@
 'use client'
 
 import Link from 'next/link'
-import { ExternalLink, Github, Clock, Code } from 'lucide-react'
+import { ExternalLink, Github, ArrowRight, Cpu, BusFront } from 'lucide-react'
+
+const projects = [
+  {
+    id: 1,
+    tag: 'Computer Vision',
+    name: 'Hand Sign Detection',
+    headline: 'Real-time gesture recognition using deep learning',
+    description:
+      'Detects and classifies hand gestures from live webcam feed using MediaPipe for hand landmark detection and a custom CNN trained with PyTorch. Achieves high accuracy for ASL alphabet recognition.',
+    tech: ['Python', 'PyTorch', 'MediaPipe', 'OpenCV', 'NumPy'],
+    github: 'https://github.com/omkarrr2533/Hand_Sign_Detection_Using_Python.git',
+    live: null,
+    accent: '#3B82F6',
+    icon: Cpu,
+    metrics: [
+      { label: 'Model Type', value: 'CNN' },
+      { label: 'Framework', value: 'PyTorch' },
+      { label: 'Input', value: 'Webcam' },
+    ],
+  },
+  {
+    id: 2,
+    tag: 'Full Stack · Real-time',
+    name: 'City Bus Tracking System',
+    headline: 'Live bus location tracking for public transport',
+    description:
+      'Real-time city bus tracking application with WebSocket-powered location updates, Leaflet Map integration for route visualisation, and a Spring Boot REST backend managing API and data flow.',
+    tech: ['Java', 'Spring Boot', 'WebSocket', 'Leaflet.js', 'HTML/CSS/JS', 'Maven'],
+    github: 'https://github.com/omkarrr2533/BUS-ETA.git',
+    live: null,
+    accent: '#10B981',
+    icon: BusFront,
+    metrics: [
+      { label: 'Backend', value: 'Spring Boot' },
+      { label: 'Protocol', value: 'WebSocket' },
+      { label: 'Map', value: 'Leaflet' },
+    ],
+  },
+]
 
 export default function FeaturedProjects() {
-  const featuredProjects = [
-    {
-      id: 1,
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with payment integration, admin dashboard, and real-time inventory management.',
-      techStack: ['Next.js', 'Node.js', 'MongoDB', 'Stripe'],
-      liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project1',
-      buildTime: '3 months',
-      image: '/images/projects/project1.jpg',
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'AI Chat Application',
-      description: 'Real-time chat application with AI-powered responses, file sharing, and group conversations.',
-      techStack: ['React', 'Socket.io', 'OpenAI', 'PostgreSQL'],
-      liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project2',
-      buildTime: '2 months',
-      image: '/images/projects/project2.jpg',
-      featured: true
-    },
-    {
-      id: 3,
-      title: 'Portfolio Dashboard',
-      description: 'Analytics dashboard for tracking portfolio performance with interactive charts and real-time data.',
-      techStack: ['Vue.js', 'Firebase', 'Chart.js', 'Tailwind'],
-      liveLink: 'https://example.com',
-      githubLink: 'https://github.com/yourusername/project3',
-      buildTime: '1.5 months',
-      image: '/images/projects/project3.jpg',
-      featured: true
-    }
-  ]
-
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-800/50">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16 animate-slide-up">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-500 to-blue-600 bg-clip-text text-transparent">
-            Featured Projects
+    <section className="relative py-28 overflow-hidden">
+      {/* ── Section background ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(59,130,246,0.04), transparent)',
+        }}
+      />
+
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        {/* ── Section header ── */}
+        <div className="mb-16 max-w-xl">
+          <span className="section-badge mb-4 block w-fit">// featured work</span>
+          <h2
+            className="font-display font-800 text-[#E8F0FE] mb-4"
+            style={{ fontSize: 'clamp(32px, 5vw, 52px)' }}
+          >
+            What I've{' '}
+            <span className="gradient-text">Built</span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Here are some of my recent works that showcase my skills and passion for development
+          <p className="text-[#8EA4C8] text-base leading-relaxed">
+            Projects that demonstrate my approach to backend engineering and applied
+            AI/ML — focused on real-world utility and clean architecture.
           </p>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProjects.map((project, index) => (
-            <div
-              key={project.id}
-              className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2 animate-slide-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Project Image Placeholder */}
-              <div className="relative h-48 bg-gradient-to-br from-primary-500 to-blue-600 overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Code className="w-20 h-20 text-white/20" />
-                </div>
-                <div className="absolute top-4 right-4 bg-white/90 dark:bg-gray-900/90 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {project.buildTime}
-                </div>
-              </div>
+        {/* ── Project cards ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+          {projects.map((project, i) => {
+            const Icon = project.icon
+            return (
+              <article
+                key={project.id}
+                className="glass-card overflow-hidden group animate-slide-up"
+                style={{ animationDelay: `${i * 150}ms`, animationFillMode: 'both' }}
+              >
+                {/* ── Card top accent bar ── */}
+                <div
+                  className="h-1 w-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${project.accent}, transparent)`,
+                  }}
+                />
 
-              {/* Project Content */}
-              <div className="p-6 space-y-4">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">
-                  {project.title}
-                </h3>
-                
-                <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3">
-                  {project.description}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech) => (
+                <div className="p-6 sm:p-8">
+                  {/* ── Tag + Icon ── */}
+                  <div className="flex items-start justify-between mb-4">
                     <span
-                      key={tech}
-                      className="px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-full text-xs font-medium"
+                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-mono font-600 uppercase tracking-wider"
+                      style={{
+                        background: `${project.accent}18`,
+                        color: project.accent,
+                        border: `1px solid ${project.accent}30`,
+                      }}
                     >
-                      {tech}
+                      {project.tag}
                     </span>
-                  ))}
-                </div>
+                    <div
+                      className="p-2 rounded-lg"
+                      style={{ background: `${project.accent}10` }}
+                    >
+                      <Icon size={20} style={{ color: project.accent }} />
+                    </div>
+                  </div>
 
-                {/* Links */}
-                <div className="flex gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <a
-                    href={project.liveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors"
+                  {/* ── Name + Headline ── */}
+                  <h3 className="font-display text-xl font-700 text-[#E8F0FE] mb-1 group-hover:text-white transition-colors">
+                    {project.name}
+                  </h3>
+                  <p
+                    className="text-sm font-600 mb-4"
+                    style={{ color: project.accent }}
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    Live Demo
-                  </a>
-                  <a
-                    href={project.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    {project.headline}
+                  </p>
+
+                  {/* ── Description ── */}
+                  <p className="text-[#8EA4C8] text-sm leading-relaxed mb-6">
+                    {project.description}
+                  </p>
+
+                  {/* ── Metrics row ── */}
+                  <div className="grid grid-cols-3 gap-3 mb-6">
+                    {project.metrics.map(({ label, value }) => (
+                      <div
+                        key={label}
+                        className="rounded-lg p-2.5 text-center"
+                        style={{
+                          background: 'rgba(15,26,46,0.8)',
+                          border: '1px solid rgba(99,120,162,0.12)',
+                        }}
+                      >
+                        <div className="text-xs text-[#4A6080] mb-0.5 font-mono">{label}</div>
+                        <div className="text-xs font-700 text-[#E8F0FE] font-mono">{value}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* ── Tech stack ── */}
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {project.tech.map((t) => (
+                      <span key={t} className="tech-badge">{t}</span>
+                    ))}
+                  </div>
+
+                  {/* ── Links ── */}
+                  <div
+                    className="flex gap-4 pt-5"
+                    style={{ borderTop: '1px solid rgba(99,120,162,0.12)' }}
                   >
-                    <Github className="w-4 h-4" />
-                    Code
-                  </a>
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm font-600 text-[#8EA4C8] hover:text-[#E8F0FE] group/link"
+                    >
+                      <Github size={15} />
+                      Source Code
+                      <ArrowRight
+                        size={12}
+                        className="opacity-0 group-hover/link:opacity-100 group-hover/link:translate-x-1 transition-all"
+                      />
+                    </a>
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm font-600 text-[#8EA4C8] hover:text-[#60A5FA] group/link"
+                      >
+                        <ExternalLink size={15} />
+                        Live Demo
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </article>
+            )
+          })}
         </div>
 
-        {/* View All Button */}
-        <div className="text-center mt-12 animate-fade-in">
+        {/* ── View all CTA ── */}
+        <div className="text-center">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
+            className="btn-secondary inline-flex group"
           >
             View All Projects
-            <ExternalLink className="w-5 h-5" />
+            <ArrowRight
+              size={15}
+              className="group-hover:translate-x-1 transition-transform"
+            />
           </Link>
         </div>
       </div>
