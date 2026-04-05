@@ -1,217 +1,318 @@
 'use client'
 
-import { useState } from 'react'
-import { X, ZoomIn, Calendar, Tag } from 'lucide-react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Upload, X, ZoomIn, Calendar, Tag, Plus, Trash2, FolderOpen, Image } from 'lucide-react'
 
-export default function GalleryPage() {
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [filter, setFilter] = useState('All')
+const CATEGORIES = ['All', 'Events', 'Achievements', 'Travel', 'Projects', 'Blogs']
 
-  const categories = ['All', 'Projects', 'Events', 'Achievements', 'Travel']
+const DEFAULT_ITEMS = []
 
-  const images = [
-    {
-      id: 1,
-      title: 'Project Launch Event',
-      category: 'Events',
-      date: '2024-01-15',
-      description: 'Launching our new e-commerce platform',
-      color: 'from-blue-500 to-purple-500'
-    },
-    {
-      id: 2,
-      title: 'Hackathon Winner',
-      category: 'Achievements',
-      date: '2023-12-10',
-      description: 'First place at National Hackathon',
-      color: 'from-green-500 to-teal-500'
-    },
-    {
-      id: 3,
-      title: 'Team Building',
-      category: 'Events',
-      date: '2023-11-20',
-      description: 'Annual team outing and workshops',
-      color: 'from-orange-500 to-red-500'
-    },
-    {
-      id: 4,
-      title: 'Conference Talk',
-      category: 'Achievements',
-      date: '2023-10-05',
-      description: 'Speaking at Tech Conference 2023',
-      color: 'from-pink-500 to-rose-500'
-    },
-    {
-      id: 5,
-      title: 'Dashboard UI',
-      category: 'Projects',
-      date: '2023-09-15',
-      description: 'Analytics dashboard design mockup',
-      color: 'from-cyan-500 to-blue-500'
-    },
-    {
-      id: 6,
-      title: 'Mountain Trek',
-      category: 'Travel',
-      date: '2023-08-22',
-      description: 'Weekend hiking adventure',
-      color: 'from-emerald-500 to-green-500'
-    },
-    {
-      id: 7,
-      title: 'Mobile App Launch',
-      category: 'Projects',
-      date: '2023-07-10',
-      description: 'New mobile app release celebration',
-      color: 'from-violet-500 to-purple-500'
-    },
-    {
-      id: 8,
-      title: 'Code Review Session',
-      category: 'Events',
-      date: '2023-06-18',
-      description: 'Monthly code review and learning',
-      color: 'from-yellow-500 to-orange-500'
-    },
-    {
-      id: 9,
-      title: 'Beach Workation',
-      category: 'Travel',
-      date: '2023-05-25',
-      description: 'Remote work from paradise',
-      color: 'from-sky-500 to-cyan-500'
-    }
-  ]
+function useGallery() {
+  const [items, setItems] = useState(DEFAULT_ITEMS)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('galleryItems')
+      if (saved) setItems(JSON.parse(saved))
+    } catch {}
+  }, [])
+  const save = (next) => {
+    setItems(next)
+    localStorage.setItem('galleryItems', JSON.stringify(next))
+  }
+  const add = (item) => save([item, ...items])
+  const remove = (id) => save(items.filter(i => i.id !== id))
+  return { items, add, remove }
+}
 
-  const filteredImages = filter === 'All' 
-    ? images 
-    : images.filter(img => img.category === filter)
+// ── Upload area ──────────────────────────────────
+function UploadModal({ onClose, onUpload }) {
+  const [dragging, setDragging] = useState(false)
+  const [form, setForm] = useState({ title:'', category:'Events', description:'' })
+  const [preview, setPreview] = useState(null)
+  const [file, setFile] = useState(null)
+  const inputRef = useRef(null)
+
+  const readFile = (f) => {
+    if (!f.type.startsWith('image/')) return
+    setFile(f)
+    const reader = new FileReader()
+    reader.onload = (e) => setPreview(e.target.result)
+    reader.readAsDataURL(f)
+  }
+
+  const handleDrop = useCallback((e) => {
+    e.preventDefault()
+    setDragging(false)
+    const f = e.dataTransfer.files[0]
+    if (f) readFile(f)
+  }, [])
+
+  const handleSubmit = () => {
+    if (!preview || !form.title) return
+    onUpload({
+      id: Date.now().toString(),
+      ...form,
+      src: preview,
+      date: new Date().toISOString().split('T')[0],
+    })
+    onClose()
+  }
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Gallery
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            A visual journey through my projects, achievements, and memorable moments
-          </p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background:'rgba(0,0,0,0.85)' }}
+      onClick={onClose}
+    >
+      <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-700 text-[#E8F0FE]">Upload Photo</h2>
+          <button onClick={onClose} className="text-[#4A6080] hover:text-white"><X size={18}/></button>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-slide-up">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setFilter(category)}
-              className={`px-6 py-2 rounded-full font-semibold transition-all transform hover:scale-105 ${
-                filter === category
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredImages.map((image, index) => (
-            <div
-              key={image.id}
-              className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer animate-scale-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-              onClick={() => setSelectedImage(image)}
-            >
-              {/* Image Placeholder with Gradient */}
-              <div className={`aspect-square bg-gradient-to-br ${image.color} flex items-center justify-center relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center">
-                  <ZoomIn className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all" />
-                </div>
-                <div className="text-white/20 text-8xl font-bold">
-                  {image.title.charAt(0)}
-                </div>
-              </div>
-
-              {/* Image Info Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform">
-                <h3 className="text-lg font-bold mb-2">{image.title}</h3>
-                <div className="flex items-center gap-4 text-sm text-white/80">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(image.date).toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Tag className="w-4 h-4" />
-                    {image.category}
-                  </span>
-                </div>
-              </div>
+        {/* Drop zone */}
+        <div
+          onDragOver={e => { e.preventDefault(); setDragging(true) }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          onClick={() => inputRef.current?.click()}
+          className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer mb-4 transition-all"
+          style={{ borderColor: dragging ? '#3B82F6' : 'rgba(99,120,162,0.3)', background: dragging ? 'rgba(59,130,246,0.05)':'transparent' }}
+        >
+          {preview ? (
+            <img src={preview} alt="preview" className="w-full h-32 object-cover rounded-lg" />
+          ) : (
+            <div className="flex flex-col items-center gap-2 text-[#4A6080]">
+              <Upload size={28} />
+              <p className="text-sm">Drag & drop or <span className="text-[#60A5FA]">browse</span></p>
+              <p className="text-xs">PNG, JPG, GIF, WebP — from your PC</p>
             </div>
-          ))}
+          )}
+          <input ref={inputRef} type="file" accept="image/*" className="hidden"
+            onChange={e => { const f = e.target.files?.[0]; if (f) readFile(f) }} />
         </div>
 
-        {/* Empty State */}
-        {filteredImages.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              No images found in this category.
-            </p>
-          </div>
-        )}
-
-        {/* Lightbox Modal */}
-        {selectedImage && (
-          <div
-            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fade-in"
-            onClick={() => setSelectedImage(null)}
+        {/* Form */}
+        <div className="space-y-3">
+          <input
+            placeholder="Title *"
+            value={form.title}
+            onChange={e => setForm(p => ({...p, title: e.target.value}))}
+            className="input-dark text-sm"
+          />
+          <select
+            value={form.category}
+            onChange={e => setForm(p => ({...p, category: e.target.value}))}
+            className="input-dark text-sm"
           >
-            <button
-              className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
-              onClick={() => setSelectedImage(null)}
-            >
-              <X className="w-6 h-6 text-white" />
-            </button>
+            {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c}>{c}</option>)}
+          </select>
+          <textarea
+            placeholder="Description (optional)"
+            value={form.description}
+            onChange={e => setForm(p => ({...p, description: e.target.value}))}
+            rows={2}
+            className="input-dark text-sm resize-none"
+          />
+        </div>
 
-            <div className="max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
-              {/* Image */}
-              <div className={`aspect-video bg-gradient-to-br ${selectedImage.color} rounded-xl flex items-center justify-center mb-6`}>
-                <div className="text-white text-9xl font-bold opacity-20">
-                  {selectedImage.title.charAt(0)}
-                </div>
-              </div>
+        <div className="flex gap-2 mt-5">
+          <button onClick={onClose} className="btn-secondary flex-1 text-sm py-2">Cancel</button>
+          <button onClick={handleSubmit} disabled={!preview || !form.title}
+            className="btn-primary flex-1 text-sm py-2 disabled:opacity-40">
+            <Upload size={14} /> Upload
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-              {/* Info */}
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                  {selectedImage.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  {selectedImage.description}
-                </p>
-                <div className="flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-                  <span className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(selectedImage.date).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Tag className="w-4 h-4" />
-                    {selectedImage.category}
-                  </span>
-                </div>
-              </div>
+// ── Lightbox ─────────────────────────────────────
+function Lightbox({ item, onClose, onDelete }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background:'rgba(0,0,0,0.92)' }}
+      onClick={onClose}
+    >
+      <div className="relative max-w-3xl w-full" onClick={e => e.stopPropagation()}>
+        <button onClick={onClose}
+          className="absolute -top-10 right-0 text-white/60 hover:text-white flex items-center gap-1 text-sm">
+          <X size={16}/> Close
+        </button>
+        <img src={item.src} alt={item.title} className="w-full rounded-xl max-h-[60vh] object-contain" />
+        <div className="glass-card p-5 mt-3 flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-700 text-[#E8F0FE] mb-1">{item.title}</h3>
+            {item.description && <p className="text-sm text-[#8EA4C8] mb-2">{item.description}</p>}
+            <div className="flex items-center gap-4 text-xs text-[#4A6080]">
+              <span className="flex items-center gap-1"><Calendar size={11}/>{item.date}</span>
+              <span className="flex items-center gap-1"><Tag size={11}/>{item.category}</span>
             </div>
+          </div>
+          <button onClick={() => { onDelete(item.id); onClose() }}
+            className="text-red-400 hover:text-red-300 shrink-0 transition-colors p-2 rounded-lg hover:bg-red-500/10">
+            <Trash2 size={16}/>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Gallery card ─────────────────────────────────
+function GalleryCard({ item, onClick, onDelete }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <div
+      className="relative overflow-hidden rounded-xl cursor-pointer group animate-scale-in"
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      onClick={onClick}
+    >
+      <div className="aspect-square">
+        {item.src ? (
+          <img src={item.src} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
+            <Image size={32} className="text-[#4A6080]" />
           </div>
         )}
       </div>
+
+      {/* Overlay */}
+      <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${hov ? 'opacity-100':'opacity-0'}`}>
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <h3 className="text-white font-600 text-sm mb-1 truncate">{item.title}</h3>
+          <div className="flex items-center justify-between">
+            <span className="text-white/60 text-xs">{item.category}</span>
+            <ZoomIn size={14} className="text-white/60" />
+          </div>
+        </div>
+      </div>
+
+      {/* Category badge */}
+      <div className="absolute top-3 left-3">
+        <span className="text-xs font-mono px-2 py-0.5 rounded-full"
+          style={{ background:'rgba(0,0,0,0.6)', color:'#60A5FA', border:'1px solid rgba(59,130,246,0.3)' }}>
+          {item.category}
+        </span>
+      </div>
+
+      {/* Delete btn */}
+      <button
+        onClick={e => { e.stopPropagation(); onDelete(item.id) }}
+        className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/40 opacity-0 group-hover:opacity-100 transition-opacity"
+      >
+        <Trash2 size={13}/>
+      </button>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════
+export default function GalleryPage() {
+  const { items, add, remove } = useGallery()
+  const [filter, setFilter] = useState('All')
+  const [selected, setSelected] = useState(null)
+  const [showUpload, setShowUpload] = useState(false)
+
+  const filtered = filter === 'All' ? items : items.filter(i => i.category === filter)
+
+  return (
+    <div className="min-h-screen pt-24 pb-16"
+      style={{ background:'linear-gradient(180deg,#060D1F 0%,#0B1325 100%)' }}>
+      <div className="container mx-auto px-4 sm:px-6">
+
+        {/* Header */}
+        <div className="text-center mb-12 animate-fade-in">
+          <span className="section-badge mb-4 block w-fit mx-auto">// photo gallery</span>
+          <h1 className="font-display font-800 text-[#E8F0FE] mb-3" style={{ fontSize:'clamp(32px,5vw,52px)' }}>
+            My <span className="gradient-text">Gallery</span>
+          </h1>
+          <p className="text-[#8EA4C8] text-base max-w-xl mx-auto">
+            Upload photos directly from your PC — events, achievements, travel & more
+          </p>
+        </div>
+
+        {/* Controls */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+          {/* Category filter */}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {CATEGORIES.map(cat => (
+              <button key={cat} onClick={() => setFilter(cat)}
+                className="px-4 py-1.5 rounded-full text-sm font-500 transition-all"
+                style={{
+                  background: filter===cat ? 'linear-gradient(135deg,#3B82F6,#6366F1)':'rgba(15,26,46,0.8)',
+                  color: filter===cat ? '#fff':'#8EA4C8',
+                  border: filter===cat ? 'none':'1px solid rgba(99,120,162,0.2)',
+                }}>
+                {cat} {cat !== 'All' && <span className="text-xs opacity-70">({items.filter(i=>i.category===cat).length})</span>}
+              </button>
+            ))}
+          </div>
+
+          {/* Upload button */}
+          <button onClick={() => setShowUpload(true)} className="btn-primary text-sm px-5 py-2.5 shrink-0">
+            <Plus size={16}/> Upload Photo
+          </button>
+        </div>
+
+        {/* Stats */}
+        <div className="flex gap-4 mb-8 flex-wrap">
+          {[
+            { label:'Total Photos', value:items.length },
+            ...CATEGORIES.filter(c=>c!=='All').map(c => ({ label:c, value:items.filter(i=>i.category===c).length }))
+          ].map(s => (
+            <div key={s.label} className="stat-card flex items-center gap-2">
+              <span className="font-mono font-700 text-[#60A5FA] text-sm">{s.value}</span>
+              <span className="text-xs text-[#4A6080]">{s.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Grid */}
+        {filtered.length === 0 ? (
+          <div className="glass-card p-16 text-center">
+            <FolderOpen size={48} className="text-[#4A6080] mx-auto mb-4 opacity-50" />
+            <p className="text-[#8EA4C8] mb-2">No photos yet</p>
+            <p className="text-xs text-[#4A6080] mb-6">
+              {filter !== 'All' ? `No ${filter} photos — try another category` : 'Click "Upload Photo" to add your first photo from your PC'}
+            </p>
+            <button onClick={() => setShowUpload(true)} className="btn-primary text-sm">
+              <Upload size={14}/> Upload Your First Photo
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            {/* Upload tile */}
+            <div
+              onClick={() => setShowUpload(true)}
+              className="aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer group transition-all"
+              style={{ borderColor:'rgba(99,120,162,0.25)', background:'rgba(15,26,46,0.4)' }}
+            >
+              <Plus size={24} className="text-[#4A6080] group-hover:text-[#60A5FA] mb-2 transition-colors" />
+              <span className="text-xs text-[#4A6080] group-hover:text-[#60A5FA] font-mono transition-colors">Add Photo</span>
+            </div>
+
+            {filtered.map((item, i) => (
+              <GalleryCard
+                key={item.id}
+                item={item}
+                onClick={() => setSelected(item)}
+                onDelete={remove}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Modals */}
+      {showUpload && (
+        <UploadModal onClose={() => setShowUpload(false)} onUpload={add} />
+      )}
+      {selected && (
+        <Lightbox item={selected} onClose={() => setSelected(null)} onDelete={remove} />
+      )}
     </div>
   )
 }

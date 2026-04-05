@@ -1,22 +1,40 @@
-// GitHub API utility functions
-
+// GitHub API utility - fixes GITHUB_USERNAME resolution and adds getLanguageColor
 const GITHUB_API = 'https://api.github.com'
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
-const GITHUB_USERNAME = process.env.NEXT_PUBLIC_GITHUB_USERNAME
+// Fix: use both env vars so API routes (server) and pages (client) both work
+const GITHUB_USERNAME =
+  process.env.GITHUB_USERNAME ||
+  process.env.NEXT_PUBLIC_GITHUB_USERNAME ||
+  'omkarrr2533'
 
+const AUTH_HEADERS = () => ({
+  Accept: 'application/vnd.github.v3+json',
+  ...(GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}),
+})
+
+/** Language → hex color (GitHub standard palette) */
+export function getLanguageColor(language) {
+  const colors = {
+    JavaScript: '#f1e05a', TypeScript: '#3178c6', Python: '#3572A5',
+    Java: '#b07219', Go: '#00ADD8', Rust: '#dea584', Ruby: '#701516',
+    PHP: '#4F5D95', Swift: '#ffac45', Kotlin: '#A97BFF', CSS: '#563d7c',
+    HTML: '#e34c26', Vue: '#41b883', Shell: '#89e051', C: '#555555',
+    'C++': '#f34b7d', 'C#': '#178600', Dart: '#00B4AB', R: '#198CE7',
+  }
+  return colors[language] || '#8b949e'
+}
+
+export function getGitHubUsername() {
+  return GITHUB_USERNAME
+}
 
 export async function getGitHubProfile() {
   try {
     const response = await fetch(`${GITHUB_API}/users/${GITHUB_USERNAME}`, {
-      headers: {
-        Authorization: GITHUB_TOKEN ? `token ${GITHUB_TOKEN}` : '',
-        'Content-Type': 'application/json',
-      },
-      next: { revalidate: 3600 } // Cache for 1 hour
+      headers: AUTH_HEADERS(),
+      next: { revalidate: 3600 },
     })
-
-    if (!response.ok) throw new Error('Failed to fetch GitHub profile')
-    
+    if (!response.ok) throw new Error(`GitHub ${response.status}`)
     const data = await response.json()
     return {
       name: data.name,
@@ -28,37 +46,25 @@ export async function getGitHubProfile() {
       location: data.location,
       blog: data.blog,
       twitter: data.twitter_username,
+      company: data.company,
+      createdAt: data.created_at,
+      hireable: data.hireable,
     }
   } catch (error) {
-    console.error('Error fetching GitHub profile:', error)
+    console.error('getGitHubProfile:', error)
     return null
   }
 }
 
-
 export async function getGitHubRepos(options = {}) {
-  const { 
-    sort = 'updated', 
-    per_page = 100,
-    type = 'owner' 
-  } = options
-
+  const { sort = 'updated', per_page = 100, type = 'owner' } = options
   try {
     const response = await fetch(
       `${GITHUB_API}/users/${GITHUB_USERNAME}/repos?sort=${sort}&per_page=${per_page}&type=${type}`,
-      {
-        headers: {
-          Authorization: GITHUB_TOKEN ? `token ${GITHUB_TOKEN}` : '',
-          'Content-Type': 'application/json',
-        },
-        next: { revalidate: 1800 } // Cache for 30 minutes
-      }
+      { headers: AUTH_HEADERS(), next: { revalidate: 1800 } }
     )
-
-    if (!response.ok) throw new Error('Failed to fetch repositories')
-    
+    if (!response.ok) throw new Error(`GitHub ${response.status}`)
     const data = await response.json()
-    
     return data.map(repo => ({
       id: repo.id,
       name: repo.name,
@@ -77,111 +83,28 @@ export async function getGitHubRepos(options = {}) {
       topics: repo.topics || [],
       isPrivate: repo.private,
       isFork: repo.fork,
+      size: repo.size,
+      defaultBranch: repo.default_branch,
     }))
   } catch (error) {
-    console.error('Error fetching GitHub repos:', error)
+    console.error('getGitHubRepos:', error)
     return []
   }
 }
 
-/**
- * Fetch repository details with additional info
- */
-export async function getRepoDetails(repoName) {
-  try {
-    const response = await fetch(
-      `${GITHUB_API}/repos/${GITHUB_USERNAME}/${repoName}`,
-      {
-        headers: {
-          Authorization: GITHUB_TOKEN ? `token ${GITHUB_TOKEN}` : '',
-          'Content-Type': 'application/json',
-        },
-        next: { revalidate: 3600 }
-      }
-    )
-
-    if (!response.ok) throw new Error('Failed to fetch repo details')
-    
-    return await response.json()
-  } catch (error) {
-    console.error('Error fetching repo details:', error)
-    return null
-  }
-}
-
-/**
- * Fetch user's contribution data
- */
-export async function getGitHubContributions() {
-  // Note: GitHub doesn't provide a direct API for contribution graph
-  // You would need to use GitHub GraphQL API for this
-  // For now, returning mock data structure
-  
-  try {
-    const query = `
-      query($userName: String!) {
-        user(login: $userName) {
-          contributionsCollection {
-            contributionCalendar {
-              totalContributions
-              weeks {
-                contributionDays {
-                  contributionCount
-                  date
-                }
-              }
-            }
-          }
-        }
-      }
-    `
-
-    const response = await fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      headers: {
-        Authorization: `bearer ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query,
-        variables: { userName: GITHUB_USERNAME }
-      }),
-      next: { revalidate: 86400 } // Cache for 24 hours
-    })
-
-    if (!response.ok) throw new Error('Failed to fetch contributions')
-    
-    const result = await response.json()
-    return result.data?.user?.contributionsCollection?.contributionCalendar
-  } catch (error) {
-    console.error('Error fetching contributions:', error)
-    return null
-  }
-}
-
-/**
- * Fetch user's GitHub stats
- */
 export async function getGitHubStats() {
   try {
     const [profile, repos] = await Promise.all([
       getGitHubProfile(),
-      getGitHubRepos()
+      getGitHubRepos(),
     ])
-
-    if (!profile || !repos) return null
-
-    const totalStars = repos.reduce((sum, repo) => sum + repo.stars, 0)
-    const totalForks = repos.reduce((sum, repo) => sum + repo.forks, 0)
-    
-    // Get language statistics
+    if (!profile) return null
+    const totalStars = repos.reduce((s, r) => s + r.stars, 0)
+    const totalForks = repos.reduce((s, r) => s + r.forks, 0)
     const languages = {}
-    repos.forEach(repo => {
-      if (repo.language) {
-        languages[repo.language] = (languages[repo.language] || 0) + 1
-      }
+    repos.forEach(r => {
+      if (r.language) languages[r.language] = (languages[r.language] || 0) + 1
     })
-
     return {
       totalRepos: repos.length,
       totalStars,
@@ -190,78 +113,42 @@ export async function getGitHubStats() {
       following: profile.following,
       languages,
       publicRepos: profile.publicRepos,
+      avatar: profile.avatar,
+      name: profile.name,
+      bio: profile.bio,
+      location: profile.location,
     }
   } catch (error) {
-    console.error('Error fetching GitHub stats:', error)
+    console.error('getGitHubStats:', error)
     return null
   }
 }
 
-/**
- * Get pinned repositories (featured projects)
- */
-export async function getPinnedRepos() {
+export async function getMergedPRs() {
   try {
-    const repos = await getGitHubRepos({ sort: 'updated', per_page: 6 })
-    
-    // Filter repositories by stars or manually specify pinned repos
-    return repos
-      .filter(repo => !repo.isFork) // Exclude forked repos
-      .sort((a, b) => b.stars - a.stars)
-      .slice(0, 6)
-  } catch (error) {
-    console.error('Error fetching pinned repos:', error)
-    return []
-  }
-}
-
-/**
- * Search repositories
- */
-export async function searchRepos(query) {
-  try {
-    const response = await fetch(
-      `${GITHUB_API}/search/repositories?q=user:${GITHUB_USERNAME}+${query}`,
-      {
-        headers: {
-          Authorization: GITHUB_TOKEN ? `token ${GITHUB_TOKEN}` : '',
-          'Content-Type': 'application/json',
-        },
-        next: { revalidate: 1800 }
-      }
+    // Open source PRs merged in repos not owned by user
+    const res = await fetch(
+      `${GITHUB_API}/search/issues?q=author:${GITHUB_USERNAME}+type:pr+is:merged+-user:${GITHUB_USERNAME}&sort=updated&per_page=30`,
+      { headers: AUTH_HEADERS(), next: { revalidate: 3600 } }
     )
-
-    if (!response.ok) throw new Error('Failed to search repositories')
-    
-    const data = await response.json()
-    return data.items || []
+    if (!res.ok) throw new Error(`GitHub ${res.status}`)
+    const data = await res.json()
+    return {
+      total: data.total_count,
+      items: data.items.map(pr => ({
+        id: pr.id,
+        title: pr.title,
+        url: pr.html_url,
+        repo: pr.repository_url.replace('https://api.github.com/repos/', ''),
+        repoUrl: pr.html_url.split('/pull/')[0],
+        number: pr.number,
+        createdAt: pr.created_at,
+        updatedAt: pr.updated_at,
+        labels: pr.labels?.map(l => ({ name: l.name, color: l.color })) || [],
+      })),
+    }
   } catch (error) {
-    console.error('Error searching repos:', error)
-    return []
-  }
-}
-
-/**
- * Get repository languages breakdown
- */
-export async function getRepoLanguages(repoName) {
-  try {
-    const response = await fetch(
-      `${GITHUB_API}/repos/${GITHUB_USERNAME}/${repoName}/languages`,
-      {
-        headers: {
-          Authorization: GITHUB_TOKEN ? `token ${GITHUB_TOKEN}` : '',
-          'Content-Type': 'application/json',
-        },
-        next: { revalidate: 3600 }
-      }
-    )
-
-    if (!response.ok) throw new Error('Failed to fetch languages')
-    
-    return await response.json()
-  } catch (error) {
-    console.error('Error fetching repo languages:', error)
-    return {}
+    console.error('getMergedPRs:', error)
+    return { total: 0, items: [] }
   }
 }

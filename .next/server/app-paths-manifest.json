@@ -1,10 +1,7 @@
 {
+  "/gallery/page": "app/gallery/page.js",
   "/stuff/page": "app/stuff/page.js",
-  "/certifications/page": "app/certifications/page.js",
   "/resume/page": "app/resume/page.js",
   "/about/page": "app/about/page.js",
-  "/github-activities/page": "app/github-activities/page.js",
-  "/contact/page": "app/contact/page.js",
-  "/gallery/page": "app/gallery/page.js",
-  "/page": "app/page.js"
+  "/contact/page": "app/contact/page.js"
 }
