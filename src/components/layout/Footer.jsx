@@ -1,82 +1,84 @@
-'use client'
-
 import Link from 'next/link'
-import { Github, Linkedin, Twitter, Mail, Heart } from 'lucide-react'
+import { Github, Linkedin, Mail, ExternalLink, Heart } from 'lucide-react'
+
+const LINKS = [
+  { name:'Projects',   path:'/projects' },
+  { name:'GitHub',     path:'/github-activities' },
+  { name:'About',      path:'/about' },
+  { name:'Contact',    path:'/contact' },
+]
+
+const SOCIAL = [
+  { icon:Github,       label:'GitHub',   url:'https://github.com/omkarrr2533' },
+  { icon:Linkedin,     label:'LinkedIn', url:'https://www.linkedin.com/in/om-kapale-b861a228a' },
+  { icon:Mail,         label:'Email',    url:'mailto:omshripadkapale@gmail.com' },
+  { icon:ExternalLink, label:'LeetCode', url:'https://leetcode.com/u/omi_/' },
+]
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
-  const socialLinks = [
-    { name: 'GitHub', icon: Github, url: 'https://github.com/yourusername' },
-    { name: 'LinkedIn', icon: Linkedin, url: 'https://linkedin.com/in/yourusername' },
-    { name: 'Twitter', icon: Twitter, url: 'https://twitter.com/yourusername' },
-    { name: 'Email', icon: Mail, url: 'mailto:your.email@example.com' },
-  ]
-
-  const footerLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
-  ]
-
   return (
-    <footer className="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Portfolio
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Building digital experiences with modern web technologies.
+    <footer style={{
+      borderTop:'1px solid rgba(99,120,162,0.12)',
+      background:'rgba(6,13,31,0.98)',
+    }}>
+      <div className="container mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-800"
+                style={{ background:'linear-gradient(135deg,#3B82F6,#8B5CF6)', color:'#fff' }}
+              >OK</span>
+              <span className="font-700 text-[#E8F0FE]">Om Shripad Kapale</span>
+            </div>
+            <p className="text-sm text-[#4A6080] leading-relaxed">
+              Backend Developer · AI/ML Enthusiast<br />
+              Building scalable systems with clean code.
             </p>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="font-semibold text-gray-900 dark:text-white">Quick Links</h4>
-            <ul className="space-y-2">
-              {footerLinks.map((link) => (
-                <li key={link.path}>
-                  <Link
-                    href={link.path}
-                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors text-sm"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
+          {/* Nav */}
+          <div>
+            <h4 className="text-xs font-600 text-[#4A6080] uppercase tracking-widest mb-4">Navigation</h4>
+            <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+              {LINKS.map(l => (
+                <Link key={l.path} href={l.path}
+                  className="text-sm text-[#8EA4C8] hover:text-[#60A5FA] transition-colors"
+                >
+                  {l.name}
+                </Link>
               ))}
-            </ul>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="font-semibold text-gray-900 dark:text-white">Connect</h4>
-            <div className="flex space-x-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
+          {/* Social */}
+          <div>
+            <h4 className="text-xs font-600 text-[#4A6080] uppercase tracking-widest mb-4">Connect</h4>
+            <div className="flex flex-wrap gap-3">
+              {SOCIAL.map(s => (
+                <a key={s.label} href={s.url}
+                  target={s.url.startsWith('mailto') ? '_self' : '_blank'}
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-blue-600 hover:text-white transition-all transform hover:scale-110"
-                  aria-label={social.name}
+                  className="flex items-center gap-2 text-sm text-[#8EA4C8] hover:text-[#60A5FA] transition-colors"
                 >
-                  <social.icon className="w-5 h-5" />
+                  <s.icon size={15} />
+                  <span className="text-xs">{s.label}</span>
                 </a>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-600 dark:text-gray-400 text-sm flex items-center">
-              Made with <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" /> by Your Name
-            </p>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              © {currentYear} All rights reserved.
-            </p>
-          </div>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-2"
+          style={{ borderTop:'1px solid rgba(99,120,162,0.1)' }}
+        >
+          <p className="text-xs text-[#4A6080] flex items-center gap-1">
+            Made with <Heart size={11} className="text-red-500 fill-red-500" /> by Om Shripad Kapale
+          </p>
+          <p className="text-xs text-[#4A6080]">
+            © {new Date().getFullYear()} · Powered by Next.js & GitHub API
+          </p>
         </div>
       </div>
     </footer>
