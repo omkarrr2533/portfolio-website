@@ -1,127 +1,309 @@
 'use client'
 
-import { Code, Lightbulb, Rocket, Heart, Award, BookOpen } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Camera, Edit2, Save, X, Plus, Trash2, MapPin, Mail, ExternalLink, Check } from 'lucide-react'
 
+// Default data
+const DEFAULT_ABOUT = {
+  name: 'Om Shripad Kapale',
+  title: 'Backend Developer & AI/ML Enthusiast',
+  location: 'Mumbai, Maharashtra, India',
+  email: 'omshripadkapale@gmail.com',
+  bio: `Passionate Computer Science student ranked in the top 5% of my college with 8.11 CGPA. I love building scalable backend systems, exploring AI/ML frontiers, and contributing to open source across 6+ organisations.\n\nCurrently in my 3rd year of B.Tech CSE, I focus on Java/Spring Boot for backend work and Python/PyTorch for AI/ML projects. I believe in writing clean, maintainable code that solves real problems.`,
+  cgpa: '8.11',
+  rank: 'Top 5%',
+  education: 'B.Tech Computer Science Engineering',
+  college: 'Your College Name',
+  period: '2023 – Present',
+  experience: [
+    {
+      id:'e1', title:'Backend Developer (Learning)', company:'Personal Projects',
+      period:'2023–Present',
+      bullets:['Building REST APIs with Spring Boot & Java','Implementing WebSocket real-time features','Working with PostgreSQL, MySQL, Oracle databases','Developing AI/ML models with PyTorch & Pandas'],
+    },
+    {
+      id:'e2', title:'Open Source Contributor', company:'GitHub',
+      period:'2024–Present',
+      bullets:['Contributing to 6+ organisations','Getting PRs merged in various projects','Collaborating with global developers'],
+    },
+  ],
+  skills: [
+    { id:'s1', category:'Backend', items:'Java, Spring Boot, Node.js, REST API, WebSocket' },
+    { id:'s2', category:'AI / ML', items:'Python, PyTorch, Pandas, NumPy, NLP, LLMs' },
+    { id:'s3', category:'Databases', items:'PostgreSQL, MySQL, Oracle, Redis' },
+    { id:'s4', category:'Tools', items:'Git, Socket.io, Maven, DSA, Linux' },
+  ],
+  values: [
+    { id:'v1', emoji:'⚡', title:'Clean Code', desc:'Readable, maintainable, well-documented.' },
+    { id:'v2', emoji:'🧠', title:'Problem Solving', desc:'Love tackling complex algorithmic challenges.' },
+    { id:'v3', emoji:'🌱', title:'Always Learning', desc:'Exploring new tech in AI/ML and backend.' },
+    { id:'v4', emoji:'🤝', title:'Collaboration', desc:'Open source contributor and team player.' },
+  ],
+}
+
+function useAbout() {
+  const [data, setData] = useState(DEFAULT_ABOUT)
+  const [photo, setPhoto] = useState(null)
+  useEffect(() => {
+    try {
+      const d = localStorage.getItem('aboutData')
+      if (d) setData(JSON.parse(d))
+      const p = localStorage.getItem('profilePhoto')
+      if (p) setPhoto(p)
+    } catch {}
+  }, [])
+  const update = (key, val) => {
+    setData(prev => {
+      const next = { ...prev, [key]: val }
+      localStorage.setItem('aboutData', JSON.stringify(next))
+      return next
+    })
+  }
+  const savePhoto = (base64) => {
+    setPhoto(base64)
+    localStorage.setItem('profilePhoto', base64)
+  }
+  return { data, update, photo, savePhoto }
+}
+
+// ── Inline editable field ────────────────────────
+function Field({ value, onChange, tag:Tag='p', multiline=false, className='', placeholder='Click to edit...' }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(value)
+  const save = () => { onChange(draft); setEditing(false) }
+  const cancel = () => { setDraft(value); setEditing(false) }
+
+  if (editing) {
+    return (
+      <div className="relative">
+        {multiline
+          ? <textarea value={draft} onChange={e=>setDraft(e.target.value)} rows={5} autoFocus
+              className={`w-full bg-[#0B1325] border border-blue-500/50 rounded-lg px-3 py-2 text-sm outline-none resize-none ${className}`} />
+          : <input value={draft} onChange={e=>setDraft(e.target.value)} autoFocus
+              className={`w-full bg-[#0B1325] border border-blue-500/50 rounded-lg px-3 py-2 text-sm outline-none ${className}`} />
+        }
+        <div className="flex gap-2 mt-2">
+          <button onClick={save} className="text-xs btn-primary py-1 px-3"><Check size={12}/> Save</button>
+          <button onClick={cancel} className="text-xs btn-secondary py-1 px-3"><X size={12}/> Cancel</button>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <Tag onClick={() => { setDraft(value); setEditing(true) }}
+      className={`cursor-pointer group relative hover:bg-white/5 rounded px-1 -mx-1 transition-colors ${className}`}
+    >
+      {value || <span className="text-[#4A6080] italic text-sm">{placeholder}</span>}
+      <Edit2 size={11} className="absolute right-1 top-1 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+    </Tag>
+  )
+}
+
+// ── Section header ───────────────────────────────
+function SectionTitle({ children }) {
+  return (
+    <h2 className="text-2xl font-700 text-[#E8F0FE] mb-6 flex items-center gap-3">
+      <span className="h-0.5 w-8 bg-gradient-to-r from-blue-500 to-transparent" />
+      {children}
+    </h2>
+  )
+}
+
+// ═══════════════════════════════════════════════
 export default function AboutPage() {
-  const experiences = [
-    {
-      title: 'Senior Full Stack Developer',
-      company: 'Tech Company Inc.',
-      period: '2022 - Present',
-      description: 'Leading development of enterprise web applications using modern tech stack. Mentoring junior developers and architecting scalable solutions.'
-    },
-    {
-      title: 'Full Stack Developer',
-      company: 'Startup XYZ',
-      period: '2020 - 2022',
-      description: 'Built and maintained multiple client projects. Worked with React, Node.js, and cloud services.'
-    },
-    {
-      title: 'Junior Developer',
-      company: 'Digital Agency',
-      period: '2019 - 2020',
-      description: 'Started my professional journey building responsive websites and learning best practices.'
-    }
-  ]
+  const { data, update, photo, savePhoto } = useAbout()
+  const [editMode, setEditMode] = useState(false)
+  const photoRef = useRef(null)
 
-  const values = [
-    {
-      icon: Code,
-      title: 'Clean Code',
-      description: 'Writing maintainable, well-documented code that others can easily understand and build upon.'
-    },
-    {
-      icon: Lightbulb,
-      title: 'Innovation',
-      description: 'Always exploring new technologies and approaches to solve problems more efficiently.'
-    },
-    {
-      icon: Rocket,
-      title: 'Performance',
-      description: 'Optimizing applications for speed and efficiency to provide the best user experience.'
-    },
-    {
-      icon: Heart,
-      title: 'User-Centric',
-      description: 'Putting users first in every design and development decision I make.'
+  // Keyboard shortcut
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'E') setEditMode(v => !v)
     }
-  ]
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
+
+  const addExperience = () => {
+    const next = [...data.experience, {
+      id: Date.now().toString(), title:'New Role', company:'Company',
+      period:'20XX–Present', bullets:['Add your responsibilities here'],
+    }]
+    update('experience', next)
+  }
+
+  const removeExperience = (id) => update('experience', data.experience.filter(e=>e.id!==id))
+
+  const updateExp = (id, key, val) => update('experience', data.experience.map(e=>e.id===id?{...e,[key]:val}:e))
+
+  const addBullet = (expId) => {
+    update('experience', data.experience.map(e => e.id===expId
+      ? {...e, bullets:[...e.bullets, 'New bullet point']}
+      : e
+    ))
+  }
+
+  const updateBullet = (expId, bi, val) => {
+    update('experience', data.experience.map(e => e.id===expId
+      ? {...e, bullets: e.bullets.map((b,i) => i===bi ? val : b)}
+      : e
+    ))
+  }
+
+  const removeBullet = (expId, bi) => {
+    update('experience', data.experience.map(e => e.id===expId
+      ? {...e, bullets: e.bullets.filter((_,i) => i!==bi)}
+      : e
+    ))
+  }
+
+  const updateSkill = (id, key, val) => update('skills', data.skills.map(s=>s.id===id?{...s,[key]:val}:s))
+  const addSkill = () => update('skills', [...data.skills, { id:Date.now().toString(), category:'New Category', items:'skill1, skill2' }])
+  const removeSkill = (id) => update('skills', data.skills.filter(s=>s.id!==id))
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            About Me
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            Learn more about my journey, skills, and what drives me as a developer
-          </p>
-        </div>
+    <div className="min-h-screen pt-24 pb-16"
+      style={{ background:'linear-gradient(180deg,#060D1F 0%,#0B1325 100%)' }}>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
-          {/* Profile Image */}
-          <div className="lg:col-span-1 animate-slide-up">
-            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-1">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-8">
-                <div className="w-full aspect-square bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white text-6xl font-bold mb-6">
-                  YN
+      {/* Edit mode banner */}
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between mb-8">
+          <span className="section-badge">// about me</span>
+          <button onClick={() => setEditMode(v=>!v)}
+            className={`text-sm font-mono flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+              editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
+                       : 'text-[#4A6080] bg-white/5 border border-white/10 hover:border-blue-500/30'
+            }`}
+          >
+            {editMode ? <><Save size={12}/> Editing (click fields)</>
+                      : <><Edit2 size={12}/> Enable Editing</>}
+          </button>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6">
+        {/* ── Profile section ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-16">
+          {/* Photo + quick info */}
+          <div className="lg:col-span-1">
+            <div className="glass-card p-6 text-center sticky top-24">
+              {/* Photo */}
+              <div className="relative w-32 h-32 mx-auto mb-4 cursor-pointer group"
+                onClick={() => editMode && photoRef.current?.click()}>
+                <div className="w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600/20 to-purple-600/20">
+                  {photo
+                    ? <img src={photo} alt="Profile" className="w-full h-full object-cover" />
+                    : <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-[#4A6080]">OK</div>
+                  }
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Your Name</h2>
-                <p className="text-blue-600 font-semibold mb-4">Full Stack Developer</p>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <p>📍 Location: Your City, Country</p>
-                  <p>💼 Experience: 5+ years</p>
-                  <p>🎓 Education: Computer Science</p>
-                  <p>🌐 Languages: English, Hindi</p>
+                {editMode && (
+                  <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Camera size={20} className="text-white" />
+                  </div>
+                )}
+              </div>
+              <input ref={photoRef} type="file" accept="image/*" className="hidden"
+                onChange={e => {
+                  const f = e.target.files?.[0]
+                  if (!f) return
+                  const reader = new FileReader()
+                  reader.onload = ev => savePhoto(ev.target.result)
+                  reader.readAsDataURL(f)
+                }} />
+              {editMode && <p className="text-xs text-[#4A6080] mb-3 font-mono">Click photo to change</p>}
+
+              {editMode
+                ? <Field value={data.name} onChange={v=>update('name',v)} tag="h2"
+                    className="text-xl font-700 text-[#E8F0FE] mb-1 text-center" />
+                : <h2 className="text-xl font-700 text-[#E8F0FE] mb-1">{data.name}</h2>
+              }
+              {editMode
+                ? <Field value={data.title} onChange={v=>update('title',v)} tag="p"
+                    className="text-sm text-[#60A5FA] mb-4 text-center" />
+                : <p className="text-sm text-[#60A5FA] mb-4">{data.title}</p>
+              }
+
+              <div className="space-y-2 text-sm text-[#8EA4C8] text-left">
+                <div className="flex items-center gap-2">
+                  <MapPin size={13} className="text-[#4A6080] shrink-0" />
+                  {editMode
+                    ? <Field value={data.location} onChange={v=>update('location',v)} className="text-sm text-[#8EA4C8]" />
+                    : <span>{data.location}</span>}
                 </div>
+                <div className="flex items-center gap-2">
+                  <Mail size={13} className="text-[#4A6080] shrink-0" />
+                  {editMode
+                    ? <Field value={data.email} onChange={v=>update('email',v)} className="text-sm text-[#8EA4C8]" />
+                    : <a href={`mailto:${data.email}`} className="text-[#60A5FA] hover:text-white text-sm">{data.email}</a>}
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-3 mt-5">
+                {[
+                  { label:'CGPA', key:'cgpa' },
+                  { label:'Rank', key:'rank' },
+                ].map(s => (
+                  <div key={s.key} className="bg-[#0B1325] rounded-lg p-3 text-center">
+                    {editMode
+                      ? <Field value={data[s.key]} onChange={v=>update(s.key,v)}
+                          className="text-lg font-800 font-mono text-[#60A5FA] text-center block" />
+                      : <div className="text-lg font-800 font-mono text-[#60A5FA]">{data[s.key]}</div>
+                    }
+                    <div className="text-xs text-[#4A6080]">{s.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* About Content */}
-          <div className="lg:col-span-2 space-y-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <BookOpen className="w-6 h-6 text-blue-600" />
-                My Story
-              </h3>
-              <div className="space-y-4 text-gray-600 dark:text-gray-400">
-                <p>
-                  Hi! I'm a passionate full-stack developer with over 5 years of experience building web applications. 
-                  My journey into tech started when I built my first website in college, and I've been hooked ever since.
-                </p>
-                <p>
-                  I love transforming complex problems into simple, beautiful, and intuitive solutions. When I'm not coding, 
-                  you'll find me exploring new technologies, contributing to open source, or sharing my knowledge through 
-                  blog posts and mentoring.
-                </p>
-                <p>
-                  I believe in continuous learning and staying up-to-date with the latest industry trends. My goal is to 
-                  create impactful software that makes a difference in people's lives.
-                </p>
+          {/* Main content */}
+          <div className="lg:col-span-2 space-y-10">
+            {/* Bio */}
+            <div className="glass-card p-6">
+              <SectionTitle>About</SectionTitle>
+              {editMode
+                ? <Field value={data.bio} onChange={v=>update('bio',v)} multiline
+                    className="text-[#8EA4C8] text-sm leading-relaxed" />
+                : <div className="text-[#8EA4C8] text-sm leading-relaxed whitespace-pre-line">{data.bio}</div>
+              }
+            </div>
+
+            {/* Education */}
+            <div className="glass-card p-6">
+              <SectionTitle>Education</SectionTitle>
+              <div className="border-l-2 border-blue-600 pl-5">
+                {editMode
+                  ? <>
+                      <Field value={data.education} onChange={v=>update('education',v)} tag="h3"
+                        className="text-lg font-700 text-[#E8F0FE] mb-1" />
+                      <Field value={data.college} onChange={v=>update('college',v)} tag="p"
+                        className="text-[#60A5FA] text-sm font-600 mb-1" />
+                      <Field value={data.period} onChange={v=>update('period',v)} tag="p"
+                        className="text-[#4A6080] text-xs" />
+                    </>
+                  : <>
+                      <h3 className="text-lg font-700 text-[#E8F0FE] mb-1">{data.education}</h3>
+                      <p className="text-[#60A5FA] text-sm font-600 mb-1">{data.college}</p>
+                      <p className="text-[#4A6080] text-xs">{data.period} · CGPA {data.cgpa} · {data.rank} of College</p>
+                    </>
+                }
               </div>
             </div>
 
             {/* Values */}
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">What I Value</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {values.map((value, index) => (
-                  <div
-                    key={value.title}
-                    className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <value.icon className="w-10 h-10 text-blue-600 mb-4" />
-                    <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                      {value.title}
-                    </h4>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                      {value.description}
-                    </p>
+              <SectionTitle>What I Value</SectionTitle>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {data.values.map(v => (
+                  <div key={v.id} className="glass-card p-5">
+                    <div className="text-2xl mb-2">{v.emoji}</div>
+                    <h4 className="font-700 text-[#E8F0FE] text-sm mb-1">{v.title}</h4>
+                    {editMode
+                      ? <Field value={v.desc} onChange={val=>update('values', data.values.map(vv=>vv.id===v.id?{...vv,desc:val}:vv))}
+                          className="text-xs text-[#8EA4C8]" />
+                      : <p className="text-xs text-[#8EA4C8]">{v.desc}</p>
+                    }
                   </div>
                 ))}
               </div>
@@ -129,58 +311,114 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Experience Timeline */}
-        <div className="mb-16 animate-slide-up" style={{ animationDelay: '0.4s' }}>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Work Experience
-          </h2>
-          <div className="max-w-4xl mx-auto">
-            {experiences.map((exp, index) => (
-              <div key={index} className="relative pl-8 pb-12 border-l-2 border-blue-600 last:pb-0">
-                <div className="absolute left-0 top-0 -translate-x-1/2 w-4 h-4 rounded-full bg-blue-600 ring-4 ring-white dark:ring-gray-900"></div>
-                <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow ml-4">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                      {exp.title}
-                    </h3>
-                    <span className="text-sm text-blue-600 font-semibold">
-                      {exp.period}
-                    </span>
+        {/* ── Experience ── */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <SectionTitle>Experience</SectionTitle>
+            {editMode && (
+              <button onClick={addExperience} className="btn-secondary text-xs py-1.5 px-3">
+                <Plus size={13}/> Add Role
+              </button>
+            )}
+          </div>
+          <div className="space-y-6 max-w-4xl">
+            {data.experience.map((exp, ei) => (
+              <div key={exp.id} className="relative border-l-2 border-blue-600 pl-6 glass-card p-5">
+                <div className="absolute -left-2 top-4 w-4 h-4 bg-blue-600 rounded-full ring-4 ring-[#060D1F]" />
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    {editMode
+                      ? <>
+                          <Field value={exp.title} onChange={v=>updateExp(exp.id,'title',v)} tag="h3"
+                            className="text-lg font-700 text-[#E8F0FE] mb-1" />
+                          <Field value={exp.company} onChange={v=>updateExp(exp.id,'company',v)} tag="p"
+                            className="text-[#60A5FA] text-sm font-600 mb-1" />
+                          <Field value={exp.period} onChange={v=>updateExp(exp.id,'period',v)} tag="p"
+                            className="text-[#4A6080] text-xs mb-3" />
+                        </>
+                      : <>
+                          <h3 className="text-lg font-700 text-[#E8F0FE] mb-1">{exp.title}</h3>
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-[#60A5FA] text-sm font-600">{exp.company}</span>
+                            <span className="text-[#4A6080] text-xs">{exp.period}</span>
+                          </div>
+                        </>
+                    }
+                    <ul className="space-y-1">
+                      {exp.bullets.map((b, bi) => (
+                        <li key={bi} className="flex items-start gap-2">
+                          <span className="text-[#3B82F6] mt-1.5 text-xs">▸</span>
+                          {editMode
+                            ? <div className="flex gap-2 flex-1">
+                                <Field value={b} onChange={v=>updateBullet(exp.id,bi,v)}
+                                  className="text-sm text-[#8EA4C8] flex-1" />
+                                <button onClick={()=>removeBullet(exp.id,bi)}
+                                  className="text-red-400/50 hover:text-red-400"><X size={12}/></button>
+                              </div>
+                            : <span className="text-sm text-[#8EA4C8]">{b}</span>
+                          }
+                        </li>
+                      ))}
+                    </ul>
+                    {editMode && (
+                      <button onClick={()=>addBullet(exp.id)}
+                        className="mt-2 text-xs text-[#4A6080] hover:text-[#60A5FA] flex items-center gap-1 font-mono">
+                        <Plus size={11}/> Add bullet
+                      </button>
+                    )}
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 font-semibold mb-2">
-                    {exp.company}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {exp.description}
-                  </p>
+                  {editMode && (
+                    <button onClick={()=>removeExperience(exp.id)} className="text-red-400/50 hover:text-red-400 shrink-0">
+                      <Trash2 size={15}/>
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Fun Facts */}
-        <div className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Fun Facts About Me
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {[
-              { emoji: '☕', text: 'Coffee enthusiast' },
-              { emoji: '🎮', text: 'Gamer in free time' },
-              { emoji: '📚', text: 'Avid reader' },
-              { emoji: '🎵', text: 'Music lover' }
-            ].map((fact, index) => (
-              <div
-                key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg text-center hover:shadow-xl transition-all transform hover:-translate-y-1"
-              >
-                <div className="text-5xl mb-3">{fact.emoji}</div>
-                <p className="text-gray-900 dark:text-white font-semibold">{fact.text}</p>
+        {/* ── Skills ── */}
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <SectionTitle>Technical Skills</SectionTitle>
+            {editMode && (
+              <button onClick={addSkill} className="btn-secondary text-xs py-1.5 px-3">
+                <Plus size={13}/> Add Category
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {data.skills.map(sk => (
+              <div key={sk.id} className="glass-card p-5">
+                <div className="flex items-start justify-between mb-3">
+                  {editMode
+                    ? <Field value={sk.category} onChange={v=>updateSkill(sk.id,'category',v)} tag="h3"
+                        className="font-700 text-[#E8F0FE] text-sm" />
+                    : <h3 className="font-700 text-[#E8F0FE] text-sm">{sk.category}</h3>
+                  }
+                  {editMode && (
+                    <button onClick={()=>removeSkill(sk.id)} className="text-red-400/50 hover:text-red-400">
+                      <Trash2 size={13}/>
+                    </button>
+                  )}
+                </div>
+                {editMode
+                  ? <Field value={sk.items} onChange={v=>updateSkill(sk.id,'items',v)}
+                      className="text-xs text-[#8EA4C8]" />
+                  : (
+                    <div className="flex flex-wrap gap-1.5">
+                      {sk.items.split(',').map(s => s.trim()).filter(Boolean).map(s => (
+                        <span key={s} className="tech-badge">{s}</span>
+                      ))}
+                    </div>
+                  )
+                }
               </div>
             ))}
           </div>
         </div>
+
       </div>
     </div>
   )
