@@ -38,8 +38,6 @@ function ContribCalendar({ weeks }) {
     return 4
   }
 
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-
   return (
     <div className="glass-card p-6">
       <h2 className="text-lg font-700 text-[#E8F0FE] mb-6 flex items-center gap-2">
@@ -287,11 +285,12 @@ export default function GitHubActivitiesPage() {
           )}
         </div>
 
-        {/* GitHub CTA */}
+        {/* GitHub CTA - FIXED: added missing <a tag */}
         <div className="mt-12 text-center animate-fade-in">
-          
+          <a
             href={`https://github.com/${process.env.NEXT_PUBLIC_GITHUB_USERNAME || 'omkarrr2533'}`}
-            target="_blank" rel="noopener noreferrer"
+            target="_blank"
+            rel="noopener noreferrer"
             className="btn-primary text-base px-8 py-4"
           >
             <Github size={20} />

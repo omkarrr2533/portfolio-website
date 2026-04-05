@@ -38,9 +38,18 @@ body {
 }
 
 /* ═══════════════════════════════════════════════
-   SCROLLBAR
+   SCROLLBAR — with cross-browser fallbacks
 ═══════════════════════════════════════════════ */
-::-webkit-scrollbar { width: 6px; }
+/* Modern browsers (Chrome 121+, Firefox) */
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #1E3358 transparent;
+  }
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-base); }
 ::-webkit-scrollbar-thumb { background: #1E3358; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
@@ -83,7 +92,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════════
-   GLASS CARD
+   GLASS CARD — with webkit backdrop-filter prefix
 ═══════════════════════════════════════════════ */
 .glass-card {
   background: linear-gradient(135deg,
@@ -91,6 +100,7 @@ body {
     rgba(11,19,37,0.95) 100%);
   border: 1px solid var(--border-dim);
   border-radius: 16px;
+  -webkit-backdrop-filter: blur(12px); /* Safari 9+ */
   backdrop-filter: blur(12px);
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
@@ -281,8 +291,6 @@ body {
 ═══════════════════════════════════════════════ */
 .scroll-x {
   overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #1E3358 transparent;
 }
 
 /* ═══════════════════════════════════════════════

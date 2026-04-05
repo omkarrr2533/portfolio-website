@@ -57,7 +57,8 @@ function RepoCard({ repo, index }) {
               ? <Lock size={14} className="text-[#4A6080]" />
               : <Globe size={14} className="text-[#4A6080]" />
             }
-            
+            {/* FIXED: restored missing <a opening tag */}
+            <a
               href={repo.url}
               target="_blank"
               rel="noopener noreferrer"
@@ -97,7 +98,8 @@ function RepoCard({ repo, index }) {
           <span className="flex items-center gap-1 text-xs text-[#8EA4C8]">
             <GitFork size={11} />{repo.forks}
           </span>
-          
+          {/* FIXED: restored missing <a opening tag */}
+          <a
             href={repo.url}
             target="_blank"
             rel="noopener noreferrer"
@@ -106,7 +108,8 @@ function RepoCard({ repo, index }) {
             <Github size={13} /> View
           </a>
           {repo.homepage && (
-            
+            /* FIXED: restored missing <a opening tag */
+            <a
               href={repo.homepage}
               target="_blank"
               rel="noopener noreferrer"
