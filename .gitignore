@@ -1,3 +1,34 @@
-node_modules
- 
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER commit these
+.env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Next.js build output
+.next/
+out/
+
+# Production build
+build/
+dist/
+
+# Misc
+*.pem
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db

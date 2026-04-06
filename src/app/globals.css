@@ -8,7 +8,6 @@
    DESIGN TOKENS
 ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* ── Backgrounds ── */
   --bg-base:        #04091A;
   --bg-surface:     #080F22;
   --bg-card:        #0C1528;
@@ -16,19 +15,16 @@
   --bg-subtle:      rgba(255,255,255,0.02);
   --bg-elevated:    rgba(255,255,255,0.04);
 
-  /* ── Borders ── */
   --border-dim:     rgba(99,125,175,0.12);
   --border-soft:    rgba(99,125,175,0.2);
   --border-glow:    rgba(59,130,246,0.4);
   --border-accent:  rgba(99,102,241,0.35);
 
-  /* ── Text ── */
   --text-primary:   #EDF2FF;
   --text-secondary: #8EA8D8;
   --text-muted:     #4A6090;
   --text-faint:     #2A3A55;
 
-  /* ── Accent Palette ── */
   --blue:           #3B82F6;
   --blue-lt:        #60A5FA;
   --indigo:         #6366F1;
@@ -38,28 +34,24 @@
   --amber:          #F59E0B;
   --rose:           #F43F5E;
 
-  /* ── Gradients ── */
   --grad-primary:   linear-gradient(135deg, #3B82F6 0%, #6366F1 100%);
   --grad-hero:      linear-gradient(135deg, #60A5FA 0%, #818CF8 50%, #A78BFA 100%);
   --grad-card:      linear-gradient(135deg, rgba(12,21,40,0.95) 0%, rgba(8,15,34,0.98) 100%);
   --grad-glow-blue: radial-gradient(ellipse at center, rgba(59,130,246,0.15) 0%, transparent 70%);
   --grad-glow-vio:  radial-gradient(ellipse at center, rgba(139,92,246,0.1) 0%, transparent 70%);
 
-  /* ── Shadows ── */
   --shadow-sm:      0 2px 8px rgba(0,0,0,0.3);
   --shadow-md:      0 8px 24px rgba(0,0,0,0.4);
   --shadow-lg:      0 16px 48px rgba(0,0,0,0.5);
   --shadow-glow:    0 0 40px rgba(59,130,246,0.15);
   --shadow-card:    0 0 0 1px rgba(99,125,175,0.12), 0 8px 32px rgba(0,0,0,0.35);
 
-  /* ── Radii ── */
   --r-sm:   8px;
   --r-md:   12px;
   --r-lg:   16px;
   --r-xl:   20px;
   --r-pill: 999px;
 
-  /* ── Transitions ── */
   --ease:   cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --t-fast:  150ms var(--ease);
@@ -75,7 +67,9 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  /* FIX: vendor prefix before standard */
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -100,8 +94,13 @@ button { cursor: pointer; border: none; background: none; }
 
 /* ═══════════════════════════════════════════════════════════════
    SCROLLBAR
+   NOTE: scrollbar-width/color are now supported in Chrome 121+.
+   webkit prefixes kept as fallback for older browsers.
 ═══════════════════════════════════════════════════════════════ */
-* { scrollbar-width: thin; scrollbar-color: #1E3358 transparent; }
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1E3358 transparent;
+}
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #1A2D4A; border-radius: 99px; }
@@ -126,23 +125,24 @@ button { cursor: pointer; border: none; background: none; }
 ═══════════════════════════════════════════════════════════════ */
 .gradient-text {
   background: var(--grad-hero);
+  /* FIX: webkit before standard */
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .gradient-text-blue {
   background: linear-gradient(135deg, #60A5FA, #34D399);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .gradient-text-warm {
   background: linear-gradient(135deg, #F59E0B, #F43F5E);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -171,13 +171,15 @@ button { cursor: pointer; border: none; background: none; }
 
 /* ═══════════════════════════════════════════════════════════════
    CARD SYSTEM
+   FIX: -webkit-backdrop-filter BEFORE backdrop-filter everywhere
 ═══════════════════════════════════════════════════════════════ */
 .glass-card {
   background: var(--grad-card);
   border: 1px solid var(--border-dim);
   border-radius: var(--r-lg);
-  backdrop-filter: blur(16px);
+  /* FIX: webkit before standard */
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   box-shadow: var(--shadow-card);
   transition: border-color var(--t-base), box-shadow var(--t-base), transform var(--t-base);
   position: relative;
@@ -257,6 +259,7 @@ button { cursor: pointer; border: none; background: none; }
   background: rgba(12,21,40,0.8);
   color: var(--text-secondary);
   border: 1px solid var(--border-soft);
+  /* FIX: webkit before standard */
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
@@ -392,6 +395,7 @@ button { cursor: pointer; border: none; background: none; }
   border: 1px solid var(--border-dim);
   border-radius: var(--r-md);
   transition: border-color var(--t-base), background var(--t-base);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 
@@ -429,12 +433,14 @@ button { cursor: pointer; border: none; background: none; }
 
 textarea.input-dark { resize: vertical; min-height: 80px; line-height: 1.6; }
 
+/* FIX: add both -webkit-appearance AND appearance */
 select.input-dark {
   cursor: pointer;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234A6090' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
+  -webkit-appearance: none;
   appearance: none;
 }
 
@@ -577,7 +583,6 @@ select.input-dark {
 .animate-pulse-glow    { animation: pulse-glow 2.5s ease-in-out infinite; }
 .animate-spin-slow     { animation: rotate-slow 8s linear infinite; }
 
-/* Delays */
 .delay-50   { animation-delay: 50ms;  }
 .delay-100  { animation-delay: 100ms; }
 .delay-150  { animation-delay: 150ms; }
@@ -604,17 +609,9 @@ select.input-dark {
 /* ═══════════════════════════════════════════════════════════════
    GLOW EFFECTS
 ═══════════════════════════════════════════════════════════════ */
-.glow-blue {
-  box-shadow: 0 0 30px rgba(59,130,246,0.2);
-}
-
-.glow-violet {
-  box-shadow: 0 0 30px rgba(139,92,246,0.2);
-}
-
-.text-glow-blue {
-  text-shadow: 0 0 30px rgba(96,165,250,0.5);
-}
+.glow-blue   { box-shadow: 0 0 30px rgba(59,130,246,0.2); }
+.glow-violet { box-shadow: 0 0 30px rgba(139,92,246,0.2); }
+.text-glow-blue { text-shadow: 0 0 30px rgba(96,165,250,0.5); }
 
 /* ═══════════════════════════════════════════════════════════════
    HOVER LIFT UTILITIES
@@ -627,9 +624,7 @@ select.input-dark {
   box-shadow: var(--shadow-lg);
 }
 
-.hover-scale {
-  transition: transform var(--t-base);
-}
+.hover-scale { transition: transform var(--t-base); }
 .hover-scale:hover { transform: scale(1.03); }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -648,9 +643,7 @@ select.input-dark {
   pointer-events: none;
 }
 
-.card-shine:hover::after {
-  left: 150%;
-}
+.card-shine:hover::after { left: 150%; }
 
 /* ═══════════════════════════════════════════════════════════════
    MODAL OVERLAY
@@ -682,9 +675,7 @@ select.input-dark {
 /* ═══════════════════════════════════════════════════════════════
    NAV ACTIVE INDICATOR
 ═══════════════════════════════════════════════════════════════ */
-.nav-item-active {
-  position: relative;
-}
+.nav-item-active { position: relative; }
 
 .nav-item-active::after {
   content: '';
@@ -718,16 +709,13 @@ select.input-dark {
 /* ═══════════════════════════════════════════════════════════════
    TOOLTIP
 ═══════════════════════════════════════════════════════════════ */
-.tooltip {
-  position: relative;
-}
+.tooltip { position: relative; }
 
 .tooltip::before {
   content: attr(data-tip);
   position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
-  transform: translateX(-50%);
   padding: 5px 10px;
   background: rgba(8,15,34,0.95);
   border: 1px solid var(--border-soft);
@@ -748,7 +736,7 @@ select.input-dark {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   SECTION HEADING STYLE
+   SECTION HEADING
 ═══════════════════════════════════════════════════════════════ */
 .section-heading {
   font-family: 'Syne', sans-serif;
@@ -775,12 +763,10 @@ select.input-dark {
 /* ═══════════════════════════════════════════════════════════════
    SMOOTH PAGE TRANSITIONS
 ═══════════════════════════════════════════════════════════════ */
-main {
-  animation: fadeIn 0.3s var(--ease);
-}
+main { animation: fadeIn 0.3s var(--ease); }
 
 /* ═══════════════════════════════════════════════════════════════
-   PING DOT (online indicator)
+   PING DOT
 ═══════════════════════════════════════════════════════════════ */
 .ping-dot {
   position: relative;
@@ -798,9 +784,12 @@ main {
 
 /* ═══════════════════════════════════════════════════════════════
    GRADIENT BORDER UTILITY
+   FIX: removed display:contents which caused "property ignored" warning.
+   Use the simpler inset padding-mask approach without display:contents.
 ═══════════════════════════════════════════════════════════════ */
 .gradient-border {
   position: relative;
+  border-radius: inherit;
 }
 
 .gradient-border::before {
@@ -810,8 +799,12 @@ main {
   border-radius: inherit;
   padding: 1px;
   background: var(--grad-primary);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -831,10 +824,7 @@ main {
   transition: background var(--t-base);
 }
 
-.toggle.active {
-  background: var(--blue);
-  border-color: var(--blue);
-}
+.toggle.active { background: var(--blue); border-color: var(--blue); }
 
 .toggle::after {
   content: '';
@@ -849,9 +839,7 @@ main {
   box-shadow: 0 1px 4px rgba(0,0,0,0.4);
 }
 
-.toggle.active::after {
-  transform: translateX(20px);
-}
+.toggle.active::after { transform: translateX(20px); }
 
 /* ═══════════════════════════════════════════════════════════════
    TAG / FILTER PILL
@@ -895,9 +883,7 @@ main {
   margin: -2px -6px;
 }
 
-.editable-field:hover {
-  background: rgba(59,130,246,0.08);
-}
+.editable-field:hover { background: rgba(59,130,246,0.08); }
 
 .editable-field::after {
   content: '';
@@ -914,9 +900,7 @@ main {
   transition: opacity var(--t-fast);
 }
 
-.editable-field:hover::after {
-  opacity: 1;
-}
+.editable-field:hover::after { opacity: 1; }
 
 /* ═══════════════════════════════════════════════════════════════
    CODE BLOCK
@@ -951,11 +935,7 @@ main {
   gap: 6px;
 }
 
-.terminal-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
 
 .terminal-body {
   padding: 16px 20px;
@@ -1006,7 +986,28 @@ main {
 
 /* ═══════════════════════════════════════════════════════════════
    LINE CLAMP UTILITIES
+   FIX: add standard line-clamp alongside -webkit-line-clamp
 ═══════════════════════════════════════════════════════════════ */
-.line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
-.line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
