@@ -16,6 +16,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/projects/page.js"
     ],
+    "/contact/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/contact/page.js"
+    ],
     "/github-activities/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -45,11 +50,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/about/page.js"
-    ],
-    "/contact/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/contact/page.js"
     ]
   }
 }
