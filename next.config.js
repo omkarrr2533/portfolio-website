@@ -5,7 +5,7 @@ const nextConfig = {
       'avatars.githubusercontent.com',
       'raw.githubusercontent.com',
       'github.com',
-      'opengraph.githubassets.com'
+      'opengraph.githubassets.com',
     ],
     remotePatterns: [
       {
@@ -15,13 +15,13 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'github.com',
-      }
+      },
     ],
   },
- 
   reactStrictMode: true,
- 
-  swcMinify: true,
+  // swcMinify removed — it is the default and the option was removed in Next.js 14.x
+  // Explicitly suppress the "x-powered-by" header in production
+  poweredByHeader: false,
 }
 
 module.exports = nextConfig
