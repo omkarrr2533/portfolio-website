@@ -257,6 +257,7 @@ button { cursor: pointer; border: none; background: none; }
   background: rgba(12,21,40,0.8);
   color: var(--text-secondary);
   border: 1px solid var(--border-soft);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 
@@ -413,6 +414,7 @@ button { cursor: pointer; border: none; background: none; }
   font-family: 'DM Sans', sans-serif;
   outline: none;
   transition: border-color var(--t-base), box-shadow var(--t-base);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
 
@@ -662,6 +664,7 @@ select.input-dark {
   justify-content: center;
   padding: 16px;
   background: rgba(4,9,26,0.85);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 

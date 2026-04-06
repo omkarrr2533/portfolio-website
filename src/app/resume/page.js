@@ -5,118 +5,123 @@ import { Download, Briefcase, GraduationCap, Award, Code } from 'lucide-react'
 export default function ResumePage() {
   const experience = [
     {
-      title: 'Senior Full Stack Developer',
-      company: 'Tech Company Inc.',
-      location: 'San Francisco, CA',
-      period: '2022 - Present',
+      title: 'Backend Developer (Self-Directed)',
+      company: 'Personal Projects & Open Source',
+      location: 'Mumbai, India',
+      period: '2023 – Present',
       responsibilities: [
-        'Lead development of enterprise web applications serving 100K+ users',
-        'Architected microservices infrastructure reducing system latency by 40%',
-        'Mentored team of 5 junior developers',
-        'Implemented CI/CD pipelines improving deployment frequency by 300%'
-      ]
+        'Building production-grade REST APIs with Java and Spring Boot, applying clean architecture patterns',
+        'Implemented real-time city bus tracking system using WebSocket and Leaflet.js with live location updates',
+        'Developed hand-sign detection model using PyTorch and MediaPipe achieving high accuracy on ASL alphabet',
+        'Contributing merged PRs to open source organisations across 6+ repositories on GitHub',
+      ],
     },
     {
-      title: 'Full Stack Developer',
-      company: 'Startup XYZ',
-      location: 'New York, NY',
-      period: '2020 - 2022',
+      title: 'AI/ML Project Developer',
+      company: 'Academic & Personal Research',
+      location: 'Mumbai, India',
+      period: '2024 – Present',
       responsibilities: [
-        'Built and maintained 15+ client projects using React and Node.js',
-        'Developed RESTful APIs serving 50K+ daily requests',
-        'Integrated payment gateways (Stripe, PayPal) for e-commerce platforms',
-        'Optimized database queries reducing response time by 60%'
-      ]
+        'Trained custom CNNs with PyTorch for computer vision tasks including gesture recognition',
+        'Completed NVIDIA certification in Rapid Application Development with LLMs, building production-ready LLM pipelines',
+        'Applied Pandas, NumPy, and Matplotlib for end-to-end data analysis and visualisation projects',
+        'Explored NLP, Diffusion Models, and fine-tuning techniques as part of IBM AI Fundamentals certification',
+      ],
     },
-    {
-      title: 'Junior Developer',
-      company: 'Digital Agency',
-      location: 'Boston, MA',
-      period: '2019 - 2020',
-      responsibilities: [
-        'Developed responsive websites for 20+ clients',
-        'Collaborated with designers to implement pixel-perfect UI',
-        'Maintained and updated legacy codebases',
-        'Participated in agile development processes'
-      ]
-    }
   ]
 
   const education = [
     {
-      degree: 'Bachelor of Science in Computer Science',
-      school: 'University of Technology',
-      location: 'Boston, MA',
-      period: '2015 - 2019',
-      details: 'GPA: 3.8/4.0, Dean\'s List, Computer Science Society President'
-    }
+      degree: 'Bachelor of Technology — Computer Science & Engineering',
+      school: 'Your College Name',
+      location: 'Mumbai, Maharashtra',
+      period: '2023 – Present',
+      details: 'CGPA: 8.11 / 10  ·  Top 5% of College  ·  3rd Year',
+    },
   ]
 
   const skills = {
-    'Frontend': ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS', 'Redux'],
-    'Backend': ['Node.js', 'Express', 'Python', 'Django', 'REST APIs', 'GraphQL'],
-    'Database': ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Firebase'],
-    'DevOps': ['Docker', 'Kubernetes', 'AWS', 'CI/CD', 'Jenkins', 'Git'],
-    'Tools': ['VS Code', 'Postman', 'Figma', 'Jira', 'Slack']
+    'Backend & APIs': ['Java', 'Spring Boot', 'Node.js', 'REST API', 'WebSocket', 'Socket.io', 'Maven'],
+    'AI / ML & Data Science': ['Python', 'PyTorch', 'Pandas', 'NumPy', 'Matplotlib', 'NLP', 'LLMs', 'MediaPipe'],
+    'Databases': ['PostgreSQL', 'MySQL', 'Oracle', 'Redis'],
+    'Languages': ['Java', 'Python', 'C', 'JavaScript', 'Ruby', 'SQL'],
+    'Tools & DevOps': ['Git', 'GitHub', 'Linux', 'VS Code', 'Postman'],
+    'Concepts': ['DSA', 'OOP', 'System Design Basics', 'Agile', 'Clean Code'],
   }
 
+  const certifications = [
+    { name: 'Rapid Application Development with LLMs', issuer: 'NVIDIA', year: '2025' },
+    { name: 'Artificial Intelligence Fundamentals', issuer: 'IBM', year: '2025' },
+    { name: 'Ultimate Job Ready Data Science Course', issuer: 'Code with Harry', year: '2025' },
+    { name: 'AI/ML and Data Science', issuer: 'Apna College', year: '2024' },
+    { name: 'Advanced Java', issuer: 'Offline', year: '2023' },
+    { name: 'Data Structures & Algorithms', issuer: 'Offline', year: '2023' },
+  ]
+
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-24 pb-16"
+      style={{ background: 'linear-gradient(180deg,#060D1F 0%,#0B1325 100%)' }}>
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Header */}
+
+        {/* ── Header ── */}
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Resume
+          <span className="section-badge mb-4 block w-fit mx-auto">// resume</span>
+          <h1 className="section-heading mb-3" style={{ fontSize: 'clamp(36px,5vw,56px)' }}>
+            My <span className="gradient-text">Resume</span>
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg mb-6">
-            Professional experience, education, and skills
+          <p className="text-[#8EA4C8] text-base mb-8 max-w-xl mx-auto">
+            Backend Developer · AI/ML Enthusiast · Open Source Contributor
           </p>
           <a
             href="/resume.pdf"
             download
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+            className="btn btn-primary btn-lg inline-flex"
           >
-            <Download className="w-5 h-5" />
+            <Download size={18} />
             Download PDF
           </a>
         </div>
 
-        {/* Professional Summary */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg mb-8 animate-slide-up">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        {/* ── Professional Summary ── */}
+        <div className="glass-card p-8 mb-8 animate-slide-up">
+          <h2 className="text-xl font-bold text-[#E8F0FE] mb-4 flex items-center gap-2"
+            style={{ fontFamily: 'Syne, sans-serif' }}>
             Professional Summary
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Passionate Full Stack Developer with 5+ years of experience building scalable web applications. 
-            Specialized in React, Node.js, and cloud technologies. Proven track record of delivering high-quality 
-            solutions that improve user experience and business outcomes. Strong problem-solving skills and ability 
-            to work effectively in fast-paced, collaborative environments.
+          <p className="text-[#8EA4C8] leading-relaxed text-sm">
+            Passionate Computer Science & Engineering student ranked in the{' '}
+            <span className="text-[#34D399] font-semibold">top 5% of college with 8.11 CGPA</span>, focused on
+            building scalable backend systems and applying AI/ML to solve real-world problems. Experienced with
+            Java/Spring Boot for production-grade REST APIs, PyTorch for deep learning, and active open source
+            contributions across 6+ organisations. Holds certifications from NVIDIA and IBM. Seeking an
+            internship or collaborative project where I can contribute clean, maintainable code and grow alongside
+            experienced engineers.
           </p>
         </div>
 
-        {/* Work Experience */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg mb-8 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <Briefcase className="w-6 h-6 text-blue-600" />
-            Work Experience
+        {/* ── Work Experience ── */}
+        <div className="glass-card p-8 mb-8 animate-slide-up" style={{ animationDelay: '0.1s', animationFillMode: 'both' }}>
+          <h2 className="text-xl font-bold text-[#E8F0FE] mb-6 flex items-center gap-2"
+            style={{ fontFamily: 'Syne, sans-serif' }}>
+            <Briefcase size={20} className="text-[#60A5FA]" />
+            Experience
           </h2>
           <div className="space-y-8">
             {experience.map((job, index) => (
-              <div key={index} className="border-l-4 border-blue-600 pl-6">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                  {job.title}
-                </h3>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
-                  <p className="text-blue-600 font-semibold">
-                    {job.company} • {job.location}
+              <div key={index} className="border-l-2 border-blue-600 pl-6">
+                <h3 className="text-base font-bold text-[#E8F0FE] mb-1">{job.title}</h3>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
+                  <p className="text-[#60A5FA] text-sm font-semibold">
+                    {job.company} · {job.location}
                   </p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {job.period}
-                  </p>
+                  <p className="text-[#4A6080] text-xs font-mono">{job.period}</p>
                 </div>
-                <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
-                  {job.responsibilities.map((resp, i) => (
-                    <li key={i}>{resp}</li>
+                <ul className="space-y-1.5">
+                  {job.responsibilities.map((r, i) => (
+                    <li key={i} className="flex items-start gap-2 text-[#8EA4C8] text-sm">
+                      <span className="text-[#3B82F6] mt-1 text-xs shrink-0">▸</span>
+                      {r}
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -124,54 +129,41 @@ export default function ResumePage() {
           </div>
         </div>
 
-        {/* Education */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg mb-8 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <GraduationCap className="w-6 h-6 text-blue-600" />
+        {/* ── Education ── */}
+        <div className="glass-card p-8 mb-8 animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'both' }}>
+          <h2 className="text-xl font-bold text-[#E8F0FE] mb-6 flex items-center gap-2"
+            style={{ fontFamily: 'Syne, sans-serif' }}>
+            <GraduationCap size={20} className="text-[#60A5FA]" />
             Education
           </h2>
-          <div className="space-y-6">
-            {education.map((edu, index) => (
-              <div key={index} className="border-l-4 border-blue-600 pl-6">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                  {edu.degree}
-                </h3>
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                  <p className="text-blue-600 font-semibold">
-                    {edu.school} • {edu.location}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {edu.period}
-                  </p>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {edu.details}
+          {education.map((edu, index) => (
+            <div key={index} className="border-l-2 border-blue-600 pl-6">
+              <h3 className="text-base font-bold text-[#E8F0FE] mb-1">{edu.degree}</h3>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                <p className="text-[#60A5FA] text-sm font-semibold">
+                  {edu.school} · {edu.location}
                 </p>
+                <p className="text-[#4A6080] text-xs font-mono">{edu.period}</p>
               </div>
-            ))}
-          </div>
+              <p className="text-[#8EA4C8] text-sm">{edu.details}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Skills */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg animate-slide-up" style={{ animationDelay: '0.3s' }}>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <Code className="w-6 h-6 text-blue-600" />
+        {/* ── Skills ── */}
+        <div className="glass-card p-8 mb-8 animate-slide-up" style={{ animationDelay: '0.3s', animationFillMode: 'both' }}>
+          <h2 className="text-xl font-bold text-[#E8F0FE] mb-6 flex items-center gap-2"
+            style={{ fontFamily: 'Syne, sans-serif' }}>
+            <Code size={20} className="text-[#60A5FA]" />
             Technical Skills
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-5">
             {Object.entries(skills).map(([category, skillList]) => (
               <div key={category}>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                  {category}
-                </h3>
+                <h3 className="text-sm font-semibold text-[#E8F0FE] mb-2 font-mono">{category}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {skillList.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-medium"
-                    >
-                      {skill}
-                    </span>
+                  {skillList.map(skill => (
+                    <span key={skill} className="tech-badge">{skill}</span>
                   ))}
                 </div>
               </div>
@@ -179,19 +171,43 @@ export default function ResumePage() {
           </div>
         </div>
 
-        {/* Certifications Quick View */}
-        <div className="mt-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-white text-center animate-fade-in">
-          <Award className="w-12 h-12 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold mb-2">6+ Professional Certifications</h3>
-          <p className="text-white/90 mb-4">
-            Including AWS, Google Cloud, and Kubernetes certifications
+        {/* ── Certifications ── */}
+        <div className="glass-card p-8 mb-8 animate-slide-up" style={{ animationDelay: '0.4s', animationFillMode: 'both' }}>
+          <h2 className="text-xl font-bold text-[#E8F0FE] mb-6 flex items-center gap-2"
+            style={{ fontFamily: 'Syne, sans-serif' }}>
+            <Award size={20} className="text-[#F59E0B]" />
+            Certifications
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {certifications.map((cert, i) => (
+              <div key={i} className="flex items-start gap-3 p-3 rounded-xl"
+                style={{ background: 'rgba(15,26,46,0.8)', border: '1px solid rgba(99,120,162,0.12)' }}>
+                <Award size={15} className="text-[#F59E0B] shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-[#E8F0FE] leading-snug">{cert.name}</p>
+                  <p className="text-xs text-[#4A6080] font-mono mt-0.5">{cert.issuer} · {cert.year}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── CTA ── */}
+        <div className="glass-card p-8 text-center animate-fade-in"
+          style={{ background: 'linear-gradient(135deg,rgba(59,130,246,0.08),rgba(99,102,241,0.08))', borderColor: 'rgba(59,130,246,0.18)', animationDelay: '0.5s', animationFillMode: 'both' }}>
+          <Award size={32} className="text-[#F59E0B] mx-auto mb-3" />
+          <h3 className="text-lg font-bold text-[#E8F0FE] mb-2">Want to know more?</h3>
+          <p className="text-[#8EA4C8] text-sm mb-5">
+            View all my certifications or get in touch directly.
           </p>
-          <a
-            href="/certifications"
-            className="inline-block px-6 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-          >
-            View All Certifications
-          </a>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <a href="/certifications" className="btn btn-primary btn-sm">
+              View Certifications
+            </a>
+            <a href="/contact" className="btn btn-secondary btn-sm">
+              Contact Me
+            </a>
+          </div>
         </div>
       </div>
     </div>

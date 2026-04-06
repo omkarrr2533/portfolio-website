@@ -1,41 +1,53 @@
 import { NextResponse } from 'next/server'
 
-// In-memory rate limiting (in production, use Redis or similar)
+// NOTE: In-memory rate limiting resets on every cold start in serverless environments
+// (Netlify Functions, Vercel, etc.). For production, replace with Redis or Upstash.
+// For a portfolio contact form this is acceptable — each serverless instance
+// independently limits to 10 submissions per IP per hour while it stays warm.
 const rateLimitMap = new Map()
 
 function rateLimit(ip) {
   const now = Date.now()
   const windowMs = 60 * 60 * 1000 // 1 hour
-  const maxRequests = 10
+  const maxRequests = 5 // stricter: 5 per hour per IP
 
   if (!rateLimitMap.has(ip)) {
     rateLimitMap.set(ip, [])
   }
 
-  const requests = rateLimitMap.get(ip)
-  const recentRequests = requests.filter(time => now - time < windowMs)
+  const requests = rateLimitMap.get(ip).filter(time => now - time < windowMs)
 
-  if (recentRequests.length >= maxRequests) {
+  if (requests.length >= maxRequests) {
     return false
   }
 
-  recentRequests.push(now)
-  rateLimitMap.set(ip, recentRequests)
+  requests.push(now)
+  rateLimitMap.set(ip, requests)
   return true
+}
+
+// Basic honeypot + content validation
+function validateInput({ name, email, subject, message }) {
+  if (!name?.trim() || !email?.trim() || !subject?.trim() || !message?.trim()) {
+    return 'All fields are required'
+  }
+  if (name.length > 100) return 'Name is too long'
+  if (subject.length > 200) return 'Subject is too long'
+  if (message.length > 5000) return 'Message is too long'
+  if (message.length < 10) return 'Message is too short'
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) return 'Invalid email address'
+  return null
 }
 
 export async function POST(request) {
   try {
-    // Get IP for rate limiting
-    const ip = request.headers.get('x-forwarded-for') || 'unknown'
+    const forwarded = request.headers.get('x-forwarded-for')
+    const ip = forwarded ? forwarded.split(',')[0].trim() : 'unknown'
 
-    // Rate limiting
     if (!rateLimit(ip)) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Too many requests. Please try again later.',
-        },
+        { success: false, error: 'Too many requests. Please try again later.' },
         { status: 429 }
       )
     }
@@ -43,42 +55,37 @@ export async function POST(request) {
     const body = await request.json()
     const { name, email, subject, message } = body
 
-    // Validation
-    if (!name || !email || !subject || !message) {
+    const validationError = validateInput({ name, email, subject, message })
+    if (validationError) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'All fields are required',
-        },
+        { success: false, error: validationError },
         { status: 400 }
       )
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid email address',
-        },
-        { status: 400 }
-      )
-    }
+    // ── Send email here ──────────────────────────────────────────
+    // Option 1 — Resend (recommended, free tier available):
+    //   const { Resend } = await import('resend')
+    //   const resend = new Resend(process.env.RESEND_API_KEY)
+    //   await resend.emails.send({
+    //     from: 'Portfolio <onboarding@resend.dev>',
+    //     to: process.env.CONTACT_EMAIL,
+    //     subject: `Portfolio Contact: ${subject}`,
+    //     text: `From: ${name} <${email}>\n\n${message}`,
+    //   })
+    //
+    // Option 2 — Nodemailer with Gmail:
+    //   See https://nodemailer.com/usage/using-gmail/
+    // ────────────────────────────────────────────────────────────
 
-    // TODO: Integrate with email service (SendGrid, Resend, etc.)
-    // For now, just log it
-    console.log('Contact form submission:', { name, email, subject, message })
-
-    // In production, you would send an email here:
-    /*
-    await sendEmail({
-      to: process.env.CONTACT_EMAIL,
-      from: email,
-      subject: `Portfolio Contact: ${subject}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
+    console.log('Contact form submission:', {
+      name,
+      email,
+      subject,
+      message: message.substring(0, 100) + '...',
+      ip,
+      timestamp: new Date().toISOString(),
     })
-    */
 
     return NextResponse.json({
       success: true,
@@ -87,11 +94,7 @@ export async function POST(request) {
   } catch (error) {
     console.error('Contact form error:', error)
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to send message',
-        message: error.message,
-      },
+      { success: false, error: 'Failed to send message. Please try again.' },
       { status: 500 }
     )
   }
