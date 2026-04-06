@@ -1,226 +1,215 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Github, Linkedin, ExternalLink, CheckCircle, AlertCircle, Loader, ArrowRight, MessageSquare } from 'lucide-react'
+
+const SOCIAL = [
+  { icon: Github,       label: 'GitHub',   sub: '@omkarrr2533',            url: 'https://github.com/omkarrr2533',                   color: '#EDF2FF' },
+  { icon: Linkedin,     label: 'LinkedIn', sub: 'Om Kapale',               url: 'https://www.linkedin.com/in/om-kapale-b861a228a',  color: '#60A5FA' },
+  { icon: Mail,         label: 'Email',    sub: 'omshripadkapale@gmail.com',url: 'mailto:omshripadkapale@gmail.com',                 color: '#34D399' },
+  { icon: ExternalLink, label: 'LeetCode', sub: '@omi_',                   url: 'https://leetcode.com/u/omi_/',                    color: '#FCD34D' },
+]
+
+const CONTACT_ITEMS = [
+  { icon: Mail,    label: 'Email',    value: 'omshripadkapale@gmail.com', link: 'mailto:omshripadkapale@gmail.com' },
+  { icon: MapPin,  label: 'Location', value: 'Mumbai, Maharashtra, India', link: null },
+  { icon: MessageSquare, label: 'Response', value: 'Usually within 24 hours', link: null },
+]
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  })
-  const [status, setStatus] = useState('')
+  const [form,   setForm]   = useState({ name: '', email: '', subject: '', message: '' })
+  const [status, setStatus] = useState('') // '' | 'sending' | 'success' | 'error'
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+  const set = (k, v) => setForm(p => ({ ...p, [k]: v }))
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setStatus('sending')
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setStatus('success')
-      setFormData({ name: '', email: '', subject: '', message: '' })
-      setTimeout(() => setStatus(''), 3000)
-    }, 2000)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (res.ok) {
+        setStatus('success')
+        setForm({ name: '', email: '', subject: '', message: '' })
+        setTimeout(() => setStatus(''), 5000)
+      } else {
+        setStatus('error')
+        setTimeout(() => setStatus(''), 4000)
+      }
+    } catch {
+      setStatus('error')
+      setTimeout(() => setStatus(''), 4000)
+    }
   }
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      title: 'Email',
-      value: 'your.email@example.com',
-      link: 'mailto:your.email@example.com'
-    },
-    {
-      icon: Phone,
-      title: 'Phone',
-      value: '+1 (555) 123-4567',
-      link: 'tel:+15551234567'
-    },
-    {
-      icon: MapPin,
-      title: 'Location',
-      value: 'Your City, Country',
-      link: '#'
-    }
-  ]
-
-  const socialLinks = [
-    { icon: Github, name: 'GitHub', url: 'https://github.com/yourusername', color: 'hover:bg-gray-800' },
-    { icon: Linkedin, name: 'LinkedIn', url: 'https://linkedin.com/in/yourusername', color: 'hover:bg-blue-600' },
-    { icon: Twitter, name: 'Twitter', url: 'https://twitter.com/yourusername', color: 'hover:bg-sky-500' }
-  ]
-
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Get In Touch
+    <div className="min-h-screen pt-20 pb-24"
+      style={{ background: 'linear-gradient(180deg, #04091A 0%, #080F22 100%)' }}>
+      <div className="container mx-auto px-4 sm:px-6">
+
+        {/* ── Header ── */}
+        <div className="text-center mb-16 pt-8 animate-fade-in">
+          <span className="section-badge mb-4 mx-auto block w-fit">// get in touch</span>
+          <h1 className="section-heading mb-4" style={{ fontSize: 'clamp(36px,5vw,56px)' }}>
+            Let's <span className="gradient-text">Connect</span>
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            Have a question or want to work together? I'd love to hear from you!
+          <p className="text-[#4A6090] text-base max-w-xl mx-auto leading-relaxed">
+            Have a project idea, collaboration in mind, or just want to chat about tech?
+            My inbox is always open.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
-          {/* Contact Info */}
-          <div className="lg:col-span-1 space-y-6 animate-slide-up">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Contact Information
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-5xl mx-auto">
+
+          {/* ── Left sidebar ── */}
+          <div className="lg:col-span-2 space-y-4 animate-slide-up">
+
+            {/* Contact info */}
+            <div className="glass-card p-6">
+              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>
+                Contact Info
               </h2>
-              <div className="space-y-6">
-                {contactInfo.map((info) => (
-                  <a
-                    key={info.title}
-                    href={info.link}
-                    className="flex items-start gap-4 group hover:bg-gray-50 dark:hover:bg-gray-700 p-3 rounded-lg transition-colors"
-                  >
-                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-600 transition-colors">
-                      <info.icon className="w-5 h-5 text-blue-600 group-hover:text-white" />
+              <div className="space-y-4">
+                {CONTACT_ITEMS.map(item => (
+                  <div key={item.label} className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                      style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)' }}>
+                      <item.icon size={14} className="text-[#60A5FA]" />
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 dark:text-white mb-1">
-                        {info.title}
-                      </p>
-                      <p className="text-gray-600 dark:text-gray-400 text-sm">
-                        {info.value}
-                      </p>
+                      <p className="text-[10px] font-mono text-[#4A6090] uppercase tracking-wider mb-0.5">{item.label}</p>
+                      {item.link ? (
+                        <a href={item.link} className="text-sm text-[#EDF2FF] hover:text-[#60A5FA] transition-colors">
+                          {item.value}
+                        </a>
+                      ) : (
+                        <p className="text-sm text-[#8EA8D8]">{item.value}</p>
+                      )}
                     </div>
-                  </a>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                Connect With Me
-              </h3>
-              <div className="flex gap-4">
-                {socialLinks.map((social) => (
+            {/* Social links */}
+            <div className="glass-card p-6">
+              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>
+                Find Me Online
+              </h2>
+              <div className="space-y-2">
+                {SOCIAL.map(s => (
                   <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
+                    key={s.label}
+                    href={s.url}
+                    target={s.url.startsWith('mailto') ? '_self' : '_blank'}
                     rel="noopener noreferrer"
-                    className={`p-4 bg-gray-100 dark:bg-gray-700 rounded-lg hover:text-white transition-all transform hover:scale-110 ${social.color}`}
-                    aria-label={social.name}
+                    className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group"
+                    style={{ border: '1px solid transparent' }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = 'rgba(12,21,40,0.8)'
+                      e.currentTarget.style.borderColor = 'rgba(99,125,175,0.15)'
+                      e.currentTarget.style.transform = 'translateX(4px)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = 'transparent'
+                      e.currentTarget.style.borderColor = 'transparent'
+                      e.currentTarget.style.transform = 'translateX(0)'
+                    }}
                   >
-                    <social.icon className="w-6 h-6" />
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{ background: 'rgba(12,21,40,0.8)', border: '1px solid rgba(99,125,175,0.15)' }}>
+                      <s.icon size={14} style={{ color: s.color }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-[#EDF2FF]">{s.label}</p>
+                      <p className="text-[11px] text-[#4A6090] truncate font-mono">{s.sub}</p>
+                    </div>
+                    <ArrowRight size={12} className="text-[#4A6090] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* Quick Info */}
-            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-8 text-white shadow-lg">
-              <h3 className="text-xl font-bold mb-4">Quick Response</h3>
-              <p className="text-white/90 text-sm">
-                I typically respond to emails within 24 hours. For urgent matters, feel free to reach out via phone or LinkedIn.
+            {/* Quick tip */}
+            <div className="glass-card p-5"
+              style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.06), rgba(99,102,241,0.06))', borderColor: 'rgba(59,130,246,0.15)' }}>
+              <p className="text-xs text-[#4A6090] leading-relaxed">
+                <span className="text-[#60A5FA] font-semibold">Quick note:</span> I'm currently open to internships,
+                freelance work, and collaborative projects in backend development and AI/ML.
               </p>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="lg:col-span-2 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Send Me a Message
+          {/* ── Contact form ── */}
+          <div className="lg:col-span-3 animate-slide-up delay-100" style={{ animationFillMode: 'both' }}>
+            <div className="glass-card p-8">
+              <h2 className="text-lg font-bold text-[#EDF2FF] mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
+                Send a Message
               </h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <p className="text-sm text-[#4A6090] mb-7">Fill out the form and I'll get back to you shortly.</p>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                      placeholder="John Doe"
-                    />
+                    <label className="block text-[10px] font-mono text-[#4A6090] uppercase tracking-wider mb-2">Your Name *</label>
+                    <input type="text" value={form.name} onChange={e => set('name', e.target.value)} required
+                      placeholder="Om Kapale" className="input-dark" />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Your Email *
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                      placeholder="john@example.com"
-                    />
+                    <label className="block text-[10px] font-mono text-[#4A6090] uppercase tracking-wider mb-2">Email Address *</label>
+                    <input type="email" value={form.email} onChange={e => set('email', e.target.value)} required
+                      placeholder="om@example.com" className="input-dark" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Subject *
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                    placeholder="How can I help you?"
-                  />
+                  <label className="block text-[10px] font-mono text-[#4A6090] uppercase tracking-wider mb-2">Subject *</label>
+                  <input type="text" value={form.subject} onChange={e => set('subject', e.target.value)} required
+                    placeholder="Project collaboration, internship inquiry…" className="input-dark" />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows="6"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
-                    placeholder="Tell me about your project..."
-                  ></textarea>
+                  <label className="block text-[10px] font-mono text-[#4A6090] uppercase tracking-wider mb-2">Message *</label>
+                  <textarea value={form.message} onChange={e => set('message', e.target.value)} required
+                    rows={6} placeholder="Tell me about your project or idea…" className="input-dark" />
                 </div>
 
+                {/* Submit */}
                 <button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg"
+                  className="btn btn-primary btn-xl w-full justify-center disabled:opacity-50 disabled:pointer-events-none"
                 >
                   {status === 'sending' ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></div>
-                      Sending...
-                    </>
+                    <><Loader size={16} className="animate-spin" /> Sending…</>
                   ) : (
-                    <>
-                      <Send className="w-5 h-5" />
-                      Send Message
-                    </>
+                    <><Send size={16} /> Send Message</>
                   )}
                 </button>
 
+                {/* Feedback */}
                 {status === 'success' && (
-                  <div className="bg-green-100 dark:bg-green-900/30 border border-green-500 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg animate-fade-in">
-                    ✅ Message sent successfully! I'll get back to you soon.
+                  <div className="flex items-start gap-3 p-4 rounded-xl animate-scale-in"
+                    style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
+                    <CheckCircle size={18} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-emerald-300 mb-0.5">Message sent!</p>
+                      <p className="text-xs text-[#4A6090]">I'll get back to you within 24 hours.</p>
+                    </div>
+                  </div>
+                )}
+
+                {status === 'error' && (
+                  <div className="flex items-start gap-3 p-4 rounded-xl animate-scale-in"
+                    style={{ background: 'rgba(244,63,94,0.08)', border: '1px solid rgba(244,63,94,0.2)' }}>
+                    <AlertCircle size={18} className="text-rose-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-rose-300 mb-0.5">Failed to send</p>
+                      <p className="text-xs text-[#4A6090]">Please try again or reach out via email directly.</p>
+                    </div>
                   </div>
                 )}
               </form>
