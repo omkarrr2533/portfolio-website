@@ -582,7 +582,7 @@ export default function HomePage() {
                 {ghOk && repos.length > 0 ? '// github · live sync' : '// featured projects'}
               </span>
               <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(28px,4vw,42px)', color: '#1E293B', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                {ghOk && repos.length > 0 ? <><span className="gradient-text">Top</span> Repositories</> : <>Featured <span className="gradient-text">Projects</>}
+                {ghOk && repos.length > 0 ? <><span className="gradient-text">Top</span> Repositories</> : <>Featured <span className="gradient-text">Projects</span></>}
               </h2>
             </div>
             <Link href="/projects" className="btn btn-secondary btn-sm">
