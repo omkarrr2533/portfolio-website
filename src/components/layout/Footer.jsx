@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { Github, Linkedin, Mail, ExternalLink, Code2, ArrowUpRight, MapPin, Zap } from 'lucide-react'
 
@@ -127,23 +129,11 @@ export default function Footer() {
                   target={s.url.startsWith('mailto') ? '_self' : '_blank'}
                   rel="noopener noreferrer"
                   title={s.label}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 group"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
                   style={{
                     background: 'rgba(12,21,40,0.8)',
                     border: '1px solid rgba(99,125,175,0.15)',
                     color: '#4A6090',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.color = s.color
-                    e.currentTarget.style.borderColor = 'rgba(99,125,175,0.3)'
-                    e.currentTarget.style.background = 'rgba(20,35,65,0.9)'
-                    e.currentTarget.style.transform = 'translateY(-2px)'
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.color = '#4A6090'
-                    e.currentTarget.style.borderColor = 'rgba(99,125,175,0.15)'
-                    e.currentTarget.style.background = 'rgba(12,21,40,0.8)'
-                    e.currentTarget.style.transform = 'translateY(0)'
                   }}
                 >
                   <s.icon size={14} />
@@ -166,15 +156,12 @@ export default function Footer() {
                   <li key={link.path}>
                     <Link
                       href={link.path}
-                      className="text-sm transition-colors duration-150 flex items-center gap-1.5 group"
-                      style={{ color: '#4A6090', fontFamily: 'DM Sans, sans-serif' }}
-                      onMouseEnter={e => { e.currentTarget.style.color = '#8EA8D8' }}
-                      onMouseLeave={e => { e.currentTarget.style.color = '#4A6090' }}
+                      className="text-sm text-[#4A6090] hover:text-[#8EA8D8] transition-colors duration-150 flex items-center gap-1.5 group"
+                      style={{ fontFamily: 'DM Sans, sans-serif' }}
                     >
                       <ArrowUpRight
                         size={11}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ color: '#3B82F6' }}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-500"
                       />
                       {link.name}
                     </Link>
@@ -190,11 +177,11 @@ export default function Footer() {
           className="flex flex-col sm:flex-row items-center justify-between gap-3 py-5"
           style={{ borderTop: '1px solid rgba(99,125,175,0.08)' }}
         >
-          <div className="flex items-center gap-1.5 text-xs" style={{ color: '#2A3A55', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div className="flex items-center gap-1.5 text-xs text-[#2A3A55]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
             <Code2 size={11} />
             <span>Built with Next.js · GitHub API · Framer Motion</span>
           </div>
-          <p className="text-xs" style={{ color: '#2A3A55', fontFamily: 'JetBrains Mono, monospace' }}>
+          <p className="text-xs text-[#2A3A55]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
             © {new Date().getFullYear()} Om Shripad Kapale — All rights reserved
           </p>
         </div>
