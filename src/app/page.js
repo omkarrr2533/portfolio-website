@@ -6,11 +6,12 @@ import {
   Github, Linkedin, Mail, ExternalLink, Download,
   ArrowRight, Star, GitFork, Camera, Code2, Terminal,
   Zap, Award, TrendingUp, Lock, Globe, Cpu, BusFront,
-  ChevronDown, MapPin, Edit3, Check, X,
+  ChevronDown, MapPin, Plus, Trash2, X, Check, Edit3,
 } from 'lucide-react'
+import { AdminOnly, useAdmin } from '@/lib/admin'
 
-/* ── Typewriter ─────────────────────────────────────────────── */
-function useTypewriter(words, speed = 75, pause = 2200) {
+/* ── Typewriter ─────────────────────────────────── */
+function useTypewriter(words, speed = 70, pause = 2000) {
   const [display, setDisplay] = useState('')
   const [wi, setWi] = useState(0)
   const [ci, setCi] = useState(0)
@@ -26,12 +27,11 @@ function useTypewriter(words, speed = 75, pause = 2200) {
     setDisplay(cur.substring(0, ci))
     return () => clearTimeout(t)
   }, [ci, del, wi, words, speed, pause])
-
   return display
 }
 
-/* ── Counter animation ──────────────────────────────────────── */
-function useCounter(target, duration = 1800, delay = 0, started = false) {
+/* ── Counter ────────────────────────────────────── */
+function useCounter(target, duration = 1600, delay = 0, started = false) {
   const [count, setCount] = useState(0)
   useEffect(() => {
     if (!started) return
@@ -39,8 +39,7 @@ function useCounter(target, duration = 1800, delay = 0, started = false) {
       const t0 = Date.now()
       const step = () => {
         const p = Math.min((Date.now() - t0) / duration, 1)
-        const eased = 1 - Math.pow(1 - p, 3)
-        setCount(Math.round(eased * target))
+        setCount(Math.round((1 - Math.pow(1 - p, 3)) * target))
         if (p < 1) requestAnimationFrame(step)
       }
       requestAnimationFrame(step)
@@ -50,145 +49,18 @@ function useCounter(target, duration = 1800, delay = 0, started = false) {
   return count
 }
 
-/* ── Language colours ───────────────────────────────────────── */
 const LANG_CLR = {
-  JavaScript: '#F1E05A', TypeScript: '#3178C6', Python: '#3572A5',
-  Java: '#B07219', Go: '#00ADD8', CSS: '#563D7C', HTML: '#E34C26',
-  'C++': '#F34B7D', Rust: '#DEA584',
+  JavaScript:'#F59E0B', TypeScript:'#3B82F6', Python:'#8B5CF6',
+  Java:'#EF4444', Go:'#06B6D4', CSS:'#EC4899', HTML:'#F97316',
+  'C++':'#14B8A6', Rust:'#F97316',
 }
 
-/* ── Editable inline text ───────────────────────────────────── */
-function Editable({ value, onChange, tag: Tag = 'span', className = '', multiline = false }) {
-  const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState(value)
-  const inputRef = useRef(null)
-
-  useEffect(() => { if (editing) inputRef.current?.focus() }, [editing])
-
-  const save = () => { onChange(draft); setEditing(false) }
-  const cancel = () => { setDraft(value); setEditing(false) }
-
-  if (!editing) {
-    return (
-      <Tag
-        onClick={() => { setDraft(value); setEditing(true) }}
-        className={`cursor-pointer group relative inline-block rounded px-0.5 -mx-0.5 transition-colors hover:bg-blue-500/10 hover:outline hover:outline-1 hover:outline-blue-500/30 ${className}`}
-        title="Click to edit"
-      >
-        {value}
-        <Edit3 size={10} className="inline ml-1 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-      </Tag>
-    )
-  }
-
-  return (
-    <span className="inline-flex flex-col gap-1">
-      {multiline ? (
-        <textarea
-          ref={inputRef}
-          value={draft}
-          onChange={e => setDraft(e.target.value)}
-          rows={3}
-          className={`input-dark text-sm resize-none ${className}`}
-          onKeyDown={e => { if (e.key === 'Escape') cancel() }}
-        />
-      ) : (
-        <input
-          ref={inputRef}
-          value={draft}
-          onChange={e => setDraft(e.target.value)}
-          className={`input-dark text-sm ${className}`}
-          onKeyDown={e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') cancel() }}
-        />
-      )}
-      <span className="flex gap-1">
-        <button onClick={save}   className="btn btn-primary btn-sm py-1 px-2 text-xs"><Check size={11}/> Save</button>
-        <button onClick={cancel} className="btn btn-ghost  btn-sm py-1 px-2 text-xs"><X size={11}/></button>
-      </span>
-    </span>
-  )
-}
-
-/* ── Profile photo uploader ─────────────────────────────────── */
-function ProfilePhoto({ photo, onUpload }) {
-  const ref = useRef(null)
-  const [hov, setHov] = useState(false)
-
-  return (
-    <div
-      className="relative mx-auto lg:mx-0"
-      style={{ width: 260, height: 260 }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-    >
-      {/* Outer glow rings */}
-      <div className="absolute inset-0 rounded-2xl"
-        style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.3), rgba(99,102,241,0.2))', filter: 'blur(20px)', transform: 'scale(1.1)' }} />
-      <div className="absolute inset-0 rounded-2xl border-2"
-        style={{ borderColor: 'rgba(59,130,246,0.25)' }} />
-
-      <div className="absolute inset-[2px] rounded-[14px] overflow-hidden bg-[#0C1528] flex items-center justify-center">
-        {photo ? (
-          <img src={photo} alt="Profile" className="w-full h-full object-cover" />
-        ) : (
-          <div className="flex flex-col items-center gap-2">
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white"
-              style={{ background: 'linear-gradient(135deg, #3B82F6, #6366F1)', fontFamily: 'Syne, sans-serif' }}
-            >
-              OK
-            </div>
-            <span className="text-xs text-[#4A6090] font-mono">Click to upload</span>
-          </div>
-        )}
-
-        {/* Upload overlay */}
-        <div
-          onClick={() => ref.current?.click()}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300"
-          style={{
-            background: 'rgba(4,9,26,0.6)',
-            backdropFilter: 'blur(4px)',
-            opacity: hov ? 1 : 0,
-          }}
-        >
-          <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
-            <Camera size={18} className="text-blue-400" />
-          </div>
-          <span className="text-xs text-white font-mono font-medium">Upload Photo</span>
-        </div>
-      </div>
-
-      {/* Corner deco */}
-      <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-2 border-r-2 border-blue-500/40 rounded-br-lg" />
-      <div className="absolute -top-3 -left-3 w-8 h-8 border-t-2 border-l-2 border-violet-500/40 rounded-tl-lg" />
-
-      {/* Animated dot */}
-      <div className="absolute top-3 right-3 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-[#0C1528] animate-pulse-glow" />
-
-      <input
-        ref={ref}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={e => {
-          const f = e.target.files?.[0]
-          if (!f) return
-          const reader = new FileReader()
-          reader.onload = ev => onUpload(ev.target.result)
-          reader.readAsDataURL(f)
-        }}
-      />
-    </div>
-  )
-}
-
-/* ── Mini stat pill ─────────────────────────────────────────── */
+/* ── Stat pill ──────────────────────────────────── */
 function StatPill({ icon: Icon, value, label, accent, delay = 0, started }) {
   const n = parseInt(value)
   const isNum = !isNaN(n)
-  const cnt = useCounter(isNum ? n : 0, 1600, delay, started)
-  const display = isNum ? cnt + (value.includes('+') ? '+' : '') : value
+  const cnt = useCounter(isNum ? n : 0, 1400, delay, started)
+  const display = isNum ? cnt + (String(value).includes('+') ? '+' : '') : value
 
   return (
     <div
@@ -196,25 +68,34 @@ function StatPill({ icon: Icon, value, label, accent, delay = 0, started }) {
       style={{ animationDelay: `${delay}ms`, animationFillMode: 'both' }}
     >
       <div
-        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-        style={{ background: `${accent}14`, border: `1px solid ${accent}25` }}
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: 8,
+          background: `${accent}14`,
+          border: `1px solid ${accent}25`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+        }}
       >
         <Icon size={15} style={{ color: accent }} />
       </div>
       <div>
-        <div className="text-sm font-bold font-mono text-[#EDF2FF]">{isNum ? display : value}</div>
-        <div className="text-[10px] text-[#4A6090] leading-none mt-0.5">{label}</div>
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#1E293B', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.2 }}>
+          {isNum ? display : value}
+        </div>
+        <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{label}</div>
       </div>
     </div>
   )
 }
 
-/* ── Repo card ──────────────────────────────────────────────── */
+/* ── Repo card ──────────────────────────────────── */
 function RepoCard({ repo, index }) {
-  const langColor = LANG_CLR[repo.language] || '#8b949e'
-  const d = repo.pushedAt
-    ? Math.floor((Date.now() - new Date(repo.pushedAt)) / 86400000)
-    : null
+  const lc = LANG_CLR[repo.language] || '#94A3B8'
+  const d = repo.pushedAt ? Math.floor((Date.now() - new Date(repo.pushedAt)) / 86400000) : null
   const ago = d === null ? '' : d === 0 ? 'today' : d === 1 ? '1d ago' : d < 30 ? `${d}d ago` : `${Math.floor(d/30)}mo ago`
 
   return (
@@ -222,59 +103,59 @@ function RepoCard({ repo, index }) {
       href={repo.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="glass-card glass-card-interactive p-4 block card-shine animate-slide-up"
-      style={{ animationDelay: `${index * 60}ms`, animationFillMode: 'both' }}
+      className="card card-lift animate-slide-up"
+      style={{
+        display: 'block',
+        padding: '16px 18px',
+        animationDelay: `${index * 55}ms`,
+        animationFillMode: 'both',
+        textDecoration: 'none',
+      }}
     >
-      <div className="flex items-start justify-between mb-2">
-        <div className="flex items-center gap-1.5">
-          {repo.isPrivate ? <Lock size={12} className="text-[#4A6090]" /> : <Globe size={12} className="text-[#4A6090]" />}
-          <span className="font-mono text-sm font-semibold text-[#60A5FA] truncate max-w-[140px]">{repo.name}</span>
+      <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between', marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {repo.isPrivate ? <Lock size={12} color="#94A3B8" /> : <Globe size={12} color="#94A3B8" />}
+          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 600, color: '#4F46E5', maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {repo.name}
+          </span>
         </div>
-        <ArrowRight size={12} className="text-[#4A6090] flex-shrink-0 mt-0.5" />
+        <ArrowRight size={12} color="#CBD5E1" />
       </div>
-      <p className="text-xs text-[#4A6090] line-clamp-2 mb-3 min-h-[32px] leading-relaxed">
+      <p className="line-clamp-2" style={{ fontSize: 12, color: '#64748B', lineHeight: 1.6, marginBottom: 12, minHeight: 38 }}>
         {repo.description || 'No description provided'}
       </p>
-      <div className="flex items-center gap-3 text-[11px] text-[#4A6090]">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 11, color: '#94A3B8' }}>
         {repo.language && (
-          <span className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full" style={{ background: langColor }} />
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: lc, display: 'inline-block' }} />
             {repo.language}
           </span>
         )}
-        <span className="flex items-center gap-1"><Star size={10} />{repo.stars}</span>
-        <span className="flex items-center gap-1"><GitFork size={10} />{repo.forks}</span>
-        {ago && <span className="ml-auto">{ago}</span>}
+        <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Star size={10} />{repo.stars}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><GitFork size={10} />{repo.forks}</span>
+        {ago && <span style={{ marginLeft: 'auto' }}>{ago}</span>}
       </div>
     </a>
   )
 }
 
-/* ── Hardcoded featured projects ────────────────────────────── */
+/* ── Featured projects ──────────────────────────── */
 const FEATURED = [
   {
-    id: 'fp1',
-    tag: 'Computer Vision · AI',
-    name: 'Hand Sign Detection',
-    headline: 'Real-time gesture recognition via deep learning',
-    desc: 'Detects & classifies hand gestures from live webcam feed using MediaPipe for landmark detection and a custom CNN trained with PyTorch — supports full ASL alphabet.',
-    tech: ['Python', 'PyTorch', 'MediaPipe', 'OpenCV'],
-    github: 'https://github.com/omkarrr2533/Hand_Sign_Detection_Using_Python.git',
-    accent: '#3B82F6',
-    gradient: 'from-blue-600/20 to-indigo-600/20',
-    icon: Cpu,
+    id:'fp1', tag:'Computer Vision · AI', name:'Hand Sign Detection',
+    headline:'Real-time gesture recognition via deep learning',
+    desc:'Detects hand gestures from live webcam using MediaPipe + a custom PyTorch CNN. Supports full ASL alphabet.',
+    tech:['Python','PyTorch','MediaPipe','OpenCV'],
+    github:'https://github.com/omkarrr2533/Hand_Sign_Detection_Using_Python.git',
+    accent:'#4F46E5', icon: Cpu,
   },
   {
-    id: 'fp2',
-    tag: 'Full Stack · Real-time',
-    name: 'City Bus Tracking',
-    headline: 'Live bus location tracking for public transport',
-    desc: 'Real-time tracking with WebSocket location updates, Leaflet Map integration for route visualisation, and a Spring Boot REST backend managing API and data flow.',
-    tech: ['Java', 'Spring Boot', 'WebSocket', 'Leaflet.js'],
-    github: 'https://github.com/omkarrr2533/BUS-ETA.git',
-    accent: '#10B981',
-    gradient: 'from-emerald-600/20 to-teal-600/20',
-    icon: BusFront,
+    id:'fp2', tag:'Full Stack · Real-time', name:'City Bus Tracking',
+    headline:'Live bus location tracking for public transport',
+    desc:'Spring Boot REST backend + WebSocket location updates + Leaflet Map for route visualisation.',
+    tech:['Java','Spring Boot','WebSocket','Leaflet.js'],
+    github:'https://github.com/omkarrr2533/BUS-ETA.git',
+    accent:'#059669', icon: BusFront,
   },
 ]
 
@@ -282,67 +163,100 @@ function FeaturedCard({ project, index }) {
   const Icon = project.icon
   return (
     <div
-      className="glass-card glass-card-interactive overflow-hidden card-shine animate-slide-up"
-      style={{ animationDelay: `${index * 120}ms`, animationFillMode: 'both' }}
+      className="card card-lift animate-slide-up"
+      style={{
+        overflow: 'hidden',
+        animationDelay: `${index * 120}ms`,
+        animationFillMode: 'both',
+        borderTop: `3px solid ${project.accent}`,
+      }}
     >
-      <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${project.accent}, transparent)` }} />
-      <div className={`h-28 bg-gradient-to-br ${project.gradient} flex items-center justify-center relative overflow-hidden`}>
-        <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+      <div
+        style={{
+          height: 100,
+          background: `${project.accent}0C`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+        }}
+      >
         <div
-          className="w-14 h-14 rounded-2xl flex items-center justify-center"
-          style={{ background: `${project.accent}18`, border: `1px solid ${project.accent}30` }}
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: 14,
+            background: `${project.accent}18`,
+            border: `1px solid ${project.accent}30`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-          <Icon size={26} style={{ color: project.accent }} />
+          <Icon size={24} color={project.accent} />
         </div>
       </div>
-      <div className="p-5">
+      <div style={{ padding: '18px 20px' }}>
         <span
-          className="inline-block text-[10px] font-mono font-semibold mb-2 px-2 py-0.5 rounded"
-          style={{ background: `${project.accent}14`, color: project.accent, border: `1px solid ${project.accent}25` }}
+          style={{
+            display: 'inline-block',
+            padding: '3px 8px',
+            background: `${project.accent}12`,
+            color: project.accent,
+            border: `1px solid ${project.accent}25`,
+            borderRadius: 99,
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            marginBottom: 10,
+            fontFamily: 'JetBrains Mono, monospace',
+          }}
         >
           {project.tag}
         </span>
-        <h3 className="font-bold text-base text-[#EDF2FF] mb-1" style={{ fontFamily: 'Syne, sans-serif' }}>{project.name}</h3>
-        <p className="text-[13px] font-semibold mb-2" style={{ color: project.accent }}>{project.headline}</p>
-        <p className="text-xs text-[#4A6090] leading-relaxed mb-3">{project.desc}</p>
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {project.tech.map(t => <span key={t} className="tech-badge">{t}</span>)}
+        <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#1E293B', marginBottom: 4 }}>
+          {project.name}
+        </h3>
+        <p style={{ fontSize: 13, fontWeight: 600, color: project.accent, marginBottom: 8 }}>{project.headline}</p>
+        <p style={{ fontSize: 12.5, color: '#64748B', lineHeight: 1.65, marginBottom: 14 }}>{project.desc}</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
+          {project.tech.map(t => <span key={t} className="tech-pill" style={{ fontSize: 11 }}>{t}</span>)}
         </div>
         <a
           href={project.github}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 text-xs font-semibold text-[#4A6090] hover:text-[#EDF2FF] transition-colors group"
+          style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: '#64748B', transition: 'color 150ms ease' }}
         >
           <Github size={13} />
           View Source
-          <ArrowRight size={11} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+          <ArrowRight size={11} />
         </a>
       </div>
     </div>
   )
 }
 
-/* ═══════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════
    PAGE
-═══════════════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════ */
 export default function HomePage() {
-  const [photo,            setPhoto]            = useState(null)
-  const [info,             setInfo]             = useState({
+  const [photo,        setPhoto]     = useState(null)
+  const [info,         setInfo]      = useState({
     name: 'Om Shripad Kapale',
-    title: 'Backend Developer & AI/ML Enthusiast',
-    location: 'Mumbai, India · Open to Opportunities',
     bio: 'CSE 3rd year B.Tech student in the top 5% of college with 8.11 CGPA. I build scalable backend systems, explore AI/ML frontiers, and contribute to open source across 6+ organisations.',
     stack: 'Java · Spring Boot · Python · PyTorch · PostgreSQL · REST API',
   })
-  const [repos,            setRepos]            = useState([])
-  const [ghStats,          setGhStats]          = useState(null)
-  const [loading,          setLoading]          = useState(true)
-  const [githubOk,         setGithubOk]         = useState(true)
-  const [statsVisible,     setStatsVisible]     = useState(false)
+  const [repos,        setRepos]     = useState([])
+  const [ghStats,      setGhStats]   = useState(null)
+  const [loading,      setLoading]   = useState(true)
+  const [ghOk,         setGhOk]      = useState(true)
+  const [statsVisible, setVisible]   = useState(false)
   const statsRef = useRef(null)
+  const photoRef = useRef(null)
+  const admin = useAdmin()
 
-  /* Load saved data */
+  /* Load saved */
   useEffect(() => {
     try {
       const p = localStorage.getItem('profilePhoto')
@@ -352,7 +266,6 @@ export default function HomePage() {
     } catch {}
   }, [])
 
-  /* Save info on change */
   const updateInfo = useCallback((key, val) => {
     setInfo(prev => {
       const next = { ...prev, [key]: val }
@@ -367,116 +280,135 @@ export default function HomePage() {
       fetch('/api/github/status').then(r => r.json()),
       fetch('/api/github/repos?sort=stars&per_page=12').then(r => r.json()),
     ]).then(([st, rp]) => {
-      if (st.success && st.data) { setGhStats(st.data); setGithubOk(true) }
-      else setGithubOk(false)
+      if (st.success && st.data) { setGhStats(st.data); setGhOk(true) }
+      else setGhOk(false)
       if (rp.success && rp.data?.length) setRepos(rp.data.filter(r => !r.isFork).slice(0, 6))
-    }).catch(() => setGithubOk(false)).finally(() => setLoading(false))
+    }).catch(() => setGhOk(false)).finally(() => setLoading(false))
   }, [])
 
-  /* Intersection observer for counter animation */
+  /* Intersection for counters */
   useEffect(() => {
     const el = statsRef.current
     if (!el) return
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setStatsVisible(true); obs.disconnect() }
-    }, { threshold: 0.3 })
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect() } }, { threshold: 0.3 })
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
 
-  const roles = ['Backend Developer', 'AI/ML Enthusiast', 'Open Source Contributor', 'Problem Solver', 'Data Scientist']
+  const roles = ['Backend Developer', 'AI/ML Enthusiast', 'Open Source Contributor', 'Data Scientist', 'Problem Solver']
   const role = useTypewriter(roles)
 
   const STATS = ghStats ? [
-    { icon: Award,      value: '8.11',               label: 'CGPA',      accent: '#10B981', delay: 0   },
-    { icon: Star,       value: String(ghStats.totalStars), label: 'GitHub Stars', accent: '#F59E0B', delay: 80  },
-    { icon: Code2,      value: String(ghStats.totalRepos), label: 'Repositories', accent: '#3B82F6', delay: 160 },
-    { icon: TrendingUp, value: String(ghStats.followers),  label: 'Followers',    accent: '#8B5CF6', delay: 240 },
+    { icon: Award,      value: '8.11',                  label: 'CGPA',          accent: '#059669', delay: 0   },
+    { icon: Star,       value: String(ghStats.totalStars), label: 'GitHub Stars', accent: '#D97706', delay: 80  },
+    { icon: Code2,      value: String(ghStats.totalRepos), label: 'Repositories', accent: '#4F46E5', delay: 160 },
+    { icon: TrendingUp, value: String(ghStats.followers),  label: 'Followers',    accent: '#7C3AED', delay: 240 },
   ] : [
-    { icon: Award,      value: '8.11', label: 'CGPA',          accent: '#10B981', delay: 0   },
-    { icon: Star,       value: 'Top 5%', label: 'College Rank', accent: '#F59E0B', delay: 80  },
-    { icon: Code2,      value: '6+',   label: 'Certifications', accent: '#3B82F6', delay: 160 },
-    { icon: TrendingUp, value: '6+',   label: 'OSS Orgs',      accent: '#8B5CF6', delay: 240 },
+    { icon: Award,      value: '8.11',  label: 'CGPA',           accent: '#059669', delay: 0   },
+    { icon: Star,       value: 'Top 5%',label: 'College Rank',   accent: '#D97706', delay: 80  },
+    { icon: Code2,      value: '6+',    label: 'Certifications', accent: '#4F46E5', delay: 160 },
+    { icon: TrendingUp, value: '6+',    label: 'OSS Orgs',       accent: '#7C3AED', delay: 240 },
   ]
 
-  const handlePhoto = (b64) => {
-    setPhoto(b64)
-    try { localStorage.setItem('profilePhoto', b64) } catch {}
-  }
-
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #04091A 0%, #080F22 60%, #04091A 100%)' }}>
+    <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
 
       {/* ═══════════════════════════════════
           HERO
       ═══════════════════════════════════ */}
-      <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
-
-        {/* Background layers */}
-        <div className="absolute inset-0 bg-grid opacity-70 pointer-events-none" />
+      <section
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          paddingTop: 64,
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Subtle grid */}
         <div
-          className="absolute top-0 right-0 w-[700px] h-[700px] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at top right, rgba(59,130,246,0.09), transparent 65%)' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'linear-gradient(rgba(79,70,229,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(79,70,229,.04) 1px, transparent 1px)',
+            backgroundSize: '52px 52px',
+            pointerEvents: 'none',
+          }}
         />
-        <div
-          className="absolute bottom-0 left-0 w-[500px] h-[500px] pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse at bottom left, rgba(139,92,246,0.07), transparent 65%)' }}
-        />
+        {/* Accent blobs */}
+        <div style={{ position:'absolute', top:'-10%', right:'-5%', width:500, height:500, borderRadius:'50%', background:'radial-gradient(circle, rgba(79,70,229,.07), transparent 70%)', filter:'blur(40px)', pointerEvents:'none' }} />
+        <div style={{ position:'absolute', bottom:'5%', left:'-5%', width:350, height:350, borderRadius:'50%', background:'radial-gradient(circle, rgba(124,58,237,.05), transparent 70%)', filter:'blur(40px)', pointerEvents:'none' }} />
 
-        <div className="container mx-auto px-4 sm:px-6 py-24 lg:py-32 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-12 items-center max-w-6xl mx-auto">
+        <div className="container" style={{ paddingTop: 80, paddingBottom: 80, position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px,1fr))', gap: 56, alignItems: 'center', maxWidth: 1100, margin: '0 auto' }}>
 
-            {/* ── Left: Text ── */}
+            {/* ── Text col ── */}
             <div>
-              {/* Badge */}
-              <div className="section-badge mb-6 animate-fade-in" style={{ animationFillMode: 'both' }}>
-                // open to opportunities · mumbai, india
+              <div className="section-label animate-fade-in" style={{ marginBottom: 20, animationFillMode: 'both' }}>
+                // open to opportunities
               </div>
 
               {/* Name */}
               <div className="animate-slide-up delay-100" style={{ animationFillMode: 'both' }}>
-                <p className="text-sm font-mono text-[#4A6090] mb-2 tracking-widest uppercase">Hello World, I'm</p>
-                <h1 className="text-hero gradient-text mb-4 text-glow-blue" style={{ fontSize: 'clamp(40px,7vw,76px)' }}>
-                  <Editable value={info.name} onChange={v => updateInfo('name', v)} />
+                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#94A3B8', marginBottom: 8, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  Hello World, I'm
+                </p>
+                <h1
+                  className="text-hero gradient-text"
+                  style={{
+                    fontSize: 'clamp(42px,7vw,78px)',
+                    marginBottom: 16,
+                    /* FIX: prevent blurry text in hero */
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    transform: 'translateZ(0)',
+                  }}
+                >
+                  {info.name}
                 </h1>
               </div>
 
               {/* Typewriter */}
-              <div className="flex items-center gap-2.5 mb-6 animate-slide-up delay-200" style={{ animationFillMode: 'both' }}>
-                <Terminal size={15} className="text-blue-500 flex-shrink-0" />
-                <p className="font-mono text-base sm:text-lg text-[#8EA8D8]">
-                  <span className="text-[#60A5FA]">~/om $ </span>
-                  <span className="text-[#EDF2FF]">{role}</span>
+              <div className="animate-slide-up delay-200" style={{ animationFillMode: 'both', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                <Terminal size={15} color="#4F46E5" />
+                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 15, color: '#475569' }}>
+                  <span style={{ color: '#4F46E5' }}>~/om $ </span>
+                  <span style={{ color: '#1E293B' }}>{role}</span>
                   <span className="cursor-blink" />
                 </p>
               </div>
 
               {/* Bio */}
-              <p className="text-[#4A6090] text-base leading-relaxed mb-2 max-w-lg animate-slide-up delay-300" style={{ animationFillMode: 'both' }}>
-                <Editable value={info.bio} onChange={v => updateInfo('bio', v)} multiline className="w-full max-w-lg" />
+              <p
+                className="animate-slide-up delay-300"
+                style={{ animationFillMode: 'both', color: '#475569', fontSize: 15, lineHeight: 1.75, maxWidth: 520, marginBottom: 20 }}
+              >
+                {info.bio}
               </p>
 
               {/* Location */}
-              <div className="flex items-center gap-1.5 text-xs text-[#2A3A55] font-mono mb-4 animate-slide-up delay-350" style={{ animationFillMode: 'both' }}>
+              <div className="animate-slide-up delay-350" style={{ animationFillMode: 'both', display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#94A3B8', marginBottom: 20, fontFamily: 'JetBrains Mono, monospace' }}>
                 <MapPin size={11} />
-                <Editable value={info.location} onChange={v => updateInfo('location', v)} className="text-xs" />
+                Mumbai, India · Open to Opportunities
               </div>
 
               {/* Stack */}
-              <div className="mb-8 animate-slide-up delay-400" style={{ animationFillMode: 'both' }}>
-                <p className="text-[10px] font-mono text-[#2A3A55] uppercase tracking-widest mb-2">Current Stack</p>
-                <div className="flex flex-wrap gap-1.5">
+              <div className="animate-slide-up delay-400" style={{ animationFillMode: 'both', marginBottom: 28 }}>
+                <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#CBD5E1', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+                  Current Stack
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {info.stack.split('·').map(t => t.trim()).filter(Boolean).map(t => (
-                    <span key={t} className="tech-badge">{t}</span>
+                    <span key={t} className="tech-pill">{t}</span>
                   ))}
                 </div>
               </div>
 
               {/* CTAs */}
-              <div className="flex flex-wrap gap-3 mb-8 animate-slide-up delay-500" style={{ animationFillMode: 'both' }}>
-                <Link href="/projects" className="btn btn-primary btn-lg group">
-                  View Projects
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              <div className="animate-slide-up delay-500" style={{ animationFillMode: 'both', display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 28 }}>
+                <Link href="/projects" className="btn btn-primary btn-lg">
+                  View Projects <ArrowRight size={16} />
                 </Link>
                 <a href="/resume.pdf" download className="btn btn-secondary btn-lg">
                   <Download size={15} /> Resume
@@ -486,11 +418,11 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              {/* Social links */}
-              <div className="flex items-center gap-4 animate-slide-up delay-600" style={{ animationFillMode: 'both' }}>
+              {/* Socials */}
+              <div className="animate-slide-up delay-600" style={{ animationFillMode: 'both', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
                 {[
                   { icon: Github,       url: 'https://github.com/omkarrr2533',                   label: '@omkarrr2533' },
-                  { icon: Linkedin,     url: 'https://www.linkedin.com/in/om-kapale-b861a228a', label: 'Om Kapale' },
+                  { icon: Linkedin,     url: 'https://www.linkedin.com/in/om-kapale-b861a228a', label: 'LinkedIn' },
                   { icon: Mail,         url: 'mailto:omshripadkapale@gmail.com',                label: 'Email' },
                   { icon: ExternalLink, url: 'https://leetcode.com/u/omi_/',                    label: 'LeetCode' },
                 ].map(s => (
@@ -500,47 +432,129 @@ export default function HomePage() {
                     target={s.url.startsWith('mailto') ? '_self' : '_blank'}
                     rel="noopener noreferrer"
                     title={s.label}
-                    className="flex items-center gap-1.5 text-[#4A6090] hover:text-[#60A5FA] transition-colors duration-200 group"
+                    style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#94A3B8', fontSize: 12, fontFamily: 'JetBrains Mono, monospace', textDecoration: 'none', transition: 'color 150ms ease' }}
                   >
-                    <s.icon size={16} className="group-hover:scale-110 transition-transform" />
-                    <span className="text-xs font-mono hidden sm:block opacity-0 group-hover:opacity-100 transition-opacity">
-                      {s.label}
-                    </span>
+                    <s.icon size={15} />
+                    <span style={{ display: 'none' }} className="sm-show">{s.label}</span>
                   </a>
                 ))}
               </div>
             </div>
 
-            {/* ── Right: Photo + Terminal ── */}
-            <div className="flex flex-col items-center gap-6 animate-slide-up delay-300" style={{ animationFillMode: 'both' }}>
-              <ProfilePhoto photo={photo} onUpload={handlePhoto} />
+            {/* ── Right col: photo + terminal ── */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
 
-              {/* Stats pills */}
-              <div ref={statsRef} className="grid grid-cols-2 gap-2 w-full max-w-xs">
-                {STATS.map(s => (
-                  <StatPill key={s.label} {...s} started={statsVisible} />
-                ))}
+              {/* Photo */}
+              <div style={{ position: 'relative', width: 240, height: 240 }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: -8,
+                    borderRadius: 24,
+                    background: 'linear-gradient(135deg,rgba(79,70,229,.12),rgba(124,58,237,.08))',
+                    filter: 'blur(16px)',
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: 20,
+                    border: '1px solid rgba(79,70,229,.15)',
+                    overflow: 'hidden',
+                    background: '#EEF2FF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: admin ? 'pointer' : 'default',
+                  }}
+                  onClick={() => admin && photoRef.current?.click()}
+                >
+                  {photo ? (
+                    <img src={photo} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <div style={{ textAlign: 'center' }}>
+                      <div
+                        style={{
+                          width: 72,
+                          height: 72,
+                          borderRadius: 18,
+                          background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif',
+                          fontWeight: 800,
+                          fontSize: 24,
+                          color: '#fff',
+                          margin: '0 auto 8px',
+                        }}
+                      >
+                        OK
+                      </div>
+                      {admin && <span style={{ fontSize: 11, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace' }}>Click to upload</span>}
+                    </div>
+                  )}
+                  {admin && photo && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'rgba(15,23,42,.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        opacity: 0,
+                        transition: 'opacity 200ms',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = 1}
+                      onMouseLeave={e => e.currentTarget.style.opacity = 0}
+                    >
+                      <Camera size={20} color="#fff" />
+                    </div>
+                  )}
+                </div>
+                {/* Presence dot */}
+                <div style={{ position: 'absolute', top: 10, right: 10 }}>
+                  <div className="ping-dot">
+                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#10B981', display: 'block', border: '2px solid #fff' }} />
+                  </div>
+                </div>
+                <input ref={photoRef} type="file" accept="image/*" style={{ display: 'none' }}
+                  onChange={e => {
+                    const f = e.target.files?.[0]; if (!f) return
+                    const r = new FileReader()
+                    r.onload = ev => { setPhoto(ev.target.result); localStorage.setItem('profilePhoto', ev.target.result) }
+                    r.readAsDataURL(f)
+                  }} />
               </div>
 
-              {/* Terminal card */}
-              <div className="terminal w-full max-w-xs animate-slide-up delay-700" style={{ animationFillMode: 'both' }}>
+              {/* Stat pills */}
+              <div ref={statsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', maxWidth: 280 }}>
+                {STATS.map(s => <StatPill key={s.label} {...s} started={statsVisible} />)}
+              </div>
+
+              {/* Terminal */}
+              <div className="terminal animate-slide-up delay-700" style={{ animationFillMode: 'both', width: '100%', maxWidth: 280 }}>
                 <div className="terminal-header">
                   <div className="terminal-dot" style={{ background: '#FF5F56' }} />
                   <div className="terminal-dot" style={{ background: '#FFBD2E' }} />
                   <div className="terminal-dot" style={{ background: '#27C93F' }} />
-                  <span className="ml-2 text-[10px] font-mono text-[#4A6090]">om@portfolio ~ bash</span>
+                  <span style={{ marginLeft: 8, fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#475569' }}>
+                    om@portfolio ~ bash
+                  </span>
                 </div>
-                <div className="terminal-body text-[12px]">
+                <div className="terminal-body">
                   <div><span className="t-muted">$ </span><span className="t-blue">whoami</span></div>
                   <div className="t-green">om-shripad-kapale</div>
-                  <div className="mt-1"><span className="t-muted">$ </span><span className="t-blue">cat skills.txt</span></div>
+                  <div style={{ marginTop: 4 }}><span className="t-muted">$ </span><span className="t-blue">cat skills.txt</span></div>
                   <div className="t-violet">Java · Spring Boot · Python</div>
                   <div className="t-violet">PyTorch · PostgreSQL · DSA</div>
-                  <div className="mt-1"><span className="t-muted">$ </span><span className="t-blue">echo $STATUS</span></div>
-                  <div><span className="t-amber">🟡 </span><span className="t-white">Open to opportunities</span></div>
-                  <div className="mt-1 flex items-center gap-1">
+                  <div style={{ marginTop: 4 }}><span className="t-muted">$ </span><span className="t-blue">echo $STATUS</span></div>
+                  <div><span className="t-amber">⬤ </span><span className="t-white">Open to opportunities</span></div>
+                  <div style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
                     <span className="t-muted">$ </span>
-                    <span className="cursor-blink" style={{ width: '7px', height: '13px', display: 'inline-block' }} />
+                    <span className="cursor-blink" />
                   </div>
                 </div>
               </div>
@@ -548,33 +562,27 @@ export default function HomePage() {
           </div>
 
           {/* Scroll cue */}
-          <div className="flex justify-center mt-16 animate-float">
-            <div className="flex flex-col items-center gap-1 text-[#2A3A55]">
-              <span className="text-[10px] font-mono tracking-widest">SCROLL</span>
-              <ChevronDown size={16} />
+          <div className="animate-float" style={{ display: 'flex', justifyContent: 'center', marginTop: 64 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, color: '#CBD5E1' }}>
+              <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.1em' }}>SCROLL</span>
+              <ChevronDown size={15} />
             </div>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════
-          PROJECTS / REPOS
+          REPOS / PROJECTS
       ═══════════════════════════════════ */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(59,130,246,0.04), transparent)' }} />
-
-        <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
+      <section style={{ padding: '88px 0', background: '#fff' }}>
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
             <div>
-              <span className="section-badge mb-3 block w-fit">
-                {githubOk && repos.length > 0 ? '// github · live sync' : '// featured projects'}
+              <span className="section-label" style={{ marginBottom: 10, display: 'inline-flex' }}>
+                {ghOk && repos.length > 0 ? '// github · live sync' : '// featured projects'}
               </span>
-              <h2 className="section-heading" style={{ fontSize: 'clamp(28px,4vw,44px)' }}>
-                {githubOk && repos.length > 0
-                  ? <>Top <span className="gradient-text">Repositories</span></>
-                  : <>Featured <span className="gradient-text">Projects</span></>
-                }
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(28px,4vw,42px)', color: '#1E293B', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+                {ghOk && repos.length > 0 ? <><span className="gradient-text">Top</span> Repositories</> : <>Featured <span className="gradient-text">Projects</>}
               </h2>
             </div>
             <Link href="/projects" className="btn btn-secondary btn-sm">
@@ -583,103 +591,110 @@ export default function HomePage() {
           </div>
 
           {loading && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array(6).fill(0).map((_, i) => (
-                <div key={i} className="glass-card p-5 h-36">
-                  <div className="skeleton h-4 w-32 mb-3 rounded" />
-                  <div className="skeleton h-3 w-full mb-2 rounded" />
-                  <div className="skeleton h-3 w-4/5 rounded" />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px,1fr))', gap: 16 }}>
+              {Array(6).fill(0).map((_,i) => (
+                <div key={i} className="card" style={{ padding: 18, height: 140 }}>
+                  <div className="skeleton" style={{ height: 12, width: 120, marginBottom: 10 }} />
+                  <div className="skeleton" style={{ height: 10, width: '100%', marginBottom: 6 }} />
+                  <div className="skeleton" style={{ height: 10, width: '75%' }} />
                 </div>
               ))}
             </div>
           )}
 
           {!loading && repos.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px,1fr))', gap: 16 }}>
               {repos.map((r, i) => <RepoCard key={r.id} repo={r} index={i} />)}
             </div>
           )}
 
           {!loading && repos.length === 0 && (
-            <>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                {FEATURED.map((p, i) => <FeaturedCard key={p.id} project={p} index={i} />)}
-              </div>
-              <div
-                className="glass-card p-5 text-center max-w-md mx-auto"
-                style={{ borderColor: 'rgba(59,130,246,0.15)', background: 'rgba(59,130,246,0.04)' }}
-              >
-                <Github size={18} className="text-[#4A6090] mx-auto mb-2" />
-                <p className="text-xs text-[#4A6090] font-mono">
-                  Add <code className="text-[#60A5FA]">GITHUB_TOKEN</code> to{' '}
-                  <code className="text-[#60A5FA]">.env.local</code> to auto-sync all GitHub repos
-                </p>
-              </div>
-            </>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px,1fr))', gap: 20, marginBottom: 24 }}>
+              {FEATURED.map((p,i) => <FeaturedCard key={p.id} project={p} index={i} />)}
+            </div>
           )}
         </div>
       </section>
 
       {/* ═══════════════════════════════════
-          TECH STACK STRIP
+          TECH STRIP
       ═══════════════════════════════════ */}
-      <section className="py-16 relative overflow-hidden">
-        <div className="section-divider mb-16" />
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-8">
-            <span className="section-badge mx-auto">// tech stack</span>
+      <section style={{ padding: '64px 0' }}>
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: 28 }}>
+            <span className="section-label">// tech stack</span>
           </div>
-          <div className="flex flex-wrap gap-2.5 justify-center max-w-3xl mx-auto">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', maxWidth: 720, margin: '0 auto' }}>
             {[
-              { label: 'Java',       icon: '☕', accent: '#B07219' },
-              { label: 'Spring Boot',icon: '🌱', accent: '#6DB33F' },
-              { label: 'Python',     icon: '🐍', accent: '#3572A5' },
-              { label: 'PyTorch',    icon: '🔥', accent: '#EE4C2C' },
-              { label: 'PostgreSQL', icon: '🐘', accent: '#336791' },
-              { label: 'REST API',   icon: '⚡', accent: '#F59E0B' },
-              { label: 'Socket.io',  icon: '🔌', accent: '#010101' },
-              { label: 'DSA',        icon: '🧠', accent: '#8B5CF6' },
-              { label: 'Git',        icon: '📦', accent: '#F05032' },
-              { label: 'LLMs',       icon: '🤖', accent: '#10B981' },
+              { label:'Java',        icon:'☕' },
+              { label:'Spring Boot', icon:'🌱' },
+              { label:'Python',      icon:'🐍' },
+              { label:'PyTorch',     icon:'🔥' },
+              { label:'PostgreSQL',  icon:'🐘' },
+              { label:'REST API',    icon:'⚡' },
+              { label:'Socket.io',   icon:'🔌' },
+              { label:'DSA',         icon:'🧠' },
+              { label:'Git',         icon:'📦' },
+              { label:'LLMs',        icon:'🤖' },
             ].map((t, i) => (
               <div
                 key={t.label}
-                className="glass-card hover-lift flex items-center gap-2 px-4 py-2 cursor-default animate-slide-up"
-                style={{ animationDelay: `${i * 40}ms`, animationFillMode: 'both' }}
+                className="card animate-slide-up hover-lift"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 7,
+                  padding: '8px 14px',
+                  cursor: 'default',
+                  animationDelay: `${i * 35}ms`,
+                  animationFillMode: 'both',
+                }}
               >
-                <span className="text-base">{t.icon}</span>
-                <span className="font-mono text-xs font-semibold" style={{ color: t.accent }}>{t.label}</span>
+                <span style={{ fontSize: 14 }}>{t.icon}</span>
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 600, color: '#4F46E5' }}>{t.label}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="section-divider mt-16" />
       </section>
 
       {/* ═══════════════════════════════════
           CTA
       ═══════════════════════════════════ */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 sm:px-6">
+      <section style={{ padding: '64px 0 96px' }}>
+        <div className="container">
           <div
-            className="glass-card p-10 text-center max-w-2xl mx-auto animate-slide-up"
+            className="card"
             style={{
-              background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(99,102,241,0.08))',
-              borderColor: 'rgba(59,130,246,0.18)',
+              padding: '48px 40px',
+              textAlign: 'center',
+              maxWidth: 640,
+              margin: '0 auto',
+              background: 'linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%)',
+              borderColor: '#C7D2FE',
             }}
           >
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-              style={{ background: 'linear-gradient(135deg, #3B82F6, #6366F1)' }}
+              style={{
+                width: 52,
+                height: 52,
+                borderRadius: 14,
+                background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 20px',
+              }}
             >
-              <Zap size={24} className="text-white" />
+              <Zap size={22} color="#fff" />
             </div>
-            <h3 className="section-heading text-2xl mb-3">Open to Collaboration</h3>
-            <p className="text-[#4A6090] text-sm mb-7 max-w-md mx-auto leading-relaxed">
-              Interested in backend projects, AI/ML experiments, or open source?
-              Let's build something together.
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 24, color: '#1E293B', marginBottom: 10, letterSpacing: '-0.02em' }}>
+              Open to Collaboration
+            </h3>
+            <p style={{ color: '#64748B', fontSize: 14, marginBottom: 28, lineHeight: 1.7, maxWidth: 440, margin: '0 auto 28px' }}>
+              Interested in backend projects, AI/ML experiments, or open source? Let's build something together.
             </p>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
               <Link href="/contact" className="btn btn-primary btn-lg">
                 Get In Touch <ArrowRight size={15} />
               </Link>
@@ -690,6 +705,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <style>{`
+        @media (min-width: 640px) { .sm-show { display: block!important; } }
+        @media (max-width: 639px) { .sm-show { display: none; } }
+      `}</style>
     </div>
   )
 }
