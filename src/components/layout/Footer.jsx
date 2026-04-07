@@ -7,10 +7,10 @@ const NAV_GROUPS = [
   {
     title: 'Portfolio',
     links: [
-      { name: 'Projects',      path: '/projects' },
-      { name: 'GitHub Stats',  path: '/github-activities' },
-      { name: 'Certifications',path: '/certifications' },
-      { name: 'Gallery',       path: '/gallery' },
+      { name: 'Projects',       path: '/projects' },
+      { name: 'GitHub Stats',   path: '/github-activities' },
+      { name: 'Certifications', path: '/certifications' },
+      { name: 'Gallery',        path: '/gallery' },
     ],
   },
   {
@@ -25,103 +25,100 @@ const NAV_GROUPS = [
 ]
 
 const SOCIAL = [
-  {
-    icon: Github,
-    label: 'GitHub',
-    url: 'https://github.com/omkarrr2533',
-    color: '#EDF2FF',
-  },
-  {
-    icon: Linkedin,
-    label: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/om-kapale-b861a228a',
-    color: '#60A5FA',
-  },
-  {
-    icon: Mail,
-    label: 'Email',
-    url: 'mailto:omshripadkapale@gmail.com',
-    color: '#34D399',
-  },
-  {
-    icon: ExternalLink,
-    label: 'LeetCode',
-    url: 'https://leetcode.com/u/omi_/',
-    color: '#FCD34D',
-  },
+  { icon: Github,       label: 'GitHub',   url: 'https://github.com/omkarrr2533' },
+  { icon: Linkedin,     label: 'LinkedIn', url: 'https://www.linkedin.com/in/om-kapale-b861a228a' },
+  { icon: Mail,         label: 'Email',    url: 'mailto:omshripadkapale@gmail.com' },
+  { icon: ExternalLink, label: 'LeetCode', url: 'https://leetcode.com/u/omi_/' },
 ]
 
 export default function Footer() {
   return (
     <footer
-      className="relative overflow-hidden"
-      style={{ borderTop: '1px solid rgba(99,125,175,0.1)', background: 'rgba(4,9,26,0.98)' }}
+      style={{
+        background: '#fff',
+        borderTop: '1px solid #E2E8F0',
+      }}
     >
-      {/* ── Ambient glow ── */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at top, rgba(59,130,246,0.05), transparent 70%)',
-        }}
-      />
-
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="container" style={{ paddingTop: 0, paddingBottom: 0 }}>
 
         {/* ── CTA strip ── */}
         <div
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 mb-8"
-          style={{ borderBottom: '1px solid rgba(99,125,175,0.08)' }}
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 14,
+            padding: '24px 0',
+            borderBottom: '1px solid #F1F5F9',
+          }}
         >
           <div>
-            <p className="text-base font-bold text-[#EDF2FF] mb-0.5" style={{ fontFamily:'Syne, sans-serif' }}>
+            <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 15, color: '#1E293B', marginBottom: 2 }}>
               Open to Collaboration
             </p>
-            <p className="text-sm text-[#4A6090]">
-              Backend · AI/ML · Open Source
-            </p>
+            <p style={{ fontSize: 13, color: '#94A3B8' }}>Backend · AI/ML · Open Source</p>
           </div>
-          <Link href="/contact" className="btn btn-primary btn-sm flex-shrink-0">
+          <Link href="/contact" className="btn btn-primary btn-sm">
             <Zap size={13} /> Let's Build Together
             <ArrowUpRight size={13} />
           </Link>
         </div>
 
-        {/* ── Main footer grid ── */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8">
-          {/* Brand column */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="logo-mark" style={{ width:32, height:32, fontSize:12, borderRadius:9 }}>OK</div>
+        {/* ── Main grid ── */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: 40,
+            padding: '40px 0 36px',
+          }}
+        >
+          {/* Brand */}
+          <div style={{ gridColumn: 'span 2', minWidth: 220 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+              <div
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 9,
+                  background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontWeight: 800,
+                  fontSize: 12,
+                  color: '#fff',
+                }}
+              >
+                OK
+              </div>
               <div>
-                <p className="text-sm font-bold text-[#EDF2FF]" style={{ fontFamily:'Syne, sans-serif' }}>
+                <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 14, color: '#1E293B' }}>
                   Om Shripad Kapale
                 </p>
-                <p className="text-[10px] font-mono text-[#4A6090] tracking-widest mt-0.5">
+                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#94A3B8', letterSpacing: '0.08em', marginTop: 1 }}>
                   BACKEND · AI/ML · OPEN SOURCE
                 </p>
               </div>
             </div>
 
-            <p className="text-sm text-[#4A6090] leading-relaxed mb-4 max-w-xs">
-              CSE student in the top 5% of college, building scalable backend systems
-              and exploring AI/ML frontiers. Always open to exciting projects.
+            <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.75, maxWidth: 280, marginBottom: 16 }}>
+              CSE student in the top 5% of college, building scalable backend systems and exploring AI/ML frontiers.
             </p>
 
-            <div className="flex items-center gap-1.5 text-xs text-[#4A6090] mb-4">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#94A3B8', marginBottom: 16, fontFamily: 'JetBrains Mono, monospace' }}>
               <MapPin size={11} />
               <span>Mumbai, Maharashtra, India</span>
-              <span className="mx-1">·</span>
+              <span style={{ margin: '0 4px' }}>·</span>
               <span className="ping-dot">
-                <span
-                  className="w-2 h-2 rounded-full block"
-                  style={{ background: '#10B981' }}
-                />
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981', display: 'block' }} />
               </span>
-              <span className="text-[#34D399]">Available for opportunities</span>
+              <span style={{ color: '#059669' }}>Available</span>
             </div>
 
-            {/* Social icons */}
-            <div className="flex items-center gap-2">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               {SOCIAL.map(s => (
                 <a
                   key={s.label}
@@ -129,11 +126,17 @@ export default function Footer() {
                   target={s.url.startsWith('mailto') ? '_self' : '_blank'}
                   rel="noopener noreferrer"
                   title={s.label}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
                   style={{
-                    background: 'rgba(12,21,40,0.8)',
-                    border: '1px solid rgba(99,125,175,0.15)',
-                    color: '#4A6090',
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid #E2E8F0',
+                    background: '#F8FAFC',
+                    color: '#64748B',
+                    transition: 'all 150ms ease',
                   }}
                 >
                   <s.icon size={14} />
@@ -146,23 +149,34 @@ export default function Footer() {
           {NAV_GROUPS.map(group => (
             <div key={group.title}>
               <h4
-                className="text-[10px] font-semibold uppercase tracking-widest mb-4"
-                style={{ color: '#2A3A55', fontFamily: 'JetBrains Mono, monospace' }}
+                style={{
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: '#CBD5E1',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  marginBottom: 14,
+                }}
               >
                 {group.title}
               </h4>
-              <ul className="space-y-2.5">
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {group.links.map(link => (
                   <li key={link.path}>
                     <Link
                       href={link.path}
-                      className="text-sm text-[#4A6090] hover:text-[#8EA8D8] transition-colors duration-150 flex items-center gap-1.5 group"
-                      style={{ fontFamily: 'DM Sans, sans-serif' }}
+                      style={{
+                        fontSize: 13,
+                        color: '#64748B',
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        transition: 'color 150ms ease',
+                        fontFamily: 'Plus Jakarta Sans, sans-serif',
+                      }}
                     >
-                      <ArrowUpRight
-                        size={11}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-500"
-                      />
                       {link.name}
                     </Link>
                   </li>
@@ -174,15 +188,22 @@ export default function Footer() {
 
         {/* ── Bottom bar ── */}
         <div
-          className="flex flex-col sm:flex-row items-center justify-between gap-3 py-5"
-          style={{ borderTop: '1px solid rgba(99,125,175,0.08)' }}
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 10,
+            padding: '16px 0',
+            borderTop: '1px solid #F1F5F9',
+          }}
         >
-          <div className="flex items-center gap-1.5 text-xs text-[#2A3A55]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#CBD5E1', fontFamily: 'JetBrains Mono, monospace' }}>
             <Code2 size={11} />
             <span>Built with Next.js · GitHub API · Framer Motion</span>
           </div>
-          <p className="text-xs text-[#2A3A55]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-            © {new Date().getFullYear()} Om Shripad Kapale — All rights reserved
+          <p style={{ fontSize: 11, color: '#CBD5E1', fontFamily: 'JetBrains Mono, monospace' }}>
+            © {new Date().getFullYear()} Om Shripad Kapale
           </p>
         </div>
       </div>

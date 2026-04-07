@@ -3,18 +3,18 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Github, ExternalLink, Zap } from 'lucide-react'
+import { Menu, X, Github, ExternalLink, Zap, ShieldCheck } from 'lucide-react'
+import { useAdmin } from '@/lib/admin'
 
 const NAV = [
-  { name: 'Home',        path: '/',                 short: 'Home'   },
-  { name: 'Projects',    path: '/projects',         short: 'Work'   },
-  { name: 'GitHub',      path: '/github-activities',short: 'GitHub' },
-  { name: 'Certs',       path: '/certifications',   short: 'Certs'  },
-  { name: 'Gallery',     path: '/gallery',          short: 'Gallery'},
-  { name: 'Stuff',       path: '/stuff',            short: 'Stuff'  },
-  { name: 'Resume',      path: '/resume',           short: 'Resume' },
-  { name: 'About',       path: '/about',            short: 'About'  },
-  { name: 'Contact',     path: '/contact',          short: 'Hire'   },
+  { name: 'Home',        path: '/' },
+  { name: 'Projects',    path: '/projects' },
+  { name: 'GitHub',      path: '/github-activities' },
+  { name: 'Certs',       path: '/certifications' },
+  { name: 'Gallery',     path: '/gallery' },
+  { name: 'About',       path: '/about' },
+  { name: 'Stuff',       path: '/stuff' },
+  { name: 'Contact',     path: '/contact' },
 ]
 
 export default function Header() {
@@ -23,124 +23,201 @@ export default function Header() {
   const [scrollPct, setScrollPct] = useState(0)
   const pathname = usePathname()
   const menuRef  = useRef(null)
+  const admin    = useAdmin()
 
-  /* scroll listener */
   useEffect(() => {
     const fn = () => {
       const h = document.documentElement
       const total = h.scrollHeight - h.clientHeight
-      const pct   = total > 0 ? (window.scrollY / total) * 100 : 0
-      setScrolled(window.scrollY > 24)
+      const pct = total > 0 ? (window.scrollY / total) * 100 : 0
+      setScrolled(window.scrollY > 20)
       setScrollPct(pct)
     }
     window.addEventListener('scroll', fn, { passive: true })
+    fn()
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
-  /* close on route change */
   useEffect(() => { setOpen(false) }, [pathname])
 
-  /* close on outside click */
   useEffect(() => {
     if (!open) return
-    const fn = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false) }
+    const fn = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false)
+    }
     document.addEventListener('mousedown', fn)
     return () => document.removeEventListener('mousedown', fn)
   }, [open])
 
-  /* lock body scroll when mobile menu open */
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  const isActive = (path) => path === '/' ? pathname === path : pathname.startsWith(path)
+  const isActive = (path) =>
+    path === '/' ? pathname === path : pathname.startsWith(path)
 
   return (
     <>
-      <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-        style={{
-          background: scrolled ? 'rgba(4,9,26,0.88)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(99,125,175,0.1)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 4px 30px rgba(0,0,0,0.3)' : 'none',
-        }}
-      >
-        {/* ── Progress bar ── */}
+      {/* ── Top progress bar ── */}
+      {scrollPct > 0 && (
         <div
-          className="absolute bottom-0 left-0 h-[2px] transition-all duration-100"
           style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            height: 3,
             width: `${scrollPct}%`,
-            background: 'linear-gradient(90deg, #3B82F6, #6366F1, #8B5CF6)',
-            opacity: scrolled ? 1 : 0,
+            background: 'linear-gradient(90deg,#4F46E5,#7C3AED)',
+            zIndex: 1001,
+            transition: 'width 80ms linear',
+            borderRadius: '0 2px 2px 0',
           }}
         />
+      )}
 
-        <nav className="container mx-auto flex items-center justify-between h-16 px-4 sm:px-6">
-
+      <header
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          /* FIX: backface-visibility prevents subpixel blurring */
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
+          transition: 'background 250ms cubic-bezier(0.4,0,0.2,1), box-shadow 250ms cubic-bezier(0.4,0,0.2,1)',
+          ...(scrolled
+            ? {
+                background: 'rgba(248,250,252,0.88)',
+                WebkitBackdropFilter: 'blur(12px) saturate(180%)',
+                backdropFilter: 'blur(12px) saturate(180%)',
+                borderBottom: '1px solid rgba(226,232,240,.9)',
+                boxShadow: '0 1px 3px rgba(15,23,42,.06)',
+              }
+            : {
+                background: 'transparent',
+                borderBottom: '1px solid transparent',
+              }),
+        }}
+      >
+        <nav
+          className="container"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}
+        >
           {/* ── Logo ── */}
-          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div className="logo-mark group-hover:scale-105 transition-transform duration-200">
+          <Link
+            href="/"
+            style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
+          >
+            <div
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 9,
+                background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'Plus Jakarta Sans, sans-serif',
+                fontWeight: 800,
+                fontSize: 13,
+                color: '#fff',
+                letterSpacing: '-0.02em',
+                boxShadow: '0 2px 8px rgba(79,70,229,.3)',
+                transition: 'transform 150ms ease',
+              }}
+            >
               OK
             </div>
-            <div className="hidden sm:block">
-              <p className="text-sm font-bold text-[#EDF2FF] leading-none tracking-tight"
-                 style={{ fontFamily:'Syne, sans-serif' }}>
+            <div style={{ display: 'none' }} className="sm-show">
+              <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 14, color: '#1E293B', lineHeight: 1 }}>
                 Om Kapale
               </p>
-              <p className="text-[10px] text-[#4A6090] leading-none mt-0.5 font-mono tracking-widest">
+              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94A3B8', letterSpacing: '0.08em', marginTop: 2 }}>
                 PORTFOLIO
               </p>
             </div>
           </Link>
 
           {/* ── Desktop nav ── */}
-          <div className="hidden lg:flex items-center gap-0.5">
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: 2 }}
+            className="desktop-nav"
+          >
             {NAV.map(item => {
               const active = isActive(item.path)
               return (
                 <Link
                   key={item.path}
                   href={item.path}
-                  className="relative px-3.5 py-2 rounded-lg text-[13px] font-medium transition-all duration-200 group"
                   style={{
-                    color:      active ? '#EDF2FF' : '#4A6090',
-                    background: active ? 'rgba(59,130,246,0.1)' : 'transparent',
-                    fontFamily: 'DM Sans, sans-serif',
+                    position: 'relative',
+                    padding: '7px 14px',
+                    borderRadius: 8,
+                    fontSize: 13,
+                    fontWeight: active ? 600 : 500,
+                    color: active ? '#4F46E5' : '#475569',
+                    background: active ? '#EEF2FF' : 'transparent',
+                    textDecoration: 'none',
+                    transition: 'all 150ms ease',
+                    letterSpacing: '-0.01em',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
                   }}
-                  onMouseEnter={e => { if (!active) e.currentTarget.style.color = '#8EA8D8' }}
-                  onMouseLeave={e => { if (!active) e.currentTarget.style.color = '#4A6090' }}
                 >
-                  {active && (
-                    <span
-                      className="absolute inset-0 rounded-lg"
-                      style={{ boxShadow: 'inset 0 1px 0 rgba(59,130,246,0.2)' }}
-                    />
-                  )}
                   {item.name}
                   {active && (
                     <span
-                      className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue-500"
+                      style={{
+                        position: 'absolute',
+                        bottom: 3,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: 16,
+                        height: 2,
+                        borderRadius: 2,
+                        background: '#4F46E5',
+                      }}
                     />
                   )}
                 </Link>
               )
             })}
+            {admin && (
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  padding: '3px 8px',
+                  background: '#FFFBEB',
+                  border: '1px solid #FDE68A',
+                  borderRadius: 99,
+                  fontSize: 10,
+                  fontWeight: 700,
+                  color: '#92400E',
+                  marginLeft: 4,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <ShieldCheck size={11} />
+                ADMIN
+              </span>
+            )}
           </div>
 
-          {/* ── Desktop right actions ── */}
-          <div className="hidden lg:flex items-center gap-2">
+          {/* ── Desktop right ── */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="desktop-nav">
             <a
               href="https://github.com/omkarrr2533"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-secondary btn-sm flex items-center gap-1.5"
+              className="btn btn-secondary btn-sm"
+              style={{ display: 'flex' }}
             >
               <Github size={14} />
               GitHub
-              <ExternalLink size={10} className="opacity-40" />
             </a>
             <Link href="/contact" className="btn btn-primary btn-sm">
               <Zap size={13} />
@@ -151,12 +228,20 @@ export default function Header() {
           {/* ── Mobile toggle ── */}
           <button
             ref={menuRef}
-            onClick={() => setOpen(!open)}
-            className="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200"
+            onClick={() => setOpen(v => !v)}
+            className="mobile-only"
             style={{
-              background: open ? 'rgba(59,130,246,0.1)' : 'rgba(12,21,40,0.7)',
-              border: '1px solid rgba(99,125,175,0.2)',
-              color: open ? '#60A5FA' : '#8EA8D8',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 38,
+              height: 38,
+              borderRadius: 9,
+              background: open ? '#EEF2FF' : '#F1F5F9',
+              border: '1px solid #E2E8F0',
+              color: open ? '#4F46E5' : '#475569',
+              cursor: 'pointer',
+              transition: 'all 150ms ease',
             }}
             aria-label="Toggle menu"
           >
@@ -165,104 +250,143 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* ── Mobile menu ── */}
-      <div
-        className="fixed inset-0 z-40 lg:hidden transition-all duration-300"
-        style={{
-          pointerEvents: open ? 'auto' : 'none',
-        }}
-      >
+      {/* ── Mobile drawer ── */}
+      <>
         {/* Backdrop */}
         <div
-          className="absolute inset-0 transition-opacity duration-300"
-          style={{
-            background: 'rgba(4,9,26,0.7)',
-            backdropFilter: 'blur(8px)',
-            opacity: open ? 1 : 0,
-          }}
           onClick={() => setOpen(false)}
-        />
-
-        {/* Slide-in panel */}
-        <div
-          className="absolute top-0 right-0 bottom-0 w-72 flex flex-col transition-transform duration-300"
           style={{
-            background: 'linear-gradient(135deg, rgba(8,15,34,0.98), rgba(12,21,40,0.98))',
-            borderLeft: '1px solid rgba(99,125,175,0.15)',
-            backdropFilter: 'blur(24px)',
+            position: 'fixed',
+            inset: 0,
+            zIndex: 998,
+            background: 'rgba(15,23,42,.4)',
+            WebkitBackdropFilter: 'blur(4px)',
+            backdropFilter: 'blur(4px)',
+            transition: 'opacity 250ms ease',
+            opacity: open ? 1 : 0,
+            pointerEvents: open ? 'auto' : 'none',
+          }}
+        />
+        {/* Panel */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: 280,
+            zIndex: 999,
+            background: '#fff',
+            borderLeft: '1px solid #E2E8F0',
+            boxShadow: '-8px 0 24px rgba(15,23,42,.12)',
             transform: open ? 'translateX(0)' : 'translateX(100%)',
-            boxShadow: '-20px 0 60px rgba(0,0,0,0.5)',
+            transition: 'transform 280ms cubic-bezier(0.4,0,0.2,1)',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           {/* Panel header */}
-          <div className="flex items-center justify-between p-5 border-b"
-               style={{ borderColor: 'rgba(99,125,175,0.12)' }}>
-            <div className="flex items-center gap-2.5">
-              <div className="logo-mark" style={{ width:30, height:30, fontSize:12, borderRadius:8 }}>OK</div>
-              <span className="text-sm font-bold text-[#EDF2FF]" style={{ fontFamily:'Syne, sans-serif' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '18px 20px',
+              borderBottom: '1px solid #E2E8F0',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+              <div
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 8,
+                  background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                  fontWeight: 800,
+                  fontSize: 12,
+                  color: '#fff',
+                }}
+              >
+                OK
+              </div>
+              <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 14, color: '#1E293B' }}>
                 Om Kapale
               </span>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-[#4A6090] hover:text-[#EDF2FF] hover:bg-white/5 transition-all"
-            >
-              <X size={16} />
+            <button onClick={() => setOpen(false)} style={{ color: '#94A3B8', cursor: 'pointer' }}>
+              <X size={17} />
             </button>
           </div>
 
-          {/* Nav links */}
-          <div className="flex-1 overflow-y-auto py-4 px-3">
-            {NAV.map((item, i) => {
+          {/* Links */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '12px 12px' }}>
+            {NAV.map(item => {
               const active = isActive(item.path)
               return (
                 <Link
                   key={item.path}
                   href={item.path}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl mb-1 transition-all duration-200"
                   style={{
-                    background: active ? 'rgba(59,130,246,0.1)' : 'transparent',
-                    color:      active ? '#60A5FA' : '#8EA8D8',
-                    border:     active ? '1px solid rgba(59,130,246,0.2)' : '1px solid transparent',
-                    animationDelay: `${i * 30}ms`,
-                    fontFamily: 'DM Sans, sans-serif',
-                    fontSize: '14px',
-                    fontWeight: active ? 600 : 400,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '11px 14px',
+                    borderRadius: 9,
+                    marginBottom: 2,
+                    color: active ? '#4F46E5' : '#475569',
+                    background: active ? '#EEF2FF' : 'transparent',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: 14,
+                    fontWeight: active ? 600 : 500,
+                    textDecoration: 'none',
+                    transition: 'all 150ms ease',
+                    border: active ? '1px solid #C7D2FE' : '1px solid transparent',
                   }}
                 >
                   <span
-                    className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all"
                     style={{
-                      background: active ? '#3B82F6' : '#2A3A55',
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      background: active ? '#4F46E5' : '#CBD5E1',
+                      flexShrink: 0,
                     }}
                   />
                   {item.name}
-                  {active && (
-                    <span className="ml-auto text-[10px] font-mono text-[#4A6090]">active</span>
-                  )}
                 </Link>
               )
             })}
           </div>
 
           {/* Panel footer */}
-          <div className="p-4 border-t space-y-2" style={{ borderColor: 'rgba(99,125,175,0.12)' }}>
+          <div style={{ padding: '16px', borderTop: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <a
               href="https://github.com/omkarrr2533"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-secondary w-full justify-center text-sm"
+              className="btn btn-secondary"
+              style={{ justifyContent: 'center', fontSize: 13 }}
             >
-              <Github size={14} />
-              View GitHub
+              <Github size={14} /> GitHub
             </a>
-            <Link href="/contact" className="btn btn-primary w-full justify-center text-sm">
-              <Zap size={13} />
-              Hire Me
+            <Link href="/contact" className="btn btn-primary" style={{ justifyContent: 'center', fontSize: 13 }}>
+              <Zap size={13} /> Hire Me
             </Link>
           </div>
         </div>
-      </div>
+      </>
+
+      {/* Responsive helpers */}
+      <style>{`
+        @media (min-width: 1024px) { .mobile-only { display:none!important; } }
+        @media (max-width: 1023px) { .desktop-nav { display:none!important; } }
+        @media (min-width: 640px)  { .sm-show { display:block!important; } }
+        @media (max-width: 639px)  { .sm-show { display:none; } }
+      `}</style>
     </>
   )
 }
