@@ -1,5 +1,9 @@
 {
-  "/page": "app/page.js",
-  "/projects/page": "app/projects/page.js",
-  "/stuff/page": "app/stuff/page.js"
+  "/github-activities/page": "app/github-activities/page.js",
+  "/certifications/page": "app/certifications/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/gallery/page": "app/gallery/page.js",
+  "/resume/page": "app/resume/page.js",
+  "/stuff/page": "app/stuff/page.js",
+  "/about/page": "app/about/page.js"
 }
