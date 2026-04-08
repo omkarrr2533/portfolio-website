@@ -60,7 +60,7 @@ export default function ResumePage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16"
-      style={{ background: 'linear-gradient(180deg,#060D1F 0%,#0B1325 100%)' }}>
+      style={{ background: '#F8FAFC' }}>
       <div className="container mx-auto px-4 max-w-5xl">
 
         {/* ── Header ── */}
@@ -181,7 +181,7 @@ export default function ResumePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {certifications.map((cert, i) => (
               <div key={i} className="flex items-start gap-3 p-3 rounded-xl"
-                style={{ background: 'rgba(15,26,46,0.8)', border: '1px solid rgba(99,120,162,0.12)' }}>
+                style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
                 <Award size={15} className="text-[#F59E0B] shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-semibold text-[#E8F0FE] leading-snug">{cert.name}</p>
@@ -194,7 +194,7 @@ export default function ResumePage() {
 
         {/* ── CTA ── */}
         <div className="glass-card p-8 text-center animate-fade-in"
-          style={{ background: 'linear-gradient(135deg,rgba(59,130,246,0.08),rgba(99,102,241,0.08))', borderColor: 'rgba(59,130,246,0.18)', animationDelay: '0.5s', animationFillMode: 'both' }}>
+          style={{ background: 'linear-gradient(135deg,#EEF2FF,#F5F3FF)', borderColor: '#C7D2FE', animationDelay: '0.5s', animationFillMode: 'both' }}>
           <Award size={32} className="text-[#F59E0B] mx-auto mb-3" />
           <h3 className="text-lg font-bold text-[#E8F0FE] mb-2">Want to know more?</h3>
           <p className="text-[#8EA4C8] text-sm mb-5">

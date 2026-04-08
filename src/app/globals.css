@@ -610,3 +610,98 @@ main { animation: fadeIn .25s var(--ease); }
 .t-violet { color: #A78BFA; }
 .t-white  { color: #F1F5F9; }
 .t-muted  { color: #475569; }
+
+/* ═══════════════════════════════════════════════════════
+   MISSING CLASSES — used by dark pages, now light-themed
+═══════════════════════════════════════════════════════ */
+
+.glass-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--t-base), border-color var(--t-base);
+}
+.glass-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-md);
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--accent-xlt);
+  border: 1px solid #C7D2FE;
+  border-radius: var(--r-pill);
+  color: var(--accent-dark);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  transition: all var(--t-fast);
+}
+.tech-badge:hover {
+  background: var(--accent-xlt);
+  border-color: #C7D2FE;
+  color: var(--accent-dark);
+}
+
+.input-dark {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-md);
+  border-radius: var(--r-md);
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  outline: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+  box-shadow: var(--shadow-xs);
+}
+.input-dark::placeholder { color: var(--text-muted); }
+.input-dark:hover { border-color: var(--border-focus); }
+.input-dark:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+}
+textarea.input-dark { resize: vertical; min-height: 80px; line-height: 1.6; }
+select.input-dark { cursor: pointer; -webkit-appearance: none; appearance: none; }
+
+.section-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.gradient-text-blue {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(79,70,229,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,70,229,.04) 1px, transparent 1px);
+  background-size: 52px 52px;
+}

@@ -60,7 +60,7 @@ function UploadModal({ onClose, onUpload }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(0,0,0,0.85)' }}
+      style={{ background:'rgba(15,23,42,0.5)' }}
       onClick={onClose}
     >
       <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
@@ -76,7 +76,7 @@ function UploadModal({ onClose, onUpload }) {
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
           className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer mb-4 transition-all"
-          style={{ borderColor: dragging ? '#3B82F6' : 'rgba(99,120,162,0.3)', background: dragging ? 'rgba(59,130,246,0.05)':'transparent' }}
+          style={{ borderColor: dragging ? '#4F46E5' : '#CBD5E1', background: dragging ? '#EEF2FF':'transparent' }}
         >
           {preview ? (
             <img src={preview} alt="preview" className="w-full h-32 object-cover rounded-lg" />
@@ -131,7 +131,7 @@ function UploadModal({ onClose, onUpload }) {
 function Lightbox({ item, onClose, onDelete }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(0,0,0,0.92)' }}
+      style={{ background:'rgba(15,23,42,0.85)' }}
       onClick={onClose}
     >
       <div className="relative max-w-3xl w-full" onClick={e => e.stopPropagation()}>
@@ -220,7 +220,7 @@ export default function GalleryPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16"
-      style={{ background:'linear-gradient(180deg,#060D1F 0%,#0B1325 100%)' }}>
+      style={{ background:'#F8FAFC' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* Header */}
@@ -288,7 +288,7 @@ export default function GalleryPage() {
             <div
               onClick={() => setShowUpload(true)}
               className="aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer group transition-all"
-              style={{ borderColor:'rgba(99,120,162,0.25)', background:'rgba(15,26,46,0.4)' }}
+              style={{ borderColor:'#CBD5E1', background:'#F8FAFC' }}
             >
               <Plus size={24} className="text-[#4A6080] group-hover:text-[#60A5FA] mb-2 transition-colors" />
               <span className="text-xs text-[#4A6080] group-hover:text-[#60A5FA] font-mono transition-colors">Add Photo</span>

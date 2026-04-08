@@ -241,7 +241,7 @@ function ProfileCard({ stats }) {
           { label: 'Stars', value: stats.totalStars, icon: Star, accent: '#F59E0B' },
         ].map(s => (
           <div key={s.label} className="p-3 rounded-lg text-center"
-            style={{ background: 'rgba(15,26,46,0.8)', border: '1px solid rgba(99,120,162,0.12)' }}>
+            style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
             <s.icon size={14} className="mx-auto mb-1" style={{ color: s.accent }} />
             <div className="text-base font-800 font-mono text-[#E8F0FE]">{s.value}</div>
             <div className="text-xs text-[#4A6080]">{s.label}</div>
@@ -259,7 +259,7 @@ function NotConfiguredBanner() {
       <Github size={40} className="text-[#4A6080] mx-auto mb-4 opacity-50" />
       <h3 className="text-lg font-700 text-[#E8F0FE] mb-2">GitHub Not Connected</h3>
       <p className="text-[#8EA4C8] text-sm mb-4">Add your GitHub credentials to see live stats</p>
-      <div className="bg-[#060D1F] rounded-lg p-4 text-left font-mono text-xs max-w-sm mx-auto">
+      <div className="bg-slate-800 rounded-lg p-4 text-left font-mono text-xs max-w-sm mx-auto">
         <div className="text-[#4A6080] mb-1"># .env.local</div>
         <div className="text-[#34D399]">GITHUB_USERNAME=<span className="text-[#60A5FA]">omkarrr2533</span></div>
         <div className="text-[#34D399]">GITHUB_TOKEN=<span className="text-[#60A5FA]">ghp_your_token_here</span></div>
@@ -333,7 +333,7 @@ export default function GitHubActivitiesPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-20"
-      style={{ background: 'linear-gradient(180deg,#060D1F 0%,#080F20 100%)' }}>
+      style={{ background: '#F8FAFC' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* Header */}
@@ -381,13 +381,13 @@ export default function GitHubActivitiesPage() {
 
         {/* Tabs */}
         <div className="flex gap-1 mb-8 p-1 rounded-xl w-fit"
-          style={{ background: 'rgba(15,26,46,0.8)', border: '1px solid rgba(99,120,162,0.15)' }}>
+          style={{ background: '#F1F5F9', border: '1px solid #E2E8F0' }}>
           {TABS.map(t => (
             <button key={t} onClick={() => setActiveTab(t)}
               className="px-4 py-2 rounded-lg text-sm font-600 transition-all capitalize"
               style={{
-                background: activeTab === t ? 'rgba(59,130,246,0.15)' : 'transparent',
-                color: activeTab === t ? '#60A5FA' : '#8EA4C8',
+                background: activeTab === t ? '#EEF2FF' : 'transparent',
+                color: activeTab === t ? '#4F46E5' : '#475569',
               }}>
               {t}
             </button>
