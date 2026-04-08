@@ -46,8 +46,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-24"
-      style={{ background: 'linear-gradient(180deg, #04091A 0%, #080F22 100%)' }}>
+    <div className="min-h-screen pt-20 pb-24" style={{ background: '#F8FAFC' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* ── Header ── */}
@@ -109,8 +108,8 @@ export default function ContactPage() {
                     className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group"
                     style={{ border: '1px solid transparent' }}
                     onMouseEnter={e => {
-                      e.currentTarget.style.background = 'rgba(12,21,40,0.8)'
-                      e.currentTarget.style.borderColor = 'rgba(99,125,175,0.15)'
+                      e.currentTarget.style.background = '#F1F5F9'
+                     e.currentTarget.style.borderColor = '#E2E8F0'
                       e.currentTarget.style.transform = 'translateX(4px)'
                     }}
                     onMouseLeave={e => {
@@ -135,7 +134,7 @@ export default function ContactPage() {
 
             {/* Quick tip */}
             <div className="glass-card p-5"
-              style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.06), rgba(99,102,241,0.06))', borderColor: 'rgba(59,130,246,0.15)' }}>
+              style={{ background: '#EEF2FF', borderColor: '#C7D2FE' }}>
               <p className="text-xs text-[#4A6090] leading-relaxed">
                 <span className="text-[#60A5FA] font-semibold">Quick note:</span> I'm currently open to internships,
                 freelance work, and collaborative projects in backend development and AI/ML.

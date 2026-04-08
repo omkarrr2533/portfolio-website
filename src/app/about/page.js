@@ -78,9 +78,9 @@ function Field({ value, onChange, tag:Tag='p', multiline=false, className='', pl
       <div className="relative">
         {multiline
           ? <textarea value={draft} onChange={e=>setDraft(e.target.value)} rows={5} autoFocus
-              className={`w-full bg-[#0B1325] border border-blue-500/50 rounded-lg px-3 py-2 text-sm outline-none resize-none ${className}`} />
+              className={`w-full bg-white border border-indigo-300 rounded-lg px-3 py-2 text-sm outline-none resize-none`} />
           : <input value={draft} onChange={e=>setDraft(e.target.value)} autoFocus
-              className={`w-full bg-[#0B1325] border border-blue-500/50 rounded-lg px-3 py-2 text-sm outline-none ${className}`} />
+              className={`w-full bg-white border border-indigo-300 rounded-lg px-3 py-2 text-sm outline-none`} />
         }
         <div className="flex gap-2 mt-2">
           <button onClick={save} className="text-xs btn-primary py-1 px-3"><Check size={12}/> Save</button>
@@ -163,7 +163,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16"
-      style={{ background:'linear-gradient(180deg,#060D1F 0%,#0B1325 100%)' }}>
+      style={{ background:'#F8FAFC' }}>
 
       {/* Edit mode banner */}
       <div className="container mx-auto px-4 sm:px-6">

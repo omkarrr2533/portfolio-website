@@ -89,7 +89,7 @@ function BlogModal({ blog, onSave, onClose }) {
   const [form, setForm] = useState(blog || { id:Date.now().toString(), title:'', excerpt:'', date:new Date().toISOString().split('T')[0], tags:'', readTime:'5 min' })
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(0,0,0,0.85)' }} onClick={onClose}>
+      style={{ background:'rgba(15,23,42,0.5)' }} onClick={onClose}>
       <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e=>e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-700 text-[#E8F0FE]">{blog?'Edit Post':'New Blog Post'}</h2>
@@ -148,7 +148,7 @@ export default function StuffPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16"
-      style={{ background:'linear-gradient(180deg,#060D1F 0%,#0B1325 100%)' }}>
+      style={{ background:'#F8FAFC' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* Header */}
@@ -335,7 +335,7 @@ export default function StuffPage() {
 
         {/* ── Quote ── */}
         <div className="glass-card p-10 text-center max-w-2xl mx-auto"
-          style={{ background:'linear-gradient(135deg,rgba(59,130,246,0.06),rgba(139,92,246,0.06))' }}>
+          style={{ background:'linear-gradient(135deg,#EEF2FF,#F5F3FF)', border:'1px solid #C7D2FE' }}>
           {editMode
             ? <>
                 <InlineField value={data.quote} onChange={v=>update('quote',v)}
