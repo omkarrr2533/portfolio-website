@@ -244,14 +244,14 @@ export default function AboutPage() {
                   { label:'CGPA', key:'cgpa' },
                   { label:'Rank', key:'rank' },
                 ].map(s => (
-                  <div key={s.key} className="bg-[#0B1325] rounded-lg p-3 text-center">
-                    {editMode
-                      ? <Field value={data[s.key]} onChange={v=>update(s.key,v)}
-                          className="text-lg font-800 font-mono text-[#60A5FA] text-center block" />
-                      : <div className="text-lg font-800 font-mono text-[#60A5FA]">{data[s.key]}</div>
-                    }
-                    <div className="text-xs text-[#4A6080]">{s.label}</div>
-                  </div>
+                  <div style={{ background: '#EEF2FF', border: '1px solid #C7D2FE', borderRadius: 10 }} className="p-3 text-center">
+  {editMode
+    ? <Field value={data[s.key]} onChange={v=>update(s.key,v)}
+        className="text-lg font-800 font-mono text-center block" style={{ color:'#4338CA' }} />
+    : <div className="text-lg font-800 font-mono" style={{ color:'#4338CA' }}>{data[s.key]}</div>
+  }
+  <div className="text-xs" style={{ color:'#64748B' }}>{s.label}</div>
+</div>
                 ))}
               </div>
             </div>

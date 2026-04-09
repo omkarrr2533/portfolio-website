@@ -243,8 +243,8 @@ function ProfileCard({ stats }) {
           <div key={s.label} className="p-3 rounded-lg text-center"
             style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
             <s.icon size={14} className="mx-auto mb-1" style={{ color: s.accent }} />
-            <div className="text-base font-800 font-mono text-[#E8F0FE]">{s.value}</div>
-            <div className="text-xs text-[#4A6080]">{s.label}</div>
+            <div className="text-base font-800 font-mono" style={{ color: '#1E293B' }}>{s.value}</div>
+            <div className="text-xs" style={{ color: '#64748B' }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -372,8 +372,8 @@ export default function GitHubActivitiesPage() {
               <div key={s.label} className="glass-card p-5 text-center hover:border-blue-500/20 transition-colors"
                 style={{ animationDelay: `${i * 60}ms` }}>
                 <s.icon size={20} className="mx-auto mb-2" style={{ color: s.accent }} />
-                <p className="text-2xl font-800 text-[#E8F0FE] font-mono">{s.value}</p>
-                <p className="text-xs text-[#4A6080] mt-1">{s.label}</p>
+                <p className="text-2xl font-800 font-mono" style={{ color: '#1E293B' }}>{s.value}</p>
+                <p className="text-xs mt-1" style={{ color: '#64748B' }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -543,12 +543,22 @@ export default function GitHubActivitiesPage() {
         )}
 
         {/* Profile CTA */}
-        <div className="mt-12 text-center">
-          <a href="https://github.com/omkarrr2533" target="_blank" rel="noopener noreferrer"
-            className="btn-primary text-sm px-8 py-3">
-            <Github size={18} /> View Full GitHub Profile
-          </a>
-        </div>
+        <div style={{ marginTop: 48, textAlign: 'center', padding: '32px 24px', background: 'linear-gradient(135deg,#EEF2FF,#F5F3FF)', borderRadius: 16, border: '1px solid #C7D2FE', maxWidth: 480, margin: '48px auto 0' }}>
+  <div style={{ width: 44, height: 44, borderRadius: 12, background: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+    <Github size={20} color="#fff" />
+  </div>
+  <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#1E293B', marginBottom: 6 }}>See the full picture</p>
+  <p style={{ fontSize: 13, color: '#64748B', marginBottom: 20 }}>Stars, contributions, followers and all repositories</p>
+  <a
+    href="https://github.com/omkarrr2533"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: '#4F46E5', color: '#fff', borderRadius: 9, fontSize: 14, fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif', textDecoration: 'none', transition: 'background 150ms ease' }}
+  >
+    <Github size={16} /> View GitHub Profile
+    <ArrowRight size={14} />
+  </a>
+</div>
       </div>
     </div>
   )
