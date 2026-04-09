@@ -63,7 +63,7 @@ function InlineField({ value, onChange, multiline=false, className='', placehold
   if (!editing) return (
     <span onClick={()=>{setDraft(value);setEditing(true)}}
       className={`cursor-pointer group relative hover:bg-white/5 rounded px-1 -mx-1 transition-colors ${className}`}>
-      {value || <span className="text-[#4A6080] italic text-xs">{placeholder}</span>}
+      {value || <span className="text-[#64B5F6] italic text-xs">{placeholder}</span>}
       <Edit2 size={10} className="inline ml-1 text-blue-400 opacity-0 group-hover:opacity-100" />
     </span>
   )
@@ -78,7 +78,7 @@ function InlineField({ value, onChange, multiline=false, className='', placehold
       }
       <span className="flex gap-1 mt-1">
         <button onClick={save} className="text-[10px] text-green-400 hover:text-green-300 flex items-center gap-0.5"><Check size={10}/>Save</button>
-        <button onClick={cancel} className="text-[10px] text-[#4A6080] hover:text-white flex items-center gap-0.5"><X size={10}/>Cancel</button>
+        <button onClick={cancel} className="text-[10px] text-[#64B5F6] hover:text-white flex items-center gap-0.5"><X size={10}/>Cancel</button>
       </span>
     </span>
   )
@@ -93,7 +93,7 @@ function BlogModal({ blog, onSave, onClose }) {
       <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e=>e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-700 text-[#E8F0FE]">{blog?'Edit Post':'New Blog Post'}</h2>
-          <button onClick={onClose} className="text-[#4A6080] hover:text-white"><X size={18}/></button>
+          <button onClick={onClose} className="text-[#64B5F6] hover:text-white"><X size={18}/></button>
         </div>
         <div className="space-y-3">
           {[
@@ -258,14 +258,14 @@ export default function StuffPage() {
             {data.blogs.map(post => (
               <div key={post.id} className="glass-card p-5 group">
                 <div className="flex items-start justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-2 text-xs text-[#4A6080]">
+                  <div className="flex items-center gap-2 text-xs text-[#64B5F6]">
                     <span>{post.date}</span>
                     <span>·</span>
                     <span>{post.readTime}</span>
                   </div>
                   {editMode && (
                     <div className="flex gap-1 shrink-0">
-                      <button onClick={()=>setBlogModal(post)} className="text-[#4A6080] hover:text-[#60A5FA]">
+                      <button onClick={()=>setBlogModal(post)} className="text-[#64B5F6] hover:text-[#60A5FA]">
                         <Edit2 size={13}/>
                       </button>
                       <button onClick={()=>deleteBlog(post.id)} className="text-red-400/50 hover:text-red-400">

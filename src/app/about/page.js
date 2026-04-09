@@ -93,7 +93,7 @@ function Field({ value, onChange, tag:Tag='p', multiline=false, className='', pl
     <Tag onClick={() => { setDraft(value); setEditing(true) }}
       className={`cursor-pointer group relative hover:bg-white/5 rounded px-1 -mx-1 transition-colors ${className}`}
     >
-      {value || <span className="text-[#4A6080] italic text-sm">{placeholder}</span>}
+      {value || <span className="text-[#64B5F6] italic text-sm">{placeholder}</span>}
       <Edit2 size={11} className="absolute right-1 top-1 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" />
     </Tag>
   )
@@ -172,7 +172,7 @@ export default function AboutPage() {
           <button onClick={() => setEditMode(v=>!v)}
             className={`text-sm font-mono flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
               editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
-                       : 'text-[#4A6080] bg-white/5 border border-white/10 hover:border-blue-500/30'
+                       : 'text-[#64B5F6] bg-white/5 border border-white/10 hover:border-blue-500/30'
             }`}
           >
             {editMode ? <><Save size={12}/> Editing (click fields)</>
@@ -193,7 +193,7 @@ export default function AboutPage() {
                 <div className="w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600/20 to-purple-600/20">
                   {photo
                     ? <img src={photo} alt="Profile" className="w-full h-full object-cover" />
-                    : <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-[#4A6080]">OK</div>
+                    : <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-[#64B5F6]">OK</div>
                   }
                 </div>
                 {editMode && (
@@ -210,7 +210,7 @@ export default function AboutPage() {
                   reader.onload = ev => savePhoto(ev.target.result)
                   reader.readAsDataURL(f)
                 }} />
-              {editMode && <p className="text-xs text-[#4A6080] mb-3 font-mono">Click photo to change</p>}
+              {editMode && <p className="text-xs text-[#64B5F6] mb-3 font-mono">Click photo to change</p>}
 
               {editMode
                 ? <Field value={data.name} onChange={v=>update('name',v)} tag="h2"
@@ -223,17 +223,17 @@ export default function AboutPage() {
                 : <p className="text-sm text-[#60A5FA] mb-4">{data.title}</p>
               }
 
-              <div className="space-y-2 text-sm text-[#8EA4C8] text-left">
+              <div className="space-y-2 text-sm text-[#64B5F6] text-left">
                 <div className="flex items-center gap-2">
-                  <MapPin size={13} className="text-[#4A6080] shrink-0" />
+                  <MapPin size={13} className="text-[#64B5F6] shrink-0" />
                   {editMode
-                    ? <Field value={data.location} onChange={v=>update('location',v)} className="text-sm text-[#8EA4C8]" />
+                    ? <Field value={data.location} onChange={v=>update('location',v)} className="text-sm text-[#64B5F6]" />
                     : <span>{data.location}</span>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Mail size={13} className="text-[#4A6080] shrink-0" />
+                  <Mail size={13} className="text-[#64B5F6] shrink-0" />
                   {editMode
-                    ? <Field value={data.email} onChange={v=>update('email',v)} className="text-sm text-[#8EA4C8]" />
+                    ? <Field value={data.email} onChange={v=>update('email',v)} className="text-sm text-[#64B5F6]" />
                     : <a href={`mailto:${data.email}`} className="text-[#60A5FA] hover:text-white text-sm">{data.email}</a>}
                 </div>
               </div>
@@ -244,14 +244,14 @@ export default function AboutPage() {
                   { label:'CGPA', key:'cgpa' },
                   { label:'Rank', key:'rank' },
                 ].map(s => (
-                  <div key={s.key} className="bg-[#0B1325] rounded-lg p-3 text-center">
-                    {editMode
-                      ? <Field value={data[s.key]} onChange={v=>update(s.key,v)}
-                          className="text-lg font-800 font-mono text-[#60A5FA] text-center block" />
-                      : <div className="text-lg font-800 font-mono text-[#60A5FA]">{data[s.key]}</div>
-                    }
-                    <div className="text-xs text-[#4A6080]">{s.label}</div>
-                  </div>
+                  <div style={{ background: '#EEF2FF', border: '1px solid #C7D2FE', borderRadius: 10 }} className="p-3 text-center">
+  {editMode
+    ? <Field value={data[s.key]} onChange={v=>update(s.key,v)}
+        className="text-lg font-800 font-mono text-center block" style={{ color:'#4338CA' }} />
+    : <div className="text-lg font-800 font-mono" style={{ color:'#4338CA' }}>{data[s.key]}</div>
+  }
+  <div className="text-xs" style={{ color:'#64B5F6' }}>{s.label}</div>
+</div>
                 ))}
               </div>
             </div>
@@ -264,8 +264,8 @@ export default function AboutPage() {
               <SectionTitle>About</SectionTitle>
               {editMode
                 ? <Field value={data.bio} onChange={v=>update('bio',v)} multiline
-                    className="text-[#8EA4C8] text-sm leading-relaxed" />
-                : <div className="text-[#8EA4C8] text-sm leading-relaxed whitespace-pre-line">{data.bio}</div>
+                    className="text-[#64B5F6] text-sm leading-relaxed" />
+                : <div className="text-[#64B5F6] text-sm leading-relaxed whitespace-pre-line">{data.bio}</div>
               }
             </div>
 
@@ -280,12 +280,12 @@ export default function AboutPage() {
                       <Field value={data.college} onChange={v=>update('college',v)} tag="p"
                         className="text-[#60A5FA] text-sm font-600 mb-1" />
                       <Field value={data.period} onChange={v=>update('period',v)} tag="p"
-                        className="text-[#4A6080] text-xs" />
+                        className="text-[#64B5F6] text-xs" />
                     </>
                   : <>
                       <h3 className="text-lg font-700 text-[#E8F0FE] mb-1">{data.education}</h3>
                       <p className="text-[#60A5FA] text-sm font-600 mb-1">{data.college}</p>
-                      <p className="text-[#4A6080] text-xs">{data.period} · CGPA {data.cgpa} · {data.rank} of College</p>
+                      <p className="text-[#64B5F6] text-xs">{data.period} · CGPA {data.cgpa} · {data.rank} of College</p>
                     </>
                 }
               </div>
@@ -301,8 +301,8 @@ export default function AboutPage() {
                     <h4 className="font-700 text-[#E8F0FE] text-sm mb-1">{v.title}</h4>
                     {editMode
                       ? <Field value={v.desc} onChange={val=>update('values', data.values.map(vv=>vv.id===v.id?{...vv,desc:val}:vv))}
-                          className="text-xs text-[#8EA4C8]" />
-                      : <p className="text-xs text-[#8EA4C8]">{v.desc}</p>
+                          className="text-xs text-[#64B5F6]" />
+                      : <p className="text-xs text-[#64B5F6]">{v.desc}</p>
                     }
                   </div>
                 ))}
@@ -334,13 +334,13 @@ export default function AboutPage() {
                           <Field value={exp.company} onChange={v=>updateExp(exp.id,'company',v)} tag="p"
                             className="text-[#60A5FA] text-sm font-600 mb-1" />
                           <Field value={exp.period} onChange={v=>updateExp(exp.id,'period',v)} tag="p"
-                            className="text-[#4A6080] text-xs mb-3" />
+                            className="text-[#64B5F6] text-xs mb-3" />
                         </>
                       : <>
                           <h3 className="text-lg font-700 text-[#E8F0FE] mb-1">{exp.title}</h3>
                           <div className="flex items-center gap-3 mb-3">
                             <span className="text-[#60A5FA] text-sm font-600">{exp.company}</span>
-                            <span className="text-[#4A6080] text-xs">{exp.period}</span>
+                            <span className="text-[#64B5F6] text-xs">{exp.period}</span>
                           </div>
                         </>
                     }
@@ -351,18 +351,18 @@ export default function AboutPage() {
                           {editMode
                             ? <div className="flex gap-2 flex-1">
                                 <Field value={b} onChange={v=>updateBullet(exp.id,bi,v)}
-                                  className="text-sm text-[#8EA4C8] flex-1" />
+                                  className="text-sm text-[#64B5F6] flex-1" />
                                 <button onClick={()=>removeBullet(exp.id,bi)}
                                   className="text-red-400/50 hover:text-red-400"><X size={12}/></button>
                               </div>
-                            : <span className="text-sm text-[#8EA4C8]">{b}</span>
+                            : <span className="text-sm text-[#64B5F6]">{b}</span>
                           }
                         </li>
                       ))}
                     </ul>
                     {editMode && (
                       <button onClick={()=>addBullet(exp.id)}
-                        className="mt-2 text-xs text-[#4A6080] hover:text-[#60A5FA] flex items-center gap-1 font-mono">
+                        className="mt-2 text-xs text-[#64B5F6] hover:text-[#60A5FA] flex items-center gap-1 font-mono">
                         <Plus size={11}/> Add bullet
                       </button>
                     )}
@@ -405,7 +405,7 @@ export default function AboutPage() {
                 </div>
                 {editMode
                   ? <Field value={sk.items} onChange={v=>updateSkill(sk.id,'items',v)}
-                      className="text-xs text-[#8EA4C8]" />
+                      className="text-xs text-[#64B5F6]" />
                   : (
                     <div className="flex flex-wrap gap-1.5">
                       {sk.items.split(',').map(s => s.trim()).filter(Boolean).map(s => (

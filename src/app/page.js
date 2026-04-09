@@ -252,6 +252,8 @@ export default function HomePage() {
   const [loading,      setLoading]   = useState(true)
   const [ghOk,         setGhOk]      = useState(true)
   const [statsVisible, setVisible]   = useState(false)
+  const [editingBio,   setEditingBio]   = useState(false)
+  const [editingStack, setEditingStack] = useState(false)
   const statsRef = useRef(null)
   const photoRef = useRef(null)
   const admin = useAdmin()
@@ -380,12 +382,27 @@ export default function HomePage() {
               </div>
 
               {/* Bio */}
-              <p
-                className="animate-slide-up delay-300"
-                style={{ animationFillMode: 'both', color: '#475569', fontSize: 15, lineHeight: 1.75, maxWidth: 520, marginBottom: 20 }}
-              >
-                {info.bio}
-              </p>
+              <div className="animate-slide-up delay-300" style={{ animationFillMode: 'both', position: 'relative', maxWidth: 520, marginBottom: 20 }}>
+  {editingBio ? (
+    <div>
+      <textarea
+        value={info.bio}
+        onChange={e => updateInfo('bio', e.target.value)}
+        rows={4}
+        autoFocus
+        style={{ width: '100%', background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 14, fontFamily: 'Plus Jakarta Sans, sans-serif', outline: 'none', resize: 'vertical', color: '#1E293B' }}
+      />
+      <button onClick={() => setEditingBio(false)} className="btn btn-primary btn-sm" style={{ marginTop: 6 }}>Done</button>
+    </div>
+  ) : (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+      <p style={{ color: '#475569', fontSize: 15, lineHeight: 1.75, flex: 1 }}>{info.bio}</p>
+      <button onClick={() => setEditingBio(true)} title="Edit bio" style={{ color: '#CBD5E1', background: 'none', border: 'none', cursor: 'pointer', padding: 2, marginTop: 3, flexShrink: 0 }}>
+        <Edit3 size={13} />
+      </button>
+    </div>
+  )}
+</div>
 
               {/* Location */}
               <div className="animate-slide-up delay-350" style={{ animationFillMode: 'both', display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#94A3B8', marginBottom: 20, fontFamily: 'JetBrains Mono, monospace' }}>
@@ -395,15 +412,33 @@ export default function HomePage() {
 
               {/* Stack */}
               <div className="animate-slide-up delay-400" style={{ animationFillMode: 'both', marginBottom: 28 }}>
-                <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#CBD5E1', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-                  Current Stack
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {info.stack.split('·').map(t => t.trim()).filter(Boolean).map(t => (
-                    <span key={t} className="tech-pill">{t}</span>
-                  ))}
-                </div>
-              </div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+    <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#CBD5E1', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>
+      Current Stack
+    </p>
+    <button onClick={() => setEditingStack(true)} title="Edit stack" style={{ color: '#CBD5E1', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+      <Edit3 size={11} />
+    </button>
+  </div>
+  {editingStack ? (
+    <div>
+      <input
+        value={info.stack}
+        onChange={e => updateInfo('stack', e.target.value)}
+        autoFocus
+        placeholder="Java · Spring Boot · Python (use · as separator)"
+        style={{ width: '100%', maxWidth: 520, background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontFamily: 'JetBrains Mono, monospace', outline: 'none', color: '#1E293B' }}
+      />
+      <button onClick={() => setEditingStack(false)} className="btn btn-primary btn-sm" style={{ marginTop: 6 }}>Done</button>
+    </div>
+  ) : (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+      {info.stack.split('·').map(t => t.trim()).filter(Boolean).map(t => (
+        <span key={t} className="tech-pill">{t}</span>
+      ))}
+    </div>
+  )}
+</div>
 
               {/* CTAs */}
               <div className="animate-slide-up delay-500" style={{ animationFillMode: 'both', display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 28 }}>
@@ -468,7 +503,7 @@ export default function HomePage() {
                     justifyContent: 'center',
                     cursor: admin ? 'pointer' : 'default',
                   }}
-                  onClick={() => admin && photoRef.current?.click()}
+                  onClick={() => photoRef.current?.click()}
                 >
                   {photo ? (
                     <img src={photo} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -492,10 +527,14 @@ export default function HomePage() {
                       >
                         OK
                       </div>
-                      {admin && <span style={{ fontSize: 11, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace' }}>Click to upload</span>}
+                      {admin && (
+                        <span style={{ fontSize: 11, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace' }}>
+                          Click to upload
+                        </span>
+                      )}
                     </div>
                   )}
-                  {admin && photo && (
+                  { photo && (
                     <div
                       style={{
                         position: 'absolute',

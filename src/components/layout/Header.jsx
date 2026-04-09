@@ -111,34 +111,21 @@ export default function Header() {
             href="/"
             style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
           >
-            <div
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: 9,
-                background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontWeight: 800,
-                fontSize: 13,
-                color: '#fff',
-                letterSpacing: '-0.02em',
-                boxShadow: '0 2px 8px rgba(79,70,229,.3)',
-                transition: 'transform 150ms ease',
-              }}
-            >
-              OK
-            </div>
-            <div style={{ display: 'none' }} className="sm-show">
-              <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 14, color: '#1E293B', lineHeight: 1 }}>
-                Om Kapale
-              </p>
-              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94A3B8', letterSpacing: '0.08em', marginTop: 2 }}>
-                PORTFOLIO
-              </p>
-            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="32" height="32" rx="9" fill="#4F46E5"/>
+    <path d="M9 16C9 12.134 12.134 9 16 9s7 3.134 7 7-3.134 7-7 7" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"/>
+    <circle cx="20.5" cy="11.5" r="1.5" fill="#A5B4FC"/>
+  </svg>
+  <div style={{ display: 'none' }} className="sm-show">
+    <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 14, color: '#1E293B', lineHeight: 1 }}>
+      Om Kapale
+    </p>
+    <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#94A3B8', letterSpacing: '0.08em', marginTop: 2 }}>
+      DEV · AI/ML
+    </p>
+  </div>
+</div>
           </Link>
 
           {/* ── Desktop nav ── */}

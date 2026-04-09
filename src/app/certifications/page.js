@@ -81,7 +81,7 @@ function EditModal({ cert, onSave, onClose }) {
         onClick={e=>e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-700 text-[#E8F0FE]">{isNew ? 'Add Certification':'Edit Certification'}</h2>
-          <button onClick={onClose} className="text-[#4A6080] hover:text-white"><X size={18}/></button>
+          <button onClick={onClose} className="text-[#64B5F6] hover:text-white"><X size={18}/></button>
         </div>
 
         <div className="space-y-3">
@@ -93,7 +93,7 @@ function EditModal({ cert, onSave, onClose }) {
             { key:'link', label:'Verify Link', placeholder:'https://...' },
           ].map(f => (
             <div key={f.key}>
-              <label className="text-xs text-[#4A6080] font-mono mb-1 block">{f.label}</label>
+              <label className="text-xs text-[#64B5F6] font-mono mb-1 block">{f.label}</label>
               <input value={form[f.key] || ''}
                 onChange={e=>setForm(p=>({...p,[f.key]:e.target.value}))}
                 placeholder={f.placeholder}
@@ -102,7 +102,7 @@ function EditModal({ cert, onSave, onClose }) {
           ))}
 
           <div>
-            <label className="text-xs text-[#4A6080] font-mono mb-1 block">Skills (comma-separated)</label>
+            <label className="text-xs text-[#64B5F6] font-mono mb-1 block">Skills (comma-separated)</label>
             <input
               value={typeof form.skills==='string' ? form.skills : form.skills?.join(', ') || ''}
               onChange={e=>setForm(p=>({...p, skills:e.target.value}))}
@@ -112,7 +112,7 @@ function EditModal({ cert, onSave, onClose }) {
           </div>
 
           <div>
-            <label className="text-xs text-[#4A6080] font-mono mb-2 block">Card Color</label>
+            <label className="text-xs text-[#64B5F6] font-mono mb-2 block">Card Color</label>
             <div className="flex gap-2 flex-wrap">
               {COLOR_OPTIONS.map(c => (
                 <button key={c.value} onClick={()=>setForm(p=>({...p,color:c.value,accent:c.accent}))}
@@ -179,7 +179,7 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
             <Building size={11} /> {cert.issuer}
           </div>
           {cert.date && (
-            <div className="flex items-center gap-1.5 text-[#4A6080] text-xs">
+            <div className="flex items-center gap-1.5 text-[#64B5F6] text-xs">
               <Calendar size={11} /> {cert.date}
             </div>
           )}
@@ -191,14 +191,14 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
               <span key={s} className="tech-badge text-[10px] px-2 py-0.5">{s}</span>
             ))}
             {skills.length > 4 && (
-              <span className="text-[10px] text-[#4A6080] px-2 py-0.5">+{skills.length-4} more</span>
+              <span className="text-[10px] text-[#64B5F6] px-2 py-0.5">+{skills.length-4} more</span>
             )}
           </div>
         )}
 
         <div className="pt-3 border-t" style={{ borderColor:'rgba(99,120,162,0.12)' }}>
           {cert.credentialId && (
-            <p className="text-[10px] text-[#4A6080] font-mono mb-2 truncate">ID: {cert.credentialId}</p>
+            <p className="text-[10px] text-[#64B5F6] font-mono mb-2 truncate">ID: {cert.credentialId}</p>
           )}
           {cert.link && cert.link !== '#' ? (
             <a href={cert.link} target="_blank" rel="noopener noreferrer"
@@ -208,7 +208,7 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
               <ExternalLink size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
             </a>
           ) : (
-            <span className="text-xs text-[#4A6080] italic">No verify link</span>
+            <span className="text-xs text-[#64B5F6] italic">No verify link</span>
           )}
         </div>
       </div>
@@ -245,10 +245,10 @@ export default function CertificationsPage() {
             <div className="stat-card flex items-center gap-2">
               <Award size={14} className="text-[#F59E0B]" />
               <span className="font-mono text-sm text-[#E8F0FE] font-700">{certs.length}</span>
-              <span className="text-xs text-[#4A6080]">Total</span>
+              <span className="text-xs text-[#64B5F6]">Total</span>
             </div>
             <div className="stat-card flex items-center gap-2">
-              <span className="text-xs text-[#4A6080] font-mono">
+              <span className="text-xs text-[#64B5F6] font-mono">
                 {certs.filter(c=>c.link && c.link!=='#').length} verifiable online
               </span>
             </div>
@@ -286,8 +286,8 @@ export default function CertificationsPage() {
             <button onClick={() => setModal('add')}
               className="glass-card h-full min-h-[280px] flex flex-col items-center justify-center gap-3 border-2 border-dashed transition-colors hover:border-blue-500/40"
               style={{ borderColor:'rgba(99,120,162,0.2)' }}>
-              <Plus size={28} className="text-[#4A6080]" />
-              <span className="text-xs text-[#4A6080] font-mono">Add Certification</span>
+              <Plus size={28} className="text-[#64B5F6]" />
+              <span className="text-xs text-[#64B5F6] font-mono">Add Certification</span>
             </button>
           )}
         </div>

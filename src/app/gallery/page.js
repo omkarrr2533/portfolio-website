@@ -66,7 +66,7 @@ function UploadModal({ onClose, onUpload }) {
       <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-700 text-[#E8F0FE]">Upload Photo</h2>
-          <button onClick={onClose} className="text-[#4A6080] hover:text-white"><X size={18}/></button>
+          <button onClick={onClose} className="text-[#64B5F6] hover:text-white"><X size={18}/></button>
         </div>
 
         {/* Drop zone */}
@@ -76,12 +76,12 @@ function UploadModal({ onClose, onUpload }) {
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
           className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer mb-4 transition-all"
-          style={{ borderColor: dragging ? '#4F46E5' : '#CBD5E1', background: dragging ? '#EEF2FF':'transparent' }}
+          style={{ borderColor: dragging ? '#4F46E5' : '#64B5F6', background: dragging ? '#EEF2FF':'transparent' }}
         >
           {preview ? (
             <img src={preview} alt="preview" className="w-full h-32 object-cover rounded-lg" />
           ) : (
-            <div className="flex flex-col items-center gap-2 text-[#4A6080]">
+            <div className="flex flex-col items-center gap-2 text-[#64B5F6]">
               <Upload size={28} />
               <p className="text-sm">Drag & drop or <span className="text-[#60A5FA]">browse</span></p>
               <p className="text-xs">PNG, JPG, GIF, WebP — from your PC</p>
@@ -144,7 +144,7 @@ function Lightbox({ item, onClose, onDelete }) {
           <div>
             <h3 className="text-lg font-700 text-[#E8F0FE] mb-1">{item.title}</h3>
             {item.description && <p className="text-sm text-[#8EA4C8] mb-2">{item.description}</p>}
-            <div className="flex items-center gap-4 text-xs text-[#4A6080]">
+            <div className="flex items-center gap-4 text-xs text-[#64B5F6]">
               <span className="flex items-center gap-1"><Calendar size={11}/>{item.date}</span>
               <span className="flex items-center gap-1"><Tag size={11}/>{item.category}</span>
             </div>
@@ -174,7 +174,7 @@ function GalleryCard({ item, onClick, onDelete }) {
           <img src={item.src} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
-            <Image size={32} className="text-[#4A6080]" />
+            <Image size={32} className="text-[#64B5F6]" />
           </div>
         )}
       </div>
@@ -265,7 +265,7 @@ export default function GalleryPage() {
           ].map(s => (
             <div key={s.label} className="stat-card flex items-center gap-2">
               <span className="font-mono font-700 text-[#60A5FA] text-sm">{s.value}</span>
-              <span className="text-xs text-[#4A6080]">{s.label}</span>
+              <span className="text-xs text-[#64B5F6]">{s.label}</span>
             </div>
           ))}
         </div>
@@ -273,9 +273,9 @@ export default function GalleryPage() {
         {/* Grid */}
         {filtered.length === 0 ? (
           <div className="glass-card p-16 text-center">
-            <FolderOpen size={48} className="text-[#4A6080] mx-auto mb-4 opacity-50" />
+            <FolderOpen size={48} className="text-[#64B5F6] mx-auto mb-4 opacity-50" />
             <p className="text-[#8EA4C8] mb-2">No photos yet</p>
-            <p className="text-xs text-[#4A6080] mb-6">
+            <p className="text-xs text-[#64B5F6] mb-6">
               {filter !== 'All' ? `No ${filter} photos — try another category` : 'Click "Upload Photo" to add your first photo from your PC'}
             </p>
             <button onClick={() => setShowUpload(true)} className="btn-primary text-sm">
@@ -288,10 +288,10 @@ export default function GalleryPage() {
             <div
               onClick={() => setShowUpload(true)}
               className="aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer group transition-all"
-              style={{ borderColor:'#CBD5E1', background:'#F8FAFC' }}
+              style={{ borderColor:'#64B5F6', background:'#F8FAFC' }}
             >
-              <Plus size={24} className="text-[#4A6080] group-hover:text-[#60A5FA] mb-2 transition-colors" />
-              <span className="text-xs text-[#4A6080] group-hover:text-[#60A5FA] font-mono transition-colors">Add Photo</span>
+              <Plus size={24} className="text-[#64B5F6] group-hover:text-[#60A5FA] mb-2 transition-colors" />
+              <span className="text-xs text-[#64B5F6] group-hover:text-[#60A5FA] font-mono transition-colors">Add Photo</span>
             </div>
 
             {filtered.map((item, i) => (
