@@ -252,6 +252,8 @@ export default function HomePage() {
   const [loading,      setLoading]   = useState(true)
   const [ghOk,         setGhOk]      = useState(true)
   const [statsVisible, setVisible]   = useState(false)
+  const [editingBio,   setEditingBio] = useState(false)
+  const [editingStack, setEditingStack] = useState(false)
   const statsRef = useRef(null)
   const photoRef = useRef(null)
   const admin = useAdmin()
