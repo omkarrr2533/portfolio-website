@@ -5,7 +5,7 @@ import {
   Github, Star, GitFork, GitPullRequest, Eye,
   TrendingUp, Code2, Users, RefreshCw, ExternalLink,
   Award, CheckCircle, Clock, BookOpen, Activity,
-  GitCommit, GitBranch, Zap, Globe, Lock,
+  GitCommit, GitBranch, Zap, Globe, Lock, ArrowRight,
 } from 'lucide-react'
 
 const LANG_COLOR = {
