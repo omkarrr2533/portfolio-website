@@ -27,13 +27,16 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        style={{ background: '#F8FAFC', color: '#1E293B', minHeight: '100vh' }}
+        style={{
+          background: '#060D1F',
+          color: '#E8F0FE',
+          minHeight: '100vh',
+        }}
         className="flex flex-col"
       >
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />
-        {/* Admin widget — floating bottom-right, always rendered */}
         <AdminWidget />
       </body>
     </html>

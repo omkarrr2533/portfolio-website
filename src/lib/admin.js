@@ -1,148 +1,222 @@
 'use client'
 
 /**
- * Admin gate — all "edit", "add", "delete" UI is hidden behind this.
+ * Secure Admin Gate
  *
- * To unlock:  open DevTools console and run:
- *   localStorage.setItem('admin_token', 'OK_ADMIN_2025')
- *   location.reload()
+ * HOW TO USE:
+ *   1. Set ADMIN_PASSWORD and ADMIN_JWT_SECRET in .env.local
+ *   2. Click the shield icon (bottom-right) on your site
+ *   3. Enter your password — it's verified server-side via HttpOnly cookie
+ *   4. To log out: click the shield icon again → "Exit Admin Mode"
  *
- * To lock again:
- *   localStorage.removeItem('admin_token')
- *   location.reload()
- *
- * The secret key should match ADMIN_TOKEN below.
- * For production, change it to something harder to guess.
+ * The password is NEVER stored in JavaScript source code.
  */
-const ADMIN_TOKEN = 'OK_ADMIN_2025'
 
-import { useState, useEffect } from 'react'
-import { ShieldCheck, ShieldOff, Eye, EyeOff, Lock, X } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { ShieldCheck, ShieldOff, Lock, X, Eye, EyeOff, Loader } from 'lucide-react'
 
-/** Returns true if admin mode is active */
-export function isAdmin() {
-  if (typeof window === 'undefined') return false
-  try {
-    return localStorage.getItem('admin_token') === ADMIN_TOKEN
-  } catch {
-    return false
-  }
-}
-
-/** React hook — reactively tracks admin state */
+/* ── React hook — reactively tracks admin state ──── */
 export function useAdmin() {
   const [admin, setAdmin] = useState(false)
-  useEffect(() => {
-    setAdmin(isAdmin())
-    const onStorage = () => setAdmin(isAdmin())
-    window.addEventListener('storage', onStorage)
-    return () => window.removeEventListener('storage', onStorage)
+
+  const checkSession = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/auth', { credentials: 'include' })
+      const data = await res.json()
+      setAdmin(data.isAdmin === true)
+    } catch {
+      setAdmin(false)
+    }
   }, [])
+
+  useEffect(() => {
+    checkSession()
+  }, [checkSession])
+
   return admin
 }
 
-/** Renders children only when admin is active */
+/* ── Render children only when admin is active ─────── */
 export function AdminOnly({ children, fallback = null }) {
   const admin = useAdmin()
   return admin ? children : fallback
 }
 
-/**
- * Floating admin toggle widget shown in bottom-right corner.
- * Renders only once; provides login / logout UI.
- */
+/* ─────────────────────────────────────────────────────────
+   FLOATING ADMIN WIDGET
+───────────────────────────────────────────────────────── */
 export function AdminWidget() {
-  const admin = useAdmin()
-  const [open, setOpen] = useState(false)
-  const [token, setToken] = useState('')
-  const [err, setErr] = useState('')
+  const [admin,    setAdmin]    = useState(false)
+  const [open,     setOpen]     = useState(false)
+  const [password, setPassword] = useState('')
+  const [showPw,   setShowPw]   = useState(false)
+  const [error,    setError]    = useState('')
+  const [loading,  setLoading]  = useState(false)
 
-  const login = () => {
-    if (token === ADMIN_TOKEN) {
-      localStorage.setItem('admin_token', ADMIN_TOKEN)
-      window.dispatchEvent(new Event('storage'))
-      setOpen(false)
-      setToken('')
-      setErr('')
-    } else {
-      setErr('Invalid admin key.')
+  /* Check session on mount */
+  useEffect(() => {
+    fetch('/api/admin/auth', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => setAdmin(d.isAdmin === true))
+      .catch(() => {})
+  }, [])
+
+  const login = async () => {
+    if (!password) return
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+        credentials: 'include',
+      })
+      const data = await res.json()
+      if (data.success) {
+        setAdmin(true)
+        setOpen(false)
+        setPassword('')
+      } else {
+        setError(data.error || 'Invalid password.')
+      }
+    } catch {
+      setError('Network error. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem('admin_token')
-    window.dispatchEvent(new Event('storage'))
+  const logout = async () => {
+    await fetch('/api/admin/auth', { method: 'DELETE', credentials: 'include' })
+    setAdmin(false)
     setOpen(false)
   }
 
   return (
     <>
-      {/* Trigger button */}
+      {/* ── Trigger button ── */}
       <button
         onClick={() => setOpen(v => !v)}
         title={admin ? 'Admin mode active' : 'Admin login'}
-        className="fixed bottom-5 right-5 z-[900] w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all"
         style={{
-          background: admin ? '#4F46E5' : '#1E293B',
+          position: 'fixed', bottom: 20, right: 20,
+          zIndex: 900,
+          width: 42, height: 42,
+          borderRadius: '50%',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: admin
+            ? 'linear-gradient(135deg,#4F46E5,#7C3AED)'
+            : 'rgba(13,21,38,0.9)',
+          border: `1px solid ${admin ? 'rgba(79,70,229,0.5)' : 'rgba(148,163,184,0.15)'}`,
           color: '#fff',
+          cursor: 'pointer',
+          boxShadow: admin ? '0 0 20px rgba(79,70,229,0.5)' : '0 4px 16px rgba(0,0,0,0.4)',
+          transition: 'all 200ms ease',
         }}
       >
-        {admin ? <ShieldCheck size={17} /> : <Lock size={17} />}
+        {admin ? <ShieldCheck size={18} /> : <Lock size={16} />}
       </button>
 
-      {/* Panel */}
+      {/* ── Panel ── */}
       {open && (
         <div
-          className="fixed bottom-16 right-5 z-[900] w-72 rounded-xl shadow-xl overflow-hidden animate-scale-in"
-          style={{ background: '#fff', border: '1px solid #E2E8F0' }}
+          style={{
+            position: 'fixed', bottom: 70, right: 20, zIndex: 900,
+            width: 288,
+            background: 'rgba(13,21,38,0.95)',
+            border: '1px solid rgba(148,163,184,0.12)',
+            borderRadius: 16,
+            boxShadow: '0 0 40px rgba(0,0,0,0.6), 0 0 24px rgba(79,70,229,0.15)',
+            backdropFilter: 'blur(20px)',
+            overflow: 'hidden',
+            animation: 'scaleIn 0.2s ease both',
+          }}
         >
-          {/* Header */}
-          <div
-            className="flex items-center justify-between px-4 py-3"
-            style={{ borderBottom: '1px solid #E2E8F0', background: admin ? '#EEF2FF' : '#F8FAFC' }}
-          >
-            <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: admin ? '#4F46E5' : '#1E293B' }}>
-              {admin ? <ShieldCheck size={15} /> : <Lock size={15} />}
-              {admin ? 'Admin Mode Active' : 'Admin Login'}
+          {/* Panel header */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '14px 16px',
+            borderBottom: '1px solid rgba(148,163,184,0.08)',
+            background: admin ? 'rgba(79,70,229,0.08)' : 'transparent',
+          }}>
+            <div style={{ display:'flex', alignItems:'center', gap: 8 }}>
+              {admin ? <ShieldCheck size={15} color="#818CF8" /> : <Lock size={14} color="#4A6080" />}
+              <span style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:13, color: admin ? '#818CF8' : '#E8F0FE' }}>
+                {admin ? 'Admin Active' : 'Admin Login'}
+              </span>
             </div>
-            <button onClick={() => setOpen(false)} style={{ color: '#94A3B8' }}>
+            <button onClick={() => setOpen(false)} style={{ color:'#4A6080', cursor:'pointer' }}>
               <X size={15} />
             </button>
           </div>
 
-          <div className="p-4">
+          <div style={{ padding: 16 }}>
             {admin ? (
-              <div className="space-y-3">
-                <p className="text-xs" style={{ color: '#64748B' }}>
-                  All edit and add controls are now visible across the site.
+              <div style={{ display:'flex', flexDirection:'column', gap: 12 }}>
+                <p style={{ fontSize:12, color:'#8EA4C8', lineHeight:1.6 }}>
+                  Edit controls are visible across the site. Your session expires in 24 hours.
                 </p>
-                <button onClick={logout} className="btn btn-danger btn-sm w-full">
+                <button
+                  onClick={logout}
+                  style={{
+                    display:'flex', alignItems:'center', justifyContent:'center', gap:6,
+                    width:'100%', padding:'9px 0',
+                    background:'rgba(239,68,68,0.1)', border:'1px solid rgba(239,68,68,0.3)',
+                    borderRadius:9, color:'#f87171', fontSize:13, fontWeight:600, cursor:'pointer',
+                  }}
+                >
                   <ShieldOff size={13} /> Exit Admin Mode
                 </button>
               </div>
             ) : (
-              <div className="space-y-3">
-                <p className="text-xs" style={{ color: '#64748B' }}>
-                  Enter your admin key to unlock edit controls.
+              <div style={{ display:'flex', flexDirection:'column', gap: 12 }}>
+                <p style={{ fontSize:12, color:'#4A6080', lineHeight:1.6 }}>
+                  Enter your admin password to unlock editing controls.
                 </p>
-                <div className="relative">
+
+                <div style={{ position:'relative' }}>
                   <input
-                    type="password"
-                    placeholder="Admin key…"
-                    value={token}
-                    onChange={e => { setToken(e.target.value); setErr('') }}
+                    type={showPw ? 'text' : 'password'}
+                    placeholder="Admin password…"
+                    value={password}
+                    onChange={e => { setPassword(e.target.value); setError('') }}
                     onKeyDown={e => e.key === 'Enter' && login()}
-                    className="input text-sm"
-                    style={{ paddingRight: 40 }}
+                    autoFocus
+                    style={{
+                      width:'100%', padding:'9px 38px 9px 12px',
+                      background:'rgba(5,10,23,0.8)', border:'1px solid rgba(148,163,184,0.15)',
+                      borderRadius:9, color:'#E8F0FE', fontSize:13, outline:'none',
+                      fontFamily:'JetBrains Mono,monospace',
+                    }}
                   />
+                  <button
+                    onClick={() => setShowPw(v => !v)}
+                    style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', color:'#4A6080', cursor:'pointer' }}
+                  >
+                    {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
                 </div>
-                {err && <p className="text-xs" style={{ color: '#DC2626' }}>{err}</p>}
-                <button onClick={login} className="btn btn-primary btn-sm w-full">
-                  <ShieldCheck size={13} /> Unlock
+
+                {error && (
+                  <p style={{ fontSize:12, color:'#f87171' }}>{error}</p>
+                )}
+
+                <button
+                  onClick={login}
+                  disabled={!password || loading}
+                  style={{
+                    display:'flex', alignItems:'center', justifyContent:'center', gap:6,
+                    width:'100%', padding:'9px 0',
+                    background:'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                    border:'none', borderRadius:9,
+                    color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer',
+                    opacity: (!password || loading) ? 0.5 : 1,
+                  }}
+                >
+                  {loading ? <Loader size={13} className="animate-spin" /> : <ShieldCheck size={13} />}
+                  {loading ? 'Verifying…' : 'Unlock Admin'}
                 </button>
-                <p className="text-xs text-center" style={{ color: '#CBD5E1' }}>
-                  Hint: set via DevTools localStorage
-                </p>
               </div>
             )}
           </div>
