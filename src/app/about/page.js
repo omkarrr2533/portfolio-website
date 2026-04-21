@@ -48,7 +48,7 @@ function useAbout() {
     try {
       const d = localStorage.getItem('aboutData')
       if (d) setData(JSON.parse(d))
-      const p = localStorage.getItem('profilePhoto')
+      const p = localStorage.getItem('profilePhotoUrl')
       if (p) setPhoto(p)
     } catch {}
   }, [])
@@ -244,7 +244,7 @@ export default function AboutPage() {
                   { label:'CGPA', key:'cgpa' },
                   { label:'Rank', key:'rank' },
                 ].map(s => (
-                  <div style={{ background: '#EEF2FF', border: '1px solid #C7D2FE', borderRadius: 10 }} className="p-3 text-center">
+                  <div style={{ background: 'rgba(79,70,229,0.1)', border: '1px solid rgba(79,70,229,0.25)', borderRadius: 10 }} className="p-3 text-center">
   {editMode
     ? <Field value={data[s.key]} onChange={v=>update(s.key,v)}
         className="text-lg font-800 font-mono text-center block" style={{ color:'#4338CA' }} />

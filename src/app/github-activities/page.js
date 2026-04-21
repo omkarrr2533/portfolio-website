@@ -243,7 +243,7 @@ function ProfileCard({ stats }) {
           <div key={s.label} className="p-3 rounded-lg text-center"
             style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
             <s.icon size={14} className="mx-auto mb-1" style={{ color: s.accent }} />
-            <div className="text-base font-800 font-mono" style={{ color: '#1E293B' }}>{s.value}</div>
+            <div className="text-base font-800 font-mono" style={{ color: '#E8F0FE' }}>{s.value}</div>
 <div className="text-xs" style={{ color: '#64B5F6' }}>{s.label}</div>
           </div>
         ))}
@@ -333,7 +333,7 @@ export default function GitHubActivitiesPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-20"
-      style={{ background: '#F8FAFC' }}>
+      style={{ background: 'transparent' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* Header */}
@@ -372,7 +372,7 @@ export default function GitHubActivitiesPage() {
               <div key={s.label} className="glass-card p-5 text-center hover:border-blue-500/20 transition-colors"
                 style={{ animationDelay: `${i * 60}ms` }}>
                 <s.icon size={20} className="mx-auto mb-2" style={{ color: s.accent }} />
-                <p className="text-2xl font-800 font-mono" style={{ color: '#1E293B' }}>{s.value}</p>
+                <p className="text-2xl font-800 font-mono" style={{ color: '#E8F0FE' }}>{s.value}</p>
 <p className="text-xs mt-1" style={{ color: '#64B5F6' }}>{s.label}</p>
               </div>
             ))}
@@ -543,11 +543,11 @@ export default function GitHubActivitiesPage() {
         )}
 
         {/* Profile CTA */}
-        <div style={{ marginTop: 48, textAlign: 'center', padding: '32px 24px', background: 'linear-gradient(135deg,#EEF2FF,#F5F3FF)', borderRadius: 16, border: '1px solid #C7D2FE', maxWidth: 480, margin: '48px auto 0' }}>
+        <div style={{ marginTop: 48, textAlign: 'center', padding: '32px 24px', background: 'linear-gradient(135deg, rgba(79,70,229,0.1), rgba(124,58,237,0.08))', borderRadius: 16, border: '1px solid rgba(79,70,229,0.25)', maxWidth: 480, margin: '48px auto 0' }}>
   <div style={{ width: 44, height: 44, borderRadius: 12, background: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
     <Github size={20} color="#fff" />
   </div>
-  <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#1E293B', marginBottom: 6 }}>See the full picture</p>
+  <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#E8F0FE', marginBottom: 6 }}>See the full picture</p>
   <p style={{ fontSize: 13, color: '#64B5F6', marginBottom: 20 }}>Stars, contributions, followers and all repositories</p>
   <a
     href="https://github.com/omkarrr2533"

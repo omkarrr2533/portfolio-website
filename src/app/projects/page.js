@@ -312,7 +312,7 @@ export default function ProjectsPage() {
   const totalStars = ghRepos.reduce((s,r)=>s+r.stars,0)
 
   return (
-    <div style={{ minHeight:'100vh', background:'#F8FAFC', paddingTop:80, paddingBottom:96 }}>
+    <div style={{ minHeight:'100vh', background:'var(--bg)', paddingTop:80, paddingBottom:96 }}>
       <div className="container" style={{ paddingTop:32 }}>
 
         {/* Header */}

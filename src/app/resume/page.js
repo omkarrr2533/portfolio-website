@@ -60,7 +60,7 @@ export default function ResumePage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16"
-      style={{ background: '#F8FAFC' }}>
+      style={{ background: 'transparent' }}>
       <div className="container mx-auto px-4 max-w-5xl">
 
         {/* ── Header ── */}
@@ -194,7 +194,7 @@ export default function ResumePage() {
 
         {/* ── CTA ── */}
         <div className="glass-card p-8 text-center animate-fade-in"
-          style={{ background: 'linear-gradient(135deg,#EEF2FF,#F5F3FF)', borderColor: '#C7D2FE', animationDelay: '0.5s', animationFillMode: 'both' }}>
+          style={{ background: 'linear-gradient(135deg,rgba(79,70,229,0.1),rgba(124,58,237,0.08))', borderColor: 'rgba(79,70,229,0.25)', animationDelay: '0.5s', animationFillMode: 'both' }}>
           <Award size={32} className="text-[#F59E0B] mx-auto mb-3" />
           <h3 className="text-lg font-bold text-[#E8F0FE] mb-2">Want to know more?</h3>
           <p className="text-[#8EA4C8] text-sm mb-5">

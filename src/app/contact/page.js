@@ -46,7 +46,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-24" style={{ background: '#F8FAFC' }}>
+    <div className="min-h-screen pt-20 pb-24" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* ── Header ── */}
@@ -134,7 +134,7 @@ export default function ContactPage() {
 
             {/* Quick tip */}
             <div className="glass-card p-5"
-              style={{ background: '#EEF2FF', borderColor: '#C7D2FE' }}>
+              style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)' }}>
               <p className="text-xs text-[#4A6090] leading-relaxed">
                 <span className="text-[#60A5FA] font-semibold">Quick note:</span> I'm currently open to internships,
                 freelance work, and collaborative projects in backend development and AI/ML.

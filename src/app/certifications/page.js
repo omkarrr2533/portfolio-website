@@ -223,7 +223,7 @@ export default function CertificationsPage() {
   const [modal, setModal] = useState(null) // null | 'add' | cert object
 
   return (
-    <div className="min-h-screen pt-24 pb-16" style={{ background:'#F8FAFC' }}>
+    <div className="min-h-screen pt-24 pb-16" style={{ background:'var(--bg)' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
         {/* Header */}

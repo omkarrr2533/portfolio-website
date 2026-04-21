@@ -83,7 +83,7 @@ function StatPill({ icon: Icon, value, label, accent, delay = 0, started }) {
         <Icon size={15} style={{ color: accent }} />
       </div>
       <div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#1E293B', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.2 }}>
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#E8F0FE', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.2 }}>
           {isNum ? display : value}
         </div>
         <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{label}</div>
@@ -121,7 +121,7 @@ function RepoCard({ repo, index }) {
         </div>
         <ArrowRight size={12} color="#CBD5E1" />
       </div>
-      <p className="line-clamp-2" style={{ fontSize: 12, color: '#64748B', lineHeight: 1.6, marginBottom: 12, minHeight: 38 }}>
+      <p className="line-clamp-2" style={{ fontSize: 12, color: '#8EA4C8', lineHeight: 1.6, marginBottom: 12, minHeight: 38 }}>
         {repo.description || 'No description provided'}
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 11, color: '#94A3B8' }}>
@@ -214,11 +214,11 @@ function FeaturedCard({ project, index }) {
         >
           {project.tag}
         </span>
-        <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#1E293B', marginBottom: 4 }}>
+        <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#E8F0FE', marginBottom: 4 }}>
           {project.name}
         </h3>
         <p style={{ fontSize: 13, fontWeight: 600, color: project.accent, marginBottom: 8 }}>{project.headline}</p>
-        <p style={{ fontSize: 12.5, color: '#64748B', lineHeight: 1.65, marginBottom: 14 }}>{project.desc}</p>
+        <p style={{ fontSize: 12.5, color: '#8EA4C8', lineHeight: 1.65, marginBottom: 14 }}>{project.desc}</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
           {project.tech.map(t => <span key={t} className="tech-pill" style={{ fontSize: 11 }}>{t}</span>)}
         </div>
@@ -226,7 +226,7 @@ function FeaturedCard({ project, index }) {
           href={project.github}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: '#64748B', transition: 'color 150ms ease' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: '#8EA4C8', transition: 'color 150ms ease' }}
         >
           <Github size={13} />
           View Source
@@ -261,7 +261,7 @@ export default function HomePage() {
   /* Load saved */
   useEffect(() => {
     try {
-      const p = localStorage.getItem('profilePhoto')
+      const p = localStorage.getItem('profilePhotoUrl')
       if (p) setPhoto(p)
       const i = localStorage.getItem('portfolioInfo')
       if (i) setInfo(JSON.parse(i))
@@ -313,7 +313,7 @@ export default function HomePage() {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
 
       {/* ═══════════════════════════════════
           HERO
@@ -376,7 +376,7 @@ export default function HomePage() {
                 <Terminal size={15} color="#4F46E5" />
                 <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 15, color: '#475569' }}>
                   <span style={{ color: '#4F46E5' }}>~/om $ </span>
-                  <span style={{ color: '#1E293B' }}>{role}</span>
+                  <span style={{ color: '#E8F0FE' }}>{role}</span>
                   <span className="cursor-blink" />
                 </p>
               </div>
@@ -390,13 +390,13 @@ export default function HomePage() {
         onChange={e => updateInfo('bio', e.target.value)}
         rows={4}
         autoFocus
-        style={{ width: '100%', background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 14, fontFamily: 'Plus Jakarta Sans, sans-serif', outline: 'none', resize: 'vertical', color: '#1E293B' }}
+        style={{ width: '100%', background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 14, fontFamily: 'Plus Jakarta Sans, sans-serif', outline: 'none', resize: 'vertical', color: '#E8F0FE' }}
       />
       <button onClick={() => setEditingBio(false)} className="btn btn-primary btn-sm" style={{ marginTop: 6 }}>Done</button>
     </div>
   ) : (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-      <p style={{ color: '#475569', fontSize: 15, lineHeight: 1.75, flex: 1 }}>{info.bio}</p>
+      <p style={{ color: '#8EA4C8', fontSize: 15, lineHeight: 1.75, flex: 1 }}>{info.bio}</p>
       <button onClick={() => setEditingBio(true)} title="Edit bio" style={{ color: '#CBD5E1', background: 'none', border: 'none', cursor: 'pointer', padding: 2, marginTop: 3, flexShrink: 0 }}>
         <Edit3 size={13} />
       </button>
@@ -405,7 +405,7 @@ export default function HomePage() {
 </div>
 
               {/* Location */}
-              <div className="animate-slide-up delay-350" style={{ animationFillMode: 'both', display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#94A3B8', marginBottom: 20, fontFamily: 'JetBrains Mono, monospace' }}>
+              <div className="animate-slide-up delay-350" style={{ animationFillMode: 'both', display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#8EA4C8', marginBottom: 20, fontFamily: 'JetBrains Mono, monospace' }}>
                 <MapPin size={11} />
                 Mumbai, India · Open to Opportunities
               </div>
@@ -427,7 +427,7 @@ export default function HomePage() {
         onChange={e => updateInfo('stack', e.target.value)}
         autoFocus
         placeholder="Java · Spring Boot · Python (use · as separator)"
-        style={{ width: '100%', maxWidth: 520, background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontFamily: 'JetBrains Mono, monospace', outline: 'none', color: '#1E293B' }}
+        style={{ width: '100%', maxWidth: 520, background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontFamily: 'JetBrains Mono, monospace', outline: 'none', color: '##E8F0FE' }}
       />
       <button onClick={() => setEditingStack(false)} className="btn btn-primary btn-sm" style={{ marginTop: 6 }}>Done</button>
     </div>
@@ -560,12 +560,30 @@ export default function HomePage() {
                   </div>
                 </div>
                 <input ref={photoRef} type="file" accept="image/*" style={{ display: 'none' }}
-                  onChange={e => {
-                    const f = e.target.files?.[0]; if (!f) return
-                    const r = new FileReader()
-                    r.onload = ev => { setPhoto(ev.target.result); localStorage.setItem('profilePhoto', ev.target.result) }
-                    r.readAsDataURL(f)
-                  }} />
+                  onChange={async e => {
+                    const f = e.target.files?.[0]
+                    if (!f) return
+                    const formData = new FormData()
+                    formData.append('file', f)
+                    formData.append('folder', 'portfolio/profile')
+                    formData.append('public_id', 'profile_photo')
+                    try {
+                      const res = await fetch('/api/upload', {
+                      method: 'POST',
+                      body: formData,
+                      credentials: 'include',
+                    })
+                    const data = await res.json()
+                    if (data.success) {
+                      setPhoto(data.url)
+                      localStorage.setItem('profilePhotoUrl', data.url)
+                    } else {
+                      alert(data.error || 'Upload failed — are you logged in as admin?')
+                    }
+                    } catch {
+                      alert('Upload error. Check your Cloudinary credentials in .env.local')
+                    }
+                  }}/>
               </div>
 
               {/* Stat pills */}
@@ -613,14 +631,14 @@ export default function HomePage() {
       {/* ═══════════════════════════════════
           REPOS / PROJECTS
       ═══════════════════════════════════ */}
-      <section style={{ padding: '88px 0', background: '#fff' }}>
+      <section style={{ padding: '88px 0', background: 'var(--bg-surface)' }}>
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
             <div>
               <span className="section-label" style={{ marginBottom: 10, display: 'inline-flex' }}>
                 {ghOk && repos.length > 0 ? '// github · live sync' : '// featured projects'}
               </span>
-              <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(28px,4vw,42px)', color: '#1E293B', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+              <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(28px,4vw,42px)', color: '#E8F0FE', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
                 {ghOk && repos.length > 0 ? <><span className="gradient-text">Top</span> Repositories</> : <>Featured <span className="gradient-text">Projects</span></>}
               </h2>
             </div>
@@ -709,8 +727,8 @@ export default function HomePage() {
               textAlign: 'center',
               maxWidth: 640,
               margin: '0 auto',
-              background: 'linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%)',
-              borderColor: '#C7D2FE',
+              background: 'linear-gradient(135deg, rgba(79,70,229,0.12) 0%, rgba(124,58,237,0.1) 100%)',
+              borderColor: 'rgba(79,70,229,0.3)',
             }}
           >
             <div
@@ -727,10 +745,10 @@ export default function HomePage() {
             >
               <Zap size={22} color="#fff" />
             </div>
-            <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 24, color: '#1E293B', marginBottom: 10, letterSpacing: '-0.02em' }}>
+            <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 24, color: '#E8F0FE', marginBottom: 10, letterSpacing: '-0.02em' }}>
               Open to Collaboration
             </h3>
-            <p style={{ color: '#64748B', fontSize: 14, marginBottom: 28, lineHeight: 1.7, maxWidth: 440, margin: '0 auto 28px' }}>
+            <p style={{ color: '#8EA4C8', fontSize: 14, marginBottom: 28, lineHeight: 1.7, maxWidth: 440, margin: '0 auto 28px' }}>
               Interested in backend projects, AI/ML experiments, or open source? Let's build something together.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
