@@ -807,7 +807,7 @@ export default function FuturisticPortfolio() {
       role: 'Google Summer of Code 2026',
       org: 'PEcAn Project (Open Source)',
       period: 'GSoC 2026',
-      desc: 'Refactoring PEcAn's monolithic architecture for modularity and scalability. Designing plugin interfaces, decoupling core modules, and improving test coverage for climate/ecosystem models.',
+      desc: "Refactoring PEcAn's monolithic architecture for modularity and scalability. Designing plugin interfaces, decoupling core modules, and improving test coverage for climate/ecosystem models.",
       tags: ['R', 'Python', 'Architecture', 'Modular Design', 'Open Source'],
       accent: '#00ffe7',
       accent2: '#4ade80',
