@@ -47,7 +47,7 @@ function ProjectModal({ project, onSave, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content animate-scale-in" style={{ padding: 24 }} onClick={e=>e.stopPropagation()}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
-          <h2 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:18, color:'#1E293B' }}>
+          <h2 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:18, color:'#E8F0FE' }}>
             {project ? 'Edit Project' : 'Add Project'}
           </h2>
           <button onClick={onClose} style={{ color:'#94A3B8', cursor:'pointer' }}><X size={18}/></button>
@@ -100,7 +100,7 @@ function GitHubPickerModal({ repos, existing, onAdd, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content animate-scale-in" style={{ padding:24, maxWidth:560 }} onClick={e=>e.stopPropagation()}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-          <h2 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:18, color:'#1E293B' }}>
+          <h2 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:18, color:'#E8F0FE' }}>
             Add from GitHub
           </h2>
           <button onClick={onClose} style={{ color:'#94A3B8', cursor:'pointer' }}><X size={18}/></button>
@@ -115,7 +115,7 @@ function GitHubPickerModal({ repos, existing, onAdd, onClose }) {
               onClick={() => { onAdd(r); }}
               style={{
                 display:'flex', alignItems:'center', gap:12, padding:'11px 14px',
-                background:'#F8FAFC', border:'1px solid #E2E8F0', borderRadius:9, cursor:'pointer',
+                background:'rgba(13,21,38,0.7)', border:'1px solid rgba(148,163,184,0.1)', borderRadius:9, cursor:'pointer',
                 textAlign:'left', transition:'all 150ms ease',
               }}
             >
@@ -320,7 +320,7 @@ export default function ProjectsPage() {
           <span className="section-label" style={{ display:'inline-flex', marginBottom:14 }}>// projects</span>
           <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:14 }}>
             <div>
-              <h1 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:'clamp(32px,5vw,52px)', color:'#1E293B', letterSpacing:'-0.03em', lineHeight:1.1 }}>
+              <h1 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:'clamp(32px,5vw,52px)', color:'#E8F0FE', letterSpacing:'-0.03em', lineHeight:1.1 }}>
                 All <span className="gradient-text">Projects</span>
               </h1>
               <p style={{ fontSize:14, color:'#64748B', marginTop:6 }}>Your custom projects + live GitHub repositories</p>
@@ -347,14 +347,16 @@ export default function ProjectsPage() {
           ].filter(Boolean).map(s=>(
             <div key={s.label} className="stat-card" style={{ display:'flex', alignItems:'center', gap:10 }}>
               <s.icon size={14} style={{ color:s.accent }}/>
-              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:700, color:'#1E293B' }}>{s.v}</span>
+              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:700, color:'#E8F0FE' }}>{s.v}</span>
               <span style={{ fontSize:12, color:'#94A3B8' }}>{s.label}</span>
             </div>
           ))}
         </div>
 
         {/* Tabs */}
-        <div style={{ display:'flex', gap:2, marginBottom:20, padding:4, background:'#F1F5F9', borderRadius:10, width:'fit-content' }}>
+        <div style={{ display:'flex', gap:2, marginBottom:20, padding:4,
+  background:'rgba(13,21,38,0.8)', border:'1px solid rgba(148,163,184,0.1)',
+  borderRadius:10, width:'fit-content' }}>
           {[
             { id:'all',    label:`All (${allProjects.length})` },
             { id:'custom', label:`Mine (${customProjects.length})` },
@@ -365,7 +367,7 @@ export default function ProjectsPage() {
               onClick={()=>setTab(t.id)}
               style={{
                 padding:'7px 16px', borderRadius:7, fontSize:13, fontWeight:600,
-                background: tab===t.id ? '#fff':'transparent',
+                 background: tab===t.id ? 'rgba(79,70,229,0.15)':'transparent',
                 color:      tab===t.id ? '#4F46E5':'#64748B',
                 boxShadow:  tab===t.id ? '0 1px 3px rgba(15,23,42,.08)':'none',
                 border:'none', cursor:'pointer', transition:'all 150ms ease',

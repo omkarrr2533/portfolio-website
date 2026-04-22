@@ -244,7 +244,7 @@ function ProfileCard({ stats }) {
             style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
             <s.icon size={14} className="mx-auto mb-1" style={{ color: s.accent }} />
             <div className="text-base font-800 font-mono" style={{ color: '#E8F0FE' }}>{s.value}</div>
-<div className="text-xs" style={{ color: '#64B5F6' }}>{s.label}</div>
+<div className="text-xs" style={{ color: '#8EA4C8' }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -386,7 +386,7 @@ export default function GitHubActivitiesPage() {
             <button key={t} onClick={() => setActiveTab(t)}
               className="px-4 py-2 rounded-lg text-sm font-600 transition-all capitalize"
               style={{
-                background: activeTab === t ? '#EEF2FF' : 'transparent',
+                background: activeTab === t ? 'rgba(79,70,229,0.15)' : 'transparent',
                 color: activeTab === t ? '#4F46E5' : '#64B5F6',
               }}>
               {t}

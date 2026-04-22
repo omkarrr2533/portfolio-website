@@ -5,26 +5,20 @@ import { Upload, X, ZoomIn, Calendar, Tag, Plus, Trash2, FolderOpen, Image } fro
 
 const CATEGORIES = ['All', 'Events', 'Achievements', 'Travel', 'Projects', 'Blogs']
 
-const DEFAULT_ITEMS = []
-
 function useGallery() {
-  const [items, setItems] = useState(DEFAULT_ITEMS)
+  const [items, setItems] = useState([])
   useEffect(() => {
     try {
       const saved = localStorage.getItem('galleryItems')
       if (saved) setItems(JSON.parse(saved))
     } catch {}
   }, [])
-  const save = (next) => {
-    setItems(next)
-    localStorage.setItem('galleryItems', JSON.stringify(next))
-  }
+  const save = (next) => { setItems(next); localStorage.setItem('galleryItems', JSON.stringify(next)) }
   const add = (item) => save([item, ...items])
   const remove = (id) => save(items.filter(i => i.id !== id))
   return { items, add, remove }
 }
 
-// ── Upload area ──────────────────────────────────
 function UploadModal({ onClose, onUpload }) {
   const [dragging, setDragging] = useState(false)
   const [form, setForm] = useState({ title:'', category:'Events', description:'' })
@@ -49,34 +43,28 @@ function UploadModal({ onClose, onUpload }) {
 
   const handleSubmit = () => {
     if (!preview || !form.title) return
-    onUpload({
-      id: Date.now().toString(),
-      ...form,
-      src: preview,
-      date: new Date().toISOString().split('T')[0],
-    })
+    onUpload({ id: Date.now().toString(), ...form, src: preview, date: new Date().toISOString().split('T')[0] })
     onClose()
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(15,23,42,0.5)' }}
+      style={{ background:'rgba(4,8,20,0.85)', backdropFilter:'blur(8px)' }}
       onClick={onClose}
     >
       <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-700 text-[#E8F0FE]">Upload Photo</h2>
+          <h2 className="text-lg font-bold text-[#E8F0FE]">Upload Photo</h2>
           <button onClick={onClose} className="text-[#64B5F6] hover:text-white"><X size={18}/></button>
         </div>
 
-        {/* Drop zone */}
         <div
           onDragOver={e => { e.preventDefault(); setDragging(true) }}
           onDragLeave={() => setDragging(false)}
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
           className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer mb-4 transition-all"
-          style={{ borderColor: dragging ? '#4F46E5' : '#64B5F6', background: dragging ? '#EEF2FF':'transparent' }}
+          style={{ borderColor: dragging ? '#4F46E5' : 'rgba(100,181,246,0.4)', background: dragging ? 'rgba(79,70,229,0.1)':'transparent' }}
         >
           {preview ? (
             <img src={preview} alt="preview" className="w-full h-32 object-cover rounded-lg" />
@@ -84,41 +72,24 @@ function UploadModal({ onClose, onUpload }) {
             <div className="flex flex-col items-center gap-2 text-[#64B5F6]">
               <Upload size={28} />
               <p className="text-sm">Drag & drop or <span className="text-[#60A5FA]">browse</span></p>
-              <p className="text-xs">PNG, JPG, GIF, WebP — from your PC</p>
+              <p className="text-xs text-[#4A6090]">PNG, JPG, GIF, WebP — from your PC</p>
             </div>
           )}
           <input ref={inputRef} type="file" accept="image/*" className="hidden"
             onChange={e => { const f = e.target.files?.[0]; if (f) readFile(f) }} />
         </div>
 
-        {/* Form */}
         <div className="space-y-3">
-          <input
-            placeholder="Title *"
-            value={form.title}
-            onChange={e => setForm(p => ({...p, title: e.target.value}))}
-            className="input-dark text-sm"
-          />
-          <select
-            value={form.category}
-            onChange={e => setForm(p => ({...p, category: e.target.value}))}
-            className="input-dark text-sm"
-          >
+          <input placeholder="Title *" value={form.title} onChange={e => setForm(p => ({...p, title: e.target.value}))} className="input-dark text-sm" />
+          <select value={form.category} onChange={e => setForm(p => ({...p, category: e.target.value}))} className="input-dark text-sm">
             {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c}>{c}</option>)}
           </select>
-          <textarea
-            placeholder="Description (optional)"
-            value={form.description}
-            onChange={e => setForm(p => ({...p, description: e.target.value}))}
-            rows={2}
-            className="input-dark text-sm resize-none"
-          />
+          <textarea placeholder="Description (optional)" value={form.description} onChange={e => setForm(p => ({...p, description: e.target.value}))} rows={2} className="input-dark text-sm resize-none" />
         </div>
 
         <div className="flex gap-2 mt-5">
           <button onClick={onClose} className="btn-secondary flex-1 text-sm py-2">Cancel</button>
-          <button onClick={handleSubmit} disabled={!preview || !form.title}
-            className="btn-primary flex-1 text-sm py-2 disabled:opacity-40">
+          <button onClick={handleSubmit} disabled={!preview || !form.title} className="btn-primary flex-1 text-sm py-2 disabled:opacity-40 flex items-center justify-center gap-2">
             <Upload size={14} /> Upload
           </button>
         </div>
@@ -127,22 +98,20 @@ function UploadModal({ onClose, onUpload }) {
   )
 }
 
-// ── Lightbox ─────────────────────────────────────
 function Lightbox({ item, onClose, onDelete }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(15,23,42,0.85)' }}
+      style={{ background:'rgba(4,8,20,0.9)', backdropFilter:'blur(8px)' }}
       onClick={onClose}
     >
       <div className="relative max-w-3xl w-full" onClick={e => e.stopPropagation()}>
-        <button onClick={onClose}
-          className="absolute -top-10 right-0 text-white/60 hover:text-white flex items-center gap-1 text-sm">
+        <button onClick={onClose} className="absolute -top-10 right-0 text-white/60 hover:text-white flex items-center gap-1 text-sm">
           <X size={16}/> Close
         </button>
         <img src={item.src} alt={item.title} className="w-full rounded-xl max-h-[60vh] object-contain" />
         <div className="glass-card p-5 mt-3 flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-lg font-700 text-[#E8F0FE] mb-1">{item.title}</h3>
+            <h3 className="text-lg font-bold text-[#E8F0FE] mb-1">{item.title}</h3>
             {item.description && <p className="text-sm text-[#8EA4C8] mb-2">{item.description}</p>}
             <div className="flex items-center gap-4 text-xs text-[#64B5F6]">
               <span className="flex items-center gap-1"><Calendar size={11}/>{item.date}</span>
@@ -159,7 +128,6 @@ function Lightbox({ item, onClose, onDelete }) {
   )
 }
 
-// ── Gallery card ─────────────────────────────────
 function GalleryCard({ item, onClick, onDelete }) {
   const [hov, setHov] = useState(false)
   return (
@@ -173,32 +141,27 @@ function GalleryCard({ item, onClick, onDelete }) {
         {item.src ? (
           <img src={item.src} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center">
+          <div className="w-full h-full flex items-center justify-center"
+            style={{ background:'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2))' }}>
             <Image size={32} className="text-[#64B5F6]" />
           </div>
         )}
       </div>
-
-      {/* Overlay */}
       <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 ${hov ? 'opacity-100':'opacity-0'}`}>
         <div className="absolute bottom-0 left-0 right-0 p-4">
-          <h3 className="text-white font-600 text-sm mb-1 truncate">{item.title}</h3>
+          <h3 className="text-white font-semibold text-sm mb-1 truncate">{item.title}</h3>
           <div className="flex items-center justify-between">
             <span className="text-white/60 text-xs">{item.category}</span>
             <ZoomIn size={14} className="text-white/60" />
           </div>
         </div>
       </div>
-
-      {/* Category badge */}
       <div className="absolute top-3 left-3">
         <span className="text-xs font-mono px-2 py-0.5 rounded-full"
           style={{ background:'rgba(0,0,0,0.6)', color:'#60A5FA', border:'1px solid rgba(59,130,246,0.3)' }}>
           {item.category}
         </span>
       </div>
-
-      {/* Delete btn */}
       <button
         onClick={e => { e.stopPropagation(); onDelete(item.id) }}
         className="absolute top-3 right-3 p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/40 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -209,7 +172,6 @@ function GalleryCard({ item, onClick, onDelete }) {
   )
 }
 
-// ═══════════════════════════════════════════════
 export default function GalleryPage() {
   const { items, add, remove } = useGallery()
   const [filter, setFilter] = useState('All')
@@ -219,11 +181,9 @@ export default function GalleryPage() {
   const filtered = filter === 'All' ? items : items.filter(i => i.category === filter)
 
   return (
-    <div className="min-h-screen pt-24 pb-16"
-      style={{ background:'#F8FAFC' }}>
+    /* FIXED: was #F8FAFC (light), now uses dark theme */
+    <div className="min-h-screen pt-24 pb-16" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto px-4 sm:px-6">
-
-        {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <span className="section-badge mb-4 block w-fit mx-auto">// photo gallery</span>
           <h1 className="font-display font-800 text-[#E8F0FE] mb-3" style={{ fontSize:'clamp(32px,5vw,52px)' }}>
@@ -234,13 +194,11 @@ export default function GalleryPage() {
           </p>
         </div>
 
-        {/* Controls */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-          {/* Category filter */}
           <div className="flex flex-wrap gap-2 justify-center">
             {CATEGORIES.map(cat => (
               <button key={cat} onClick={() => setFilter(cat)}
-                className="px-4 py-1.5 rounded-full text-sm font-500 transition-all"
+                className="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
                 style={{
                   background: filter===cat ? 'linear-gradient(135deg,#3B82F6,#6366F1)':'rgba(15,26,46,0.8)',
                   color: filter===cat ? '#fff':'#8EA4C8',
@@ -250,27 +208,22 @@ export default function GalleryPage() {
               </button>
             ))}
           </div>
-
-          {/* Upload button */}
-          <button onClick={() => setShowUpload(true)} className="btn-primary text-sm px-5 py-2.5 shrink-0">
+          <button onClick={() => setShowUpload(true)} className="btn-primary text-sm px-5 py-2.5 shrink-0 flex items-center gap-2">
             <Plus size={16}/> Upload Photo
           </button>
         </div>
 
-        {/* Stats */}
         <div className="flex gap-4 mb-8 flex-wrap">
-          {[
-            { label:'Total Photos', value:items.length },
+          {[{ label:'Total Photos', value:items.length },
             ...CATEGORIES.filter(c=>c!=='All').map(c => ({ label:c, value:items.filter(i=>i.category===c).length }))
           ].map(s => (
             <div key={s.label} className="stat-card flex items-center gap-2">
-              <span className="font-mono font-700 text-[#60A5FA] text-sm">{s.value}</span>
+              <span className="font-mono font-bold text-[#60A5FA] text-sm">{s.value}</span>
               <span className="text-xs text-[#64B5F6]">{s.label}</span>
             </div>
           ))}
         </div>
 
-        {/* Grid */}
         {filtered.length === 0 ? (
           <div className="glass-card p-16 text-center">
             <FolderOpen size={48} className="text-[#64B5F6] mx-auto mb-4 opacity-50" />
@@ -278,41 +231,29 @@ export default function GalleryPage() {
             <p className="text-xs text-[#64B5F6] mb-6">
               {filter !== 'All' ? `No ${filter} photos — try another category` : 'Click "Upload Photo" to add your first photo from your PC'}
             </p>
-            <button onClick={() => setShowUpload(true)} className="btn-primary text-sm">
+            <button onClick={() => setShowUpload(true)} className="btn-primary text-sm flex items-center gap-2 mx-auto">
               <Upload size={14}/> Upload Your First Photo
             </button>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            {/* Upload tile */}
             <div
               onClick={() => setShowUpload(true)}
               className="aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer group transition-all"
-              style={{ borderColor:'#64B5F6', background:'#F8FAFC' }}
+              style={{ borderColor:'rgba(100,181,246,0.4)', background:'rgba(13,21,38,0.5)' }}
             >
               <Plus size={24} className="text-[#64B5F6] group-hover:text-[#60A5FA] mb-2 transition-colors" />
               <span className="text-xs text-[#64B5F6] group-hover:text-[#60A5FA] font-mono transition-colors">Add Photo</span>
             </div>
-
-            {filtered.map((item, i) => (
-              <GalleryCard
-                key={item.id}
-                item={item}
-                onClick={() => setSelected(item)}
-                onDelete={remove}
-              />
+            {filtered.map(item => (
+              <GalleryCard key={item.id} item={item} onClick={() => setSelected(item)} onDelete={remove} />
             ))}
           </div>
         )}
       </div>
 
-      {/* Modals */}
-      {showUpload && (
-        <UploadModal onClose={() => setShowUpload(false)} onUpload={add} />
-      )}
-      {selected && (
-        <Lightbox item={selected} onClose={() => setSelected(null)} onDelete={remove} />
-      )}
+      {showUpload && <UploadModal onClose={() => setShowUpload(false)} onUpload={add} />}
+      {selected && <Lightbox item={selected} onClose={() => setSelected(null)} onDelete={remove} />}
     </div>
   )
 }

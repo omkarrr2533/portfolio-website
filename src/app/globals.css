@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -89,7 +89,6 @@ body {
   overflow-x: hidden;
   line-height: 1.6;
   letter-spacing: -0.01em;
-  /* Subtle noise texture for depth */
   background-image:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(79,70,229,0.15), transparent),
     radial-gradient(ellipse 60% 40% at -10% 60%, rgba(6,182,212,0.06), transparent);
@@ -109,10 +108,27 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* ═══════════════════════════════════════════════════════
+   DARK THEME GLOBAL OVERRIDES
+   Force dark backgrounds on any elements that might have light hardcoded colors
+═══════════════════════════════════════════════════════ */
+
+/* Override any remaining light backgrounds in select dropdowns */
+select option {
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+/* Force dark on any modal overlays */
+[class*="modal"], [class*="Modal"] {
+  background: rgba(4,8,20,0.9) !important;
+}
+
+/* ═══════════════════════════════════════════════════════
    TYPOGRAPHY
 ═══════════════════════════════════════════════════════ */
 .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
 .font-mono    { font-family: 'JetBrains Mono', monospace; }
+.font-rajdhani { font-family: 'Rajdhani', sans-serif; }
 
 /* ═══════════════════════════════════════════════════════
    GRADIENT TEXT
@@ -173,22 +189,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-color: var(--border-accent);
 }
 
-/* Glow border variant */
-.glass-card-glow {
-  position: relative;
-}
-.glass-card-glow::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: calc(var(--r-lg) + 1px);
-  background: linear-gradient(135deg, rgba(79,70,229,0.6), rgba(6,182,212,0.3), rgba(79,70,229,0.1));
-  z-index: -1;
-  opacity: 0;
-  transition: opacity var(--t-base);
-}
-.glass-card-glow:hover::before { opacity: 1; }
-
 /* ═══════════════════════════════════════════════════════
    CARD SYSTEM
 ═══════════════════════════════════════════════════════ */
@@ -228,7 +228,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   text-decoration: none;
   border: none;
   position: relative;
-  -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
 }
@@ -328,6 +327,25 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-color: var(--border-accent);
   color: #818CF8;
   transform: scale(1.05);
+}
+
+/* Tech pill variant for home page */
+.tech-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(13,21,38,0.8);
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 500;
+  color: #8EA4C8;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all var(--t-fast);
+}
+.tech-pill:hover {
+  border-color: rgba(79,70,229,0.4);
+  color: #818CF8;
 }
 
 .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: var(--r-pill); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
@@ -507,12 +525,9 @@ select.input-dark {
 .delay-300 { animation-delay: 300ms; }
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
-.delay-600 { animation-delay: 600ms; }
-.delay-700 { animation-delay: 700ms; }
-.delay-800 { animation-delay: 800ms; }
 
 /* ═══════════════════════════════════════════════════════
-   SCROLL REVEAL (works with IntersectionObserver)
+   SCROLL REVEAL
 ═══════════════════════════════════════════════════════ */
 .reveal {
   opacity: 0;
@@ -602,8 +617,32 @@ select.input-dark {
 }
 
 /* ═══════════════════════════════════════════════════════
-   ADMIN BADGE
+   PROJECTS PAGE — DARK OVERRIDES
+   Override light backgrounds in the projects page tabs/stats/pickers
 ═══════════════════════════════════════════════════════ */
+
+/* Section heading */
+.section-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* Line clamp */
+.line-clamp-1{overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;}
+.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.line-clamp-3{overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+
+/* Scroll X */
+.scroll-x { overflow-x: auto; }
+
+/* Hover lift */
+.hover-lift { transition: transform var(--t-base), box-shadow var(--t-base); }
+.hover-lift:hover { transform: translateY(-4px); box-shadow: var(--glow-sm), var(--shadow-xl); }
+
+/* Admin badge */
 .admin-badge {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 3px 10px;
@@ -613,50 +652,13 @@ select.input-dark {
   font-size: 11px; font-weight: 700; color: #FBBF24; letter-spacing: 0.04em;
 }
 
-/* ═══════════════════════════════════════════════════════
-   HOVER LIFT
-═══════════════════════════════════════════════════════ */
-.hover-lift { transition: transform var(--t-base), box-shadow var(--t-base); }
-.hover-lift:hover { transform: translateY(-4px); box-shadow: var(--glow-sm), var(--shadow-xl); }
-
-/* ═══════════════════════════════════════════════════════
-   SECTION HEADING
-═══════════════════════════════════════════════════════ */
-.section-heading {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-/* ═══════════════════════════════════════════════════════
-   LINE CLAMP
-═══════════════════════════════════════════════════════ */
-.line-clamp-1{overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;}
-.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-.line-clamp-3{overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
-
-/* ═══════════════════════════════════════════════════════
-   SCROLL X
-═══════════════════════════════════════════════════════ */
-.scroll-x { overflow-x: auto; }
-
-/* ═══════════════════════════════════════════════════════
-   PAGE TRANSITION
-═══════════════════════════════════════════════════════ */
-main { animation: fadeIn .3s var(--ease); }
-
-/* ═══════════════════════════════════════════════════════
-   MISC COMPATIBILITY
-═══════════════════════════════════════════════════════ */
+/* Gradient text variants */
 .gradient-text-blue {
   background: linear-gradient(135deg, #818CF8 0%, #06B6D4 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.section-label { /* alias */ }
 
 /* Neon animated border */
 .neon-border {
@@ -679,3 +681,6 @@ main { animation: fadeIn .3s var(--ease); }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* Page transition */
+main { animation: fadeIn .3s var(--ease); }

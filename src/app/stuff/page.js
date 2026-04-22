@@ -53,7 +53,6 @@ function useStuff() {
   return { data, update }
 }
 
-// ── Inline field ──────────────────────────────────
 function InlineField({ value, onChange, multiline=false, className='', placeholder='Click to edit' }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(value)
@@ -72,9 +71,9 @@ function InlineField({ value, onChange, multiline=false, className='', placehold
     <span className="relative inline-block w-full">
       {multiline
         ? <textarea value={draft} onChange={e=>setDraft(e.target.value)} rows={3} autoFocus
-            className={`w-full bg-[#0B1325] border border-blue-500/50 rounded px-2 py-1 text-sm outline-none resize-none ${className}`} />
+            className={`w-full bg-[#0B1325] border border-blue-500/50 rounded px-2 py-1 text-sm outline-none resize-none text-[#E8F0FE] ${className}`} />
         : <input value={draft} onChange={e=>setDraft(e.target.value)} autoFocus
-            className={`w-full bg-[#0B1325] border-b border-blue-500 outline-none text-sm ${className}`} />
+            className={`w-full bg-[#0B1325] border-b border-blue-500 outline-none text-sm text-[#E8F0FE] ${className}`} />
       }
       <span className="flex gap-1 mt-1">
         <button onClick={save} className="text-[10px] text-green-400 hover:text-green-300 flex items-center gap-0.5"><Check size={10}/>Save</button>
@@ -84,15 +83,14 @@ function InlineField({ value, onChange, multiline=false, className='', placehold
   )
 }
 
-// ── Blog modal ────────────────────────────────────
 function BlogModal({ blog, onSave, onClose }) {
   const [form, setForm] = useState(blog || { id:Date.now().toString(), title:'', excerpt:'', date:new Date().toISOString().split('T')[0], tags:'', readTime:'5 min' })
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(15,23,42,0.5)' }} onClick={onClose}>
+      style={{ background:'rgba(4,8,20,0.85)', backdropFilter:'blur(8px)' }} onClick={onClose}>
       <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e=>e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-700 text-[#E8F0FE]">{blog?'Edit Post':'New Blog Post'}</h2>
+          <h2 className="text-lg font-bold text-[#E8F0FE]">{blog?'Edit Post':'New Blog Post'}</h2>
           <button onClick={onClose} className="text-[#64B5F6] hover:text-white"><X size={18}/></button>
         </div>
         <div className="space-y-3">
@@ -113,7 +111,7 @@ function BlogModal({ blog, onSave, onClose }) {
         <div className="flex gap-2 mt-4">
           <button onClick={onClose} className="btn-secondary flex-1 text-sm py-2">Cancel</button>
           <button onClick={()=>{onSave(form);onClose()}} disabled={!form.title||!form.excerpt}
-            className="btn-primary flex-1 text-sm py-2 disabled:opacity-40">
+            className="btn-primary flex-1 text-sm py-2 disabled:opacity-40 flex items-center justify-center gap-2">
             <Save size={14}/> Save
           </button>
         </div>
@@ -122,36 +120,26 @@ function BlogModal({ blog, onSave, onClose }) {
   )
 }
 
-// ═══════════════════════════════════════════════
 export default function StuffPage() {
   const { data, update } = useStuff()
   const [editMode, setEditMode] = useState(false)
   const [blogModal, setBlogModal] = useState(null)
 
-  // Blog helpers
   const addBlog = (b) => update('blogs', [b, ...data.blogs])
   const editBlog = (b) => update('blogs', data.blogs.map(p=>p.id===b.id?b:p))
   const deleteBlog = (id) => update('blogs', data.blogs.filter(b=>b.id!==id))
-
-  // Hobbies
   const updateHobby = (id, key, val) => update('hobbies', data.hobbies.map(h=>h.id===id?{...h,[key]:val}:h))
   const deleteHobby = (id) => update('hobbies', data.hobbies.filter(h=>h.id!==id))
   const addHobby = () => update('hobbies', [...data.hobbies, { id:Date.now().toString(), icon:'Zap', title:'New Interest', desc:'Add description here', accent:'#3B82F6' }])
-
-  // Favorites
   const updateFav = (id, key, val) => update('favorites', data.favorites.map(f=>f.id===id?{...f,[key]:val}:f))
   const deleteFav = (id) => update('favorites', data.favorites.filter(f=>f.id!==id))
   const addFav = () => update('favorites', [...data.favorites, { id:Date.now().toString(), category:'New Category', items:'item1,item2' }])
-
-  // Stats
   const updateStat = (id, key, val) => update('stats', data.stats.map(s=>s.id===id?{...s,[key]:val}:s))
 
   return (
-    <div className="min-h-screen pt-24 pb-16"
-      style={{ background:'#F8FAFC' }}>
+    /* FIXED: was #F8FAFC (light), now uses dark theme */
+    <div className="min-h-screen pt-24 pb-16" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto px-4 sm:px-6">
-
-        {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="font-display font-800 text-[#E8F0FE] mb-3" style={{ fontSize:'clamp(32px,5vw,52px)' }}>
             My <span className="gradient-text">Stuff</span>
@@ -161,20 +149,18 @@ export default function StuffPage() {
           </p>
         </div>
 
-        {/* Edit mode toggle */}
         <div className="flex justify-end mb-8">
           <button onClick={()=>setEditMode(v=>!v)}
             className={`text-sm font-mono flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-              editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
-                       : 'btn-secondary'
+              editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30' : 'btn-secondary'
             }`}>
             {editMode ? <><Check size={13}/> Done Editing</> : <><Edit2 size={13}/> Edit Mode</>}
           </button>
         </div>
 
-        {/* ── Fun Stats ── */}
+        {/* Fun Stats */}
         <div className="mb-14">
-          <h2 className="text-xl font-700 text-[#E8F0FE] mb-5 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-[#E8F0FE] mb-5 flex items-center gap-2">
             <TrendingUp size={18} className="text-[#60A5FA]" /> Fun Stats
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -184,13 +170,11 @@ export default function StuffPage() {
                 <div key={s.id} className="glass-card p-5 text-center">
                   <Icon size={24} className="mx-auto mb-2 text-[#60A5FA]" />
                   {editMode
-                    ? <InlineField value={s.value} onChange={v=>updateStat(s.id,'value',v)}
-                        className="text-3xl font-800 text-[#E8F0FE] font-mono block text-center" />
-                    : <div className="text-3xl font-800 text-[#E8F0FE] font-mono mb-1">{s.value}</div>
+                    ? <InlineField value={s.value} onChange={v=>updateStat(s.id,'value',v)} className="text-3xl font-bold text-[#E8F0FE] font-mono block text-center" />
+                    : <div className="text-3xl font-bold text-[#E8F0FE] font-mono mb-1">{s.value}</div>
                   }
                   {editMode
-                    ? <InlineField value={s.label} onChange={v=>updateStat(s.id,'label',v)}
-                        className="text-xs text-[#8EA4C8] block text-center" />
+                    ? <InlineField value={s.label} onChange={v=>updateStat(s.id,'label',v)} className="text-xs text-[#8EA4C8] block text-center" />
                     : <p className="text-xs text-[#8EA4C8]">{s.label}</p>
                   }
                 </div>
@@ -199,14 +183,14 @@ export default function StuffPage() {
           </div>
         </div>
 
-        {/* ── Interests ── */}
+        {/* Interests */}
         <div className="mb-14">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-700 text-[#E8F0FE] flex items-center gap-2">
+            <h2 className="text-xl font-bold text-[#E8F0FE] flex items-center gap-2">
               <Zap size={18} className="text-[#F59E0B]" /> Interests & Hobbies
             </h2>
             {editMode && (
-              <button onClick={addHobby} className="btn-secondary text-xs py-1.5 px-3">
+              <button onClick={addHobby} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1">
                 <Plus size={13}/> Add
               </button>
             )}
@@ -217,8 +201,7 @@ export default function StuffPage() {
               return (
                 <div key={h.id} className="glass-card p-5 group relative">
                   {editMode && (
-                    <button onClick={()=>deleteHobby(h.id)}
-                      className="absolute top-3 right-3 text-red-400/50 hover:text-red-400">
+                    <button onClick={()=>deleteHobby(h.id)} className="absolute top-3 right-3 text-red-400/50 hover:text-red-400">
                       <Trash2 size={14}/>
                     </button>
                   )}
@@ -228,13 +211,11 @@ export default function StuffPage() {
                   </div>
                   {editMode
                     ? <>
-                        <InlineField value={h.title} onChange={v=>updateHobby(h.id,'title',v)}
-                          className="font-700 text-[#E8F0FE] text-sm mb-1 block" />
-                        <InlineField value={h.desc} onChange={v=>updateHobby(h.id,'desc',v)}
-                          className="text-xs text-[#8EA4C8] block" multiline />
+                        <InlineField value={h.title} onChange={v=>updateHobby(h.id,'title',v)} className="font-bold text-[#E8F0FE] text-sm mb-1 block" />
+                        <InlineField value={h.desc} onChange={v=>updateHobby(h.id,'desc',v)} className="text-xs text-[#8EA4C8] block" multiline />
                       </>
                     : <>
-                        <h3 className="font-700 text-[#E8F0FE] text-sm mb-1">{h.title}</h3>
+                        <h3 className="font-bold text-[#E8F0FE] text-sm mb-1">{h.title}</h3>
                         <p className="text-xs text-[#8EA4C8]">{h.desc}</p>
                       </>
                   }
@@ -244,13 +225,13 @@ export default function StuffPage() {
           </div>
         </div>
 
-        {/* ── Blog Posts ── */}
+        {/* Blog Posts */}
         <div className="mb-14">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-700 text-[#E8F0FE] flex items-center gap-2">
+            <h2 className="text-xl font-bold text-[#E8F0FE] flex items-center gap-2">
               <BookOpen size={18} className="text-[#8B5CF6]" /> Blog Posts & Thoughts
             </h2>
-            <button onClick={()=>setBlogModal('new')} className="btn-secondary text-xs py-1.5 px-3">
+            <button onClick={()=>setBlogModal('new')} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1">
               <Plus size={13}/> New Post
             </button>
           </div>
@@ -265,16 +246,12 @@ export default function StuffPage() {
                   </div>
                   {editMode && (
                     <div className="flex gap-1 shrink-0">
-                      <button onClick={()=>setBlogModal(post)} className="text-[#64B5F6] hover:text-[#60A5FA]">
-                        <Edit2 size={13}/>
-                      </button>
-                      <button onClick={()=>deleteBlog(post.id)} className="text-red-400/50 hover:text-red-400">
-                        <Trash2 size={13}/>
-                      </button>
+                      <button onClick={()=>setBlogModal(post)} className="text-[#64B5F6] hover:text-[#60A5FA]"><Edit2 size={13}/></button>
+                      <button onClick={()=>deleteBlog(post.id)} className="text-red-400/50 hover:text-red-400"><Trash2 size={13}/></button>
                     </div>
                   )}
                 </div>
-                <h3 className="text-sm font-700 text-[#E8F0FE] mb-2 leading-snug">{post.title}</h3>
+                <h3 className="text-sm font-bold text-[#E8F0FE] mb-2 leading-snug">{post.title}</h3>
                 <p className="text-xs text-[#8EA4C8] line-clamp-3 mb-3">{post.excerpt}</p>
                 <div className="flex flex-wrap gap-1">
                   {post.tags.split(',').map(t=>t.trim()).filter(Boolean).map(t => (
@@ -286,14 +263,14 @@ export default function StuffPage() {
           </div>
         </div>
 
-        {/* ── Favorites ── */}
+        {/* Favorites */}
         <div className="mb-14">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-700 text-[#E8F0FE] flex items-center gap-2">
+            <h2 className="text-xl font-bold text-[#E8F0FE] flex items-center gap-2">
               <Heart size={18} className="text-red-400" /> Favorites
             </h2>
             {editMode && (
-              <button onClick={addFav} className="btn-secondary text-xs py-1.5 px-3">
+              <button onClick={addFav} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1">
                 <Plus size={13}/> Add Category
               </button>
             )}
@@ -303,21 +280,15 @@ export default function StuffPage() {
               <div key={fav.id} className="glass-card p-5">
                 <div className="flex items-start justify-between mb-3">
                   {editMode
-                    ? <InlineField value={fav.category} onChange={v=>updateFav(fav.id,'category',v)}
-                        className="font-700 text-[#E8F0FE] text-sm" />
-                    : <h3 className="font-700 text-[#E8F0FE] text-sm flex items-center gap-2">
-                        <Heart size={13} className="text-red-400" /> {fav.category}
-                      </h3>
+                    ? <InlineField value={fav.category} onChange={v=>updateFav(fav.id,'category',v)} className="font-bold text-[#E8F0FE] text-sm" />
+                    : <h3 className="font-bold text-[#E8F0FE] text-sm flex items-center gap-2"><Heart size={13} className="text-red-400" /> {fav.category}</h3>
                   }
                   {editMode && (
-                    <button onClick={()=>deleteFav(fav.id)} className="text-red-400/50 hover:text-red-400">
-                      <Trash2 size={13}/>
-                    </button>
+                    <button onClick={()=>deleteFav(fav.id)} className="text-red-400/50 hover:text-red-400"><Trash2 size={13}/></button>
                   )}
                 </div>
                 {editMode
-                  ? <InlineField value={fav.items} onChange={v=>updateFav(fav.id,'items',v)}
-                      className="text-xs text-[#8EA4C8]" />
+                  ? <InlineField value={fav.items} onChange={v=>updateFav(fav.id,'items',v)} className="text-xs text-[#8EA4C8]" />
                   : (
                     <div className="flex flex-wrap gap-1.5">
                       {fav.items.split(',').map(i=>i.trim()).filter(Boolean).map(i => (
@@ -333,26 +304,22 @@ export default function StuffPage() {
           </div>
         </div>
 
-        {/* ── Quote ── */}
+        {/* Quote — FIXED: was light gradient, now dark glass */}
         <div className="glass-card p-10 text-center max-w-2xl mx-auto"
-          style={{ background:'linear-gradient(135deg,#EEF2FF,#F5F3FF)', border:'1px solid #C7D2FE' }}>
+          style={{ background:'linear-gradient(135deg, rgba(79,70,229,0.12), rgba(124,58,237,0.08))', borderColor:'rgba(79,70,229,0.25)' }}>
           {editMode
             ? <>
-                <InlineField value={data.quote} onChange={v=>update('quote',v)}
-                  className="text-xl font-700 text-[#E8F0FE] italic block text-center mb-2" />
-                <InlineField value={data.quoteAuthor} onChange={v=>update('quoteAuthor',v)}
-                  className="text-sm text-[#8EA4C8] block text-center" />
+                <InlineField value={data.quote} onChange={v=>update('quote',v)} className="text-xl font-bold text-[#E8F0FE] italic block text-center mb-2" />
+                <InlineField value={data.quoteAuthor} onChange={v=>update('quoteAuthor',v)} className="text-sm text-[#8EA4C8] block text-center" />
               </>
             : <>
-                <p className="text-xl font-700 text-[#E8F0FE] italic mb-3">{data.quote}</p>
+                <p className="text-xl font-bold text-[#E8F0FE] italic mb-3">{data.quote}</p>
                 <p className="text-sm text-[#8EA4C8]">{data.quoteAuthor}</p>
               </>
           }
         </div>
-
       </div>
 
-      {/* Blog modal */}
       {blogModal && (
         <BlogModal
           blog={blogModal === 'new' ? null : blogModal}

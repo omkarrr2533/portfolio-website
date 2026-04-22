@@ -2,770 +2,1390 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import {
-  Github, Linkedin, Mail, ExternalLink, Download,
-  ArrowRight, Star, GitFork, Camera, Code2, Terminal,
-  Zap, Award, TrendingUp, Lock, Globe, Cpu, BusFront,
-  ChevronDown, MapPin, Plus, Trash2, X, Check, Edit3,
+  Github, Linkedin, Mail, ExternalLink, ArrowRight,
+  Download, ChevronDown, Terminal, Code2, Cpu, Zap,
+  Globe, Star, GitBranch, Youtube
 } from 'lucide-react'
-import { AdminOnly, useAdmin } from '@/lib/admin'
 
-/* ── Typewriter ─────────────────────────────────── */
-function useTypewriter(words, speed = 70, pause = 2000) {
-  const [display, setDisplay] = useState('')
-  const [wi, setWi] = useState(0)
-  const [ci, setCi] = useState(0)
-  const [del, setDel] = useState(false)
+/* ─────────────────────────────────────────────────────────
+   CANVAS: Animated node network background
+───────────────────────────────────────────────────────── */
+function NodeNetwork({ mousePos }) {
+  const canvasRef = useRef(null)
+  const animRef = useRef(null)
+  const nodesRef = useRef([])
+  const mousePosRef = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
-    const cur = words[wi]
-    let t
-    if (!del && ci <= cur.length)      t = setTimeout(() => setCi(c => c + 1), speed)
-    else if (!del && ci > cur.length)  t = setTimeout(() => setDel(true), pause)
-    else if (del && ci > 0)            t = setTimeout(() => setCi(c => c - 1), speed / 2)
-    else { setDel(false); setWi(i => (i + 1) % words.length) }
-    setDisplay(cur.substring(0, ci))
-    return () => clearTimeout(t)
-  }, [ci, del, wi, words, speed, pause])
-  return display
-}
+    mousePosRef.current = mousePos
+  }, [mousePos])
 
-/* ── Counter ────────────────────────────────────── */
-function useCounter(target, duration = 1600, delay = 0, started = false) {
-  const [count, setCount] = useState(0)
   useEffect(() => {
-    if (!started) return
-    const id = setTimeout(() => {
-      const t0 = Date.now()
-      const step = () => {
-        const p = Math.min((Date.now() - t0) / duration, 1)
-        setCount(Math.round((1 - Math.pow(1 - p, 3)) * target))
-        if (p < 1) requestAnimationFrame(step)
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    // Create nodes
+    const count = Math.min(80, Math.floor((window.innerWidth * window.innerHeight) / 12000))
+    nodesRef.current = Array.from({ length: count }, (_, i) => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2.5 + 1,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: 0.02 + Math.random() * 0.02,
+      hue: Math.random() > 0.6 ? 180 : 270, // cyan or violet
+    }))
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      const mx = mousePosRef.current.x || canvas.width / 2
+      const my = mousePosRef.current.y || canvas.height / 2
+
+      nodesRef.current.forEach(n => {
+        n.x += n.vx
+        n.y += n.vy
+        n.pulse += n.pulseSpeed
+
+        // Soft bounce
+        if (n.x < 0 || n.x > canvas.width) n.vx *= -1
+        if (n.y < 0 || n.y > canvas.height) n.vy *= -1
+
+        // Mouse attraction (subtle)
+        const dx = mx - n.x, dy = my - n.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < 200) {
+          n.x += dx * 0.0015
+          n.y += dy * 0.0015
+        }
+
+        const alpha = 0.4 + 0.4 * Math.sin(n.pulse)
+        ctx.beginPath()
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
+        ctx.fillStyle = `hsla(${n.hue}, 100%, 70%, ${alpha})`
+        ctx.shadowBlur = 8
+        ctx.shadowColor = `hsla(${n.hue}, 100%, 70%, 0.8)`
+        ctx.fill()
+        ctx.shadowBlur = 0
+      })
+
+      // Draw connections
+      const nodes = nodesRef.current
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x
+          const dy = nodes[i].y - nodes[j].y
+          const d = Math.sqrt(dx * dx + dy * dy)
+          if (d < 140) {
+            const alpha = (1 - d / 140) * 0.35
+            const hue = (nodes[i].hue + nodes[j].hue) / 2
+            ctx.beginPath()
+            ctx.moveTo(nodes[i].x, nodes[i].y)
+            ctx.lineTo(nodes[j].x, nodes[j].y)
+            ctx.strokeStyle = `hsla(${hue}, 100%, 70%, ${alpha})`
+            ctx.lineWidth = 0.6
+            ctx.stroke()
+          }
+        }
       }
-      requestAnimationFrame(step)
-    }, delay)
-    return () => clearTimeout(id)
-  }, [started, target, duration, delay])
-  return count
-}
 
-const LANG_CLR = {
-  JavaScript:'#F59E0B', TypeScript:'#3B82F6', Python:'#8B5CF6',
-  Java:'#EF4444', Go:'#06B6D4', CSS:'#EC4899', HTML:'#F97316',
-  'C++':'#14B8A6', Rust:'#F97316',
-}
+      animRef.current = requestAnimationFrame(draw)
+    }
 
-/* ── Stat pill ──────────────────────────────────── */
-function StatPill({ icon: Icon, value, label, accent, delay = 0, started }) {
-  const n = parseInt(value)
-  const isNum = !isNaN(n)
-  const cnt = useCounter(isNum ? n : 0, 1400, delay, started)
-  const display = isNum ? cnt + (String(value).includes('+') ? '+' : '') : value
-
-  return (
-    <div
-      className="stat-card flex items-center gap-3 animate-slide-up"
-      style={{ animationDelay: `${delay}ms`, animationFillMode: 'both' }}
-    >
-      <div
-        style={{
-          width: 32,
-          height: 32,
-          borderRadius: 8,
-          background: `${accent}14`,
-          border: `1px solid ${accent}25`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}
-      >
-        <Icon size={15} style={{ color: accent }} />
-      </div>
-      <div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#E8F0FE', fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.2 }}>
-          {isNum ? display : value}
-        </div>
-        <div style={{ fontSize: 11, color: '#94A3B8', marginTop: 1 }}>{label}</div>
-      </div>
-    </div>
-  )
-}
-
-/* ── Repo card ──────────────────────────────────── */
-function RepoCard({ repo, index }) {
-  const lc = LANG_CLR[repo.language] || '#94A3B8'
-  const d = repo.pushedAt ? Math.floor((Date.now() - new Date(repo.pushedAt)) / 86400000) : null
-  const ago = d === null ? '' : d === 0 ? 'today' : d === 1 ? '1d ago' : d < 30 ? `${d}d ago` : `${Math.floor(d/30)}mo ago`
-
-  return (
-    <a
-      href={repo.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="card card-lift animate-slide-up"
-      style={{
-        display: 'block',
-        padding: '16px 18px',
-        animationDelay: `${index * 55}ms`,
-        animationFillMode: 'both',
-        textDecoration: 'none',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between', marginBottom: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {repo.isPrivate ? <Lock size={12} color="#94A3B8" /> : <Globe size={12} color="#94A3B8" />}
-          <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 13, fontWeight: 600, color: '#4F46E5', maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {repo.name}
-          </span>
-        </div>
-        <ArrowRight size={12} color="#CBD5E1" />
-      </div>
-      <p className="line-clamp-2" style={{ fontSize: 12, color: '#8EA4C8', lineHeight: 1.6, marginBottom: 12, minHeight: 38 }}>
-        {repo.description || 'No description provided'}
-      </p>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 11, color: '#94A3B8' }}>
-        {repo.language && (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: lc, display: 'inline-block' }} />
-            {repo.language}
-          </span>
-        )}
-        <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Star size={10} />{repo.stars}</span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><GitFork size={10} />{repo.forks}</span>
-        {ago && <span style={{ marginLeft: 'auto' }}>{ago}</span>}
-      </div>
-    </a>
-  )
-}
-
-/* ── Featured projects ──────────────────────────── */
-const FEATURED = [
-  {
-    id:'fp1', tag:'Computer Vision · AI', name:'Hand Sign Detection',
-    headline:'Real-time gesture recognition via deep learning',
-    desc:'Detects hand gestures from live webcam using MediaPipe + a custom PyTorch CNN. Supports full ASL alphabet.',
-    tech:['Python','PyTorch','MediaPipe','OpenCV'],
-    github:'https://github.com/omkarrr2533/Hand_Sign_Detection_Using_Python.git',
-    accent:'#4F46E5', icon: Cpu,
-  },
-  {
-    id:'fp2', tag:'Full Stack · Real-time', name:'City Bus Tracking',
-    headline:'Live bus location tracking for public transport',
-    desc:'Spring Boot REST backend + WebSocket location updates + Leaflet Map for route visualisation.',
-    tech:['Java','Spring Boot','WebSocket','Leaflet.js'],
-    github:'https://github.com/omkarrr2533/BUS-ETA.git',
-    accent:'#059669', icon: BusFront,
-  },
-]
-
-function FeaturedCard({ project, index }) {
-  const Icon = project.icon
-  return (
-    <div
-      className="card card-lift animate-slide-up"
-      style={{
-        overflow: 'hidden',
-        animationDelay: `${index * 120}ms`,
-        animationFillMode: 'both',
-        borderTop: `3px solid ${project.accent}`,
-      }}
-    >
-      <div
-        style={{
-          height: 100,
-          background: `${project.accent}0C`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{
-            width: 52,
-            height: 52,
-            borderRadius: 14,
-            background: `${project.accent}18`,
-            border: `1px solid ${project.accent}30`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icon size={24} color={project.accent} />
-        </div>
-      </div>
-      <div style={{ padding: '18px 20px' }}>
-        <span
-          style={{
-            display: 'inline-block',
-            padding: '3px 8px',
-            background: `${project.accent}12`,
-            color: project.accent,
-            border: `1px solid ${project.accent}25`,
-            borderRadius: 99,
-            fontSize: 10,
-            fontWeight: 700,
-            letterSpacing: '0.04em',
-            marginBottom: 10,
-            fontFamily: 'JetBrains Mono, monospace',
-          }}
-        >
-          {project.tag}
-        </span>
-        <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#E8F0FE', marginBottom: 4 }}>
-          {project.name}
-        </h3>
-        <p style={{ fontSize: 13, fontWeight: 600, color: project.accent, marginBottom: 8 }}>{project.headline}</p>
-        <p style={{ fontSize: 12.5, color: '#8EA4C8', lineHeight: 1.65, marginBottom: 14 }}>{project.desc}</p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
-          {project.tech.map(t => <span key={t} className="tech-pill" style={{ fontSize: 11 }}>{t}</span>)}
-        </div>
-        <a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: '#8EA4C8', transition: 'color 150ms ease' }}
-        >
-          <Github size={13} />
-          View Source
-          <ArrowRight size={11} />
-        </a>
-      </div>
-    </div>
-  )
-}
-
-/* ══════════════════════════════════════════════════
-   PAGE
-══════════════════════════════════════════════════ */
-export default function HomePage() {
-  const [photo,        setPhoto]     = useState(null)
-  const [info,         setInfo]      = useState({
-    name: 'Om Shripad Kapale',
-    bio: 'CSE 3rd year B.Tech student in the top 5% of college with 8.11 CGPA. I build scalable backend systems, explore AI/ML frontiers, and contribute to open source across 6+ organisations.',
-    stack: 'Java · Spring Boot · Python · PyTorch · PostgreSQL · REST API',
-  })
-  const [repos,        setRepos]     = useState([])
-  const [ghStats,      setGhStats]   = useState(null)
-  const [loading,      setLoading]   = useState(true)
-  const [ghOk,         setGhOk]      = useState(true)
-  const [statsVisible, setVisible]   = useState(false)
-  const [editingBio,   setEditingBio]   = useState(false)
-  const [editingStack, setEditingStack] = useState(false)
-  const statsRef = useRef(null)
-  const photoRef = useRef(null)
-  const admin = useAdmin()
-
-  /* Load saved */
-  useEffect(() => {
-    try {
-      const p = localStorage.getItem('profilePhotoUrl')
-      if (p) setPhoto(p)
-      const i = localStorage.getItem('portfolioInfo')
-      if (i) setInfo(JSON.parse(i))
-    } catch {}
+    draw()
+    return () => {
+      cancelAnimationFrame(animRef.current)
+      window.removeEventListener('resize', resize)
+    }
   }, [])
 
-  const updateInfo = useCallback((key, val) => {
-    setInfo(prev => {
-      const next = { ...prev, [key]: val }
-      try { localStorage.setItem('portfolioInfo', JSON.stringify(next)) } catch {}
-      return next
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute', inset: 0, zIndex: 0,
+        opacity: 0.65, pointerEvents: 'none',
+      }}
+    />
+  )
+}
+
+/* ─────────────────────────────────────────────────────────
+   CANVAS: Holographic globe
+───────────────────────────────────────────────────────── */
+function HoloGlobe({ mousePos }) {
+  const canvasRef = useRef(null)
+  const animRef = useRef(null)
+  const rotRef = useRef(0)
+  const mousePosRef = useRef({ x: 0, y: 0 })
+
+  useEffect(() => {
+    mousePosRef.current = mousePos
+  }, [mousePos])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    const S = 340
+    canvas.width = S
+    canvas.height = S
+
+    const draw = () => {
+      ctx.clearRect(0, 0, S, S)
+      const cx = S / 2, cy = S / 2
+      const R = 130
+      const mx = (mousePosRef.current.x || window.innerWidth / 2) / window.innerWidth
+      const my = (mousePosRef.current.y || window.innerHeight / 2) / window.innerHeight
+      const tiltX = (my - 0.5) * 0.3
+      const tiltY = (mx - 0.5) * 0.3
+
+      rotRef.current += 0.004
+
+      // Outer glow rings
+      for (let i = 3; i > 0; i--) {
+        ctx.beginPath()
+        ctx.arc(cx, cy, R + i * 12, 0, Math.PI * 2)
+        ctx.strokeStyle = `rgba(0, 255, 230, ${0.05 / i})`
+        ctx.lineWidth = 12
+        ctx.stroke()
+      }
+
+      // Draw lat/lon lines
+      const lines = 12
+      for (let l = 0; l < lines; l++) {
+        const lat = (l / lines) * Math.PI - Math.PI / 2
+        ctx.beginPath()
+        let first = true
+        for (let a = 0; a <= Math.PI * 2; a += 0.05) {
+          const nx = Math.cos(lat) * Math.cos(a + rotRef.current + tiltY)
+          const ny = Math.sin(lat) + tiltX
+          const nz = Math.cos(lat) * Math.sin(a + rotRef.current + tiltY)
+          if (nz < 0) { first = true; continue }
+          const px = cx + nx * R
+          const py = cy + ny * R * 0.95
+          const alpha = 0.15 + nz * 0.4
+          if (first) { ctx.moveTo(px, py); first = false }
+          else ctx.lineTo(px, py)
+        }
+        ctx.strokeStyle = `rgba(0, 255, 220, ${0.3})`
+        ctx.lineWidth = 0.7
+        ctx.stroke()
+      }
+
+      // Meridian lines
+      for (let l = 0; l < 8; l++) {
+        const lon = (l / 8) * Math.PI * 2
+        ctx.beginPath()
+        let first = true
+        for (let a = -Math.PI / 2; a <= Math.PI / 2; a += 0.05) {
+          const nx = Math.cos(a) * Math.cos(lon + rotRef.current + tiltY)
+          const ny = Math.sin(a) + tiltX * 0.5
+          const nz = Math.cos(a) * Math.sin(lon + rotRef.current + tiltY)
+          if (nz < 0) { first = true; continue }
+          const px = cx + nx * R
+          const py = cy + ny * R * 0.95
+          if (first) { ctx.moveTo(px, py); first = false }
+          else ctx.lineTo(px, py)
+        }
+        ctx.strokeStyle = `rgba(160, 80, 255, 0.25)`
+        ctx.lineWidth = 0.7
+        ctx.stroke()
+      }
+
+      // Glowing dot nodes on globe surface
+      const dots = [
+        [0.3, 0.9], [1.2, 0.5], [2.1, 1.1], [3.5, 0.7],
+        [4.2, 1.3], [5.1, 0.4], [0.8, 1.5], [2.8, 0.3],
+      ]
+      dots.forEach(([lon, lat]) => {
+        const a = lon + rotRef.current + tiltY
+        const b = lat - Math.PI / 2
+        const nx = Math.cos(b) * Math.cos(a)
+        const ny = Math.sin(b) + tiltX * 0.5
+        const nz = Math.cos(b) * Math.sin(a)
+        if (nz < 0.1) return
+        const px = cx + nx * R
+        const py = cy + ny * R * 0.95
+        ctx.beginPath()
+        ctx.arc(px, py, 3, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(0, 255, 220, ${0.5 + nz * 0.5})`
+        ctx.shadowBlur = 8
+        ctx.shadowColor = 'rgba(0,255,220,0.8)'
+        ctx.fill()
+        ctx.shadowBlur = 0
+      })
+
+      // Core glow
+      const grad = ctx.createRadialGradient(cx, cy, R * 0.1, cx, cy, R)
+      grad.addColorStop(0, 'rgba(80, 200, 255, 0.08)')
+      grad.addColorStop(0.7, 'rgba(130, 60, 255, 0.04)')
+      grad.addColorStop(1, 'rgba(0,0,0,0)')
+      ctx.beginPath()
+      ctx.arc(cx, cy, R, 0, Math.PI * 2)
+      ctx.fillStyle = grad
+      ctx.fill()
+
+      // Ring equator
+      ctx.beginPath()
+      ctx.ellipse(cx, cy, R + 30, 18, tiltX, 0, Math.PI * 2)
+      ctx.strokeStyle = 'rgba(0, 255, 220, 0.2)'
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+
+      animRef.current = requestAnimationFrame(draw)
+    }
+    draw()
+    return () => cancelAnimationFrame(animRef.current)
+  }, [])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ display: 'block', filter: 'drop-shadow(0 0 30px rgba(0,255,220,0.3))' }}
+    />
+  )
+}
+
+/* ─────────────────────────────────────────────────────────
+   TYPEWRITER HOOK
+───────────────────────────────────────────────────────── */
+function useTypewriter(text, speed = 55) {
+  const [displayed, setDisplayed] = useState('')
+  const [done, setDone] = useState(false)
+  useEffect(() => {
+    setDisplayed('')
+    setDone(false)
+    let i = 0
+    const id = setInterval(() => {
+      i++
+      setDisplayed(text.slice(0, i))
+      if (i >= text.length) { clearInterval(id); setDone(true) }
+    }, speed)
+    return () => clearInterval(id)
+  }, [text, speed])
+  return { displayed, done }
+}
+
+/* ─────────────────────────────────────────────────────────
+   GLITCH TEXT
+───────────────────────────────────────────────────────── */
+function GlitchText({ children, className = '' }) {
+  const [glitching, setGlitching] = useState(false)
+  const chars = '!<>-_\\/[]{}—=+*^?#$%'
+  const [glitched, setGlitched] = useState(children)
+
+  const trigger = () => {
+    setGlitching(true)
+    let count = 0
+    const id = setInterval(() => {
+      setGlitched(
+        children.split('').map(c =>
+          c === ' ' ? ' ' : (Math.random() > 0.6 ? chars[Math.floor(Math.random() * chars.length)] : c)
+        ).join('')
+      )
+      count++
+      if (count > 10) {
+        clearInterval(id)
+        setGlitched(children)
+        setGlitching(false)
+      }
+    }, 50)
+  }
+
+  return (
+    <span
+      className={className}
+      onMouseEnter={trigger}
+      style={{ cursor: 'default', letterSpacing: '0.05em' }}
+    >
+      {glitched}
+    </span>
+  )
+}
+
+/* ─────────────────────────────────────────────────────────
+   SKILLS PARTICLE CANVAS
+───────────────────────────────────────────────────────── */
+function SkillsParticles({ skills, hovered }) {
+  const canvasRef = useRef(null)
+  const animRef = useRef(null)
+  const particlesRef = useRef([])
+  const hoveredRef = useRef(null)
+
+  useEffect(() => {
+    hoveredRef.current = hovered
+  }, [hovered])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    canvas.width = canvas.offsetWidth
+    canvas.height = canvas.offsetHeight
+
+    const W = canvas.width, H = canvas.height
+
+    // Create particles for each skill
+    const allParticles = []
+    skills.forEach((skill, si) => {
+      const angle = (si / skills.length) * Math.PI * 2
+      const baseR = Math.min(W, H) * 0.32
+      const cx = W / 2 + Math.cos(angle) * baseR
+      const cy = H / 2 + Math.sin(angle) * baseR * 0.7
+      const count = 18 + Math.floor(Math.random() * 12)
+      for (let i = 0; i < count; i++) {
+        allParticles.push({
+          skillIdx: si,
+          homeX: cx + (Math.random() - 0.5) * 40,
+          homeY: cy + (Math.random() - 0.5) * 40,
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: 0, vy: 0,
+          r: 1.5 + Math.random() * 2,
+          hue: skill.hue,
+          alpha: 0.5 + Math.random() * 0.5,
+        })
+      }
     })
-  }, [])
+    particlesRef.current = allParticles
 
-  /* Fetch GitHub */
-  useEffect(() => {
-    Promise.all([
-      fetch('/api/github/status').then(r => r.json()),
-      fetch('/api/github/repos?sort=stars&per_page=12').then(r => r.json()),
-    ]).then(([st, rp]) => {
-      if (st.success && st.data) { setGhStats(st.data); setGhOk(true) }
-      else setGhOk(false)
-      if (rp.success && rp.data?.length) setRepos(rp.data.filter(r => !r.isFork).slice(0, 6))
-    }).catch(() => setGhOk(false)).finally(() => setLoading(false))
-  }, [])
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H)
+      const scattered = hoveredRef.current !== null
 
-  /* Intersection for counters */
-  useEffect(() => {
-    const el = statsRef.current
-    if (!el) return
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect() } }, { threshold: 0.3 })
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [])
+      particlesRef.current.forEach(p => {
+        let tx = p.homeX, ty = p.homeY
+        if (scattered && hoveredRef.current !== p.skillIdx) {
+          tx = p.x + (Math.random() - 0.5) * 200
+          ty = p.y + (Math.random() - 0.5) * 200
+        } else if (!scattered) {
+          tx = p.homeX
+          ty = p.homeY
+        }
 
-  const roles = ['Backend Developer', 'AI/ML Enthusiast', 'Open Source Contributor', 'Data Scientist', 'Problem Solver']
-  const role = useTypewriter(roles)
+        const speed = scattered && hoveredRef.current !== p.skillIdx ? 0.02 : 0.06
+        p.x += (tx - p.x) * speed
+        p.y += (ty - p.y) * speed
 
-  const STATS = ghStats ? [
-    { icon: Award,      value: '8.11',                  label: 'CGPA',          accent: '#059669', delay: 0   },
-    { icon: Star,       value: String(ghStats.totalStars), label: 'GitHub Stars', accent: '#D97706', delay: 80  },
-    { icon: Code2,      value: String(ghStats.totalRepos), label: 'Repositories', accent: '#4F46E5', delay: 160 },
-    { icon: TrendingUp, value: String(ghStats.followers),  label: 'Followers',    accent: '#7C3AED', delay: 240 },
-  ] : [
-    { icon: Award,      value: '8.11',  label: 'CGPA',           accent: '#059669', delay: 0   },
-    { icon: Star,       value: 'Top 5%',label: 'College Rank',   accent: '#D97706', delay: 80  },
-    { icon: Code2,      value: '6+',    label: 'Certifications', accent: '#4F46E5', delay: 160 },
-    { icon: TrendingUp, value: '6+',    label: 'OSS Orgs',       accent: '#7C3AED', delay: 240 },
-  ]
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = `hsla(${p.hue}, 90%, 70%, ${p.alpha})`
+        ctx.shadowBlur = 6
+        ctx.shadowColor = `hsla(${p.hue}, 90%, 70%, 0.7)`
+        ctx.fill()
+        ctx.shadowBlur = 0
+      })
+
+      animRef.current = requestAnimationFrame(draw)
+    }
+    draw()
+    return () => cancelAnimationFrame(animRef.current)
+  }, [skills])
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute', inset: 0, width: '100%', height: '100%',
+        pointerEvents: 'none',
+      }}
+    />
+  )
+}
 
-      {/* ═══════════════════════════════════
-          HERO
-      ═══════════════════════════════════ */}
-      <section
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          paddingTop: 64,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Subtle grid */}
-        <div
+/* ─────────────────────────────────────────────────────────
+   TERMINAL COMPONENT
+───────────────────────────────────────────────────────── */
+function TerminalContact() {
+  const [lines, setLines] = useState([
+    { type: 'system', text: '> SECURE CONNECTION ESTABLISHED' },
+    { type: 'system', text: '> PORTFOLIO CONTACT NODE v2.0.26' },
+    { type: 'prompt', text: '// Type your message and press [ENTER] to send' },
+  ])
+  const [input, setInput] = useState('')
+  const [stage, setStage] = useState('idle') // idle | name | email | message | sent
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [sending, setSending] = useState(false)
+  const termRef = useRef(null)
+
+  const addLine = (text, type = 'output') => {
+    setLines(l => [...l, { type, text }])
+    setTimeout(() => { termRef.current?.scrollTo(0, 99999) }, 50)
+  }
+
+  const handleCommand = async (cmd) => {
+    addLine(`$ ${cmd}`, 'input')
+    const c = cmd.trim().toLowerCase()
+
+    if (stage === 'idle') {
+      if (c === 'contact' || c === 'msg' || c === 'message') {
+        setStage('name')
+        addLine('> Initiating contact protocol...', 'system')
+        addLine('> Enter your name:', 'prompt')
+      } else if (c === 'help') {
+        addLine('  contact   → Send a message to Om', 'output')
+        addLine('  github    → Open GitHub profile', 'output')
+        addLine('  linkedin  → Open LinkedIn profile', 'output')
+        addLine('  clear     → Clear terminal', 'output')
+      } else if (c === 'github') {
+        addLine('> Opening: github.com/omkarrr2533', 'system')
+        window.open('https://github.com/omkarrr2533', '_blank')
+      } else if (c === 'linkedin') {
+        addLine('> Opening LinkedIn...', 'system')
+        window.open('https://www.linkedin.com/in/om-kapale-b861a228a', '_blank')
+      } else if (c === 'clear') {
+        setLines([])
+      } else {
+        addLine(`> Command not found: "${cmd}". Type "help" for commands.`, 'error')
+      }
+    } else if (stage === 'name') {
+      setFormData(d => ({ ...d, name: cmd }))
+      setStage('email')
+      addLine(`> Name recorded: ${cmd}`, 'system')
+      addLine('> Enter your email address:', 'prompt')
+    } else if (stage === 'email') {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cmd)) {
+        addLine('> Invalid email format. Try again:', 'error')
+        return
+      }
+      setFormData(d => ({ ...d, email: cmd }))
+      setStage('message')
+      addLine(`> Email recorded: ${cmd}`, 'system')
+      addLine('> Enter your message:', 'prompt')
+    } else if (stage === 'message') {
+      const finalData = { ...formData, message: cmd }
+      setFormData(finalData)
+      setStage('idle')
+      setSending(true)
+      addLine('> Encrypting message...', 'system')
+      addLine('> Transmitting to receiver...', 'system')
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: finalData.name, email: finalData.email, subject: 'Terminal Contact', message: cmd }),
+        })
+        if (res.ok) {
+          addLine('> ✓ MESSAGE SENT SUCCESSFULLY!', 'success')
+          addLine(`> Response will arrive at: ${finalData.email}`, 'system')
+        } else {
+          addLine('> Transmission error. Try again or email directly.', 'error')
+        }
+      } catch {
+        addLine('> Network error. Email: omshripadkapale@gmail.com', 'error')
+      }
+      setSending(false)
+    }
+  }
+
+  const color = {
+    system: '#00ffe7',
+    prompt: '#a78bfa',
+    input: '#f1f5f9',
+    output: '#94a3b8',
+    error: '#f87171',
+    success: '#4ade80',
+  }
+
+  return (
+    <div style={{
+      background: 'rgba(6,13,31,0.95)',
+      border: '1px solid rgba(0,255,231,0.15)',
+      borderRadius: 12,
+      overflow: 'hidden',
+      boxShadow: '0 0 40px rgba(0,255,231,0.08), 0 24px 64px rgba(0,0,0,0.7)',
+      fontFamily: '"JetBrains Mono", monospace',
+    }}>
+      {/* Terminal header */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 6,
+        padding: '10px 16px',
+        background: 'rgba(0,0,0,0.5)',
+        borderBottom: '1px solid rgba(0,255,231,0.1)',
+      }}>
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f56' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffbd2e' }} />
+        <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#27c93f' }} />
+        <span style={{ marginLeft: 10, fontSize: 11, color: '#4a6090' }}>
+          om@portfolio:~$ terminal_contact
+        </span>
+      </div>
+
+      {/* Output */}
+      <div ref={termRef} style={{
+        height: 280, overflowY: 'auto', padding: '14px 20px',
+        fontSize: 12.5, lineHeight: 1.9,
+        scrollbarWidth: 'thin', scrollbarColor: 'rgba(0,255,231,0.2) transparent',
+      }}>
+        {lines.map((l, i) => (
+          <div key={i} style={{ color: color[l.type] || '#94a3b8' }}>{l.text}</div>
+        ))}
+      </div>
+
+      {/* Input row */}
+      <div style={{
+        display: 'flex', alignItems: 'center',
+        padding: '10px 20px',
+        borderTop: '1px solid rgba(0,255,231,0.1)',
+        background: 'rgba(0,0,0,0.3)',
+      }}>
+        <span style={{ color: '#00ffe7', marginRight: 8, fontSize: 13 }}>$</span>
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' && input.trim() && !sending) {
+              handleCommand(input.trim())
+              setInput('')
+            }
+          }}
+          disabled={sending}
+          placeholder={stage === 'idle' ? 'type "contact" or "help"…' : '…'}
           style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'linear-gradient(rgba(79,70,229,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(79,70,229,.04) 1px, transparent 1px)',
-            backgroundSize: '52px 52px',
-            pointerEvents: 'none',
+            flex: 1, background: 'none', border: 'none', outline: 'none',
+            color: '#e8f0fe', fontSize: 12.5, fontFamily: '"JetBrains Mono", monospace',
+            caretColor: '#00ffe7',
           }}
         />
-        {/* Accent blobs */}
-        <div style={{ position:'absolute', top:'-10%', right:'-5%', width:500, height:500, borderRadius:'50%', background:'radial-gradient(circle, rgba(79,70,229,.07), transparent 70%)', filter:'blur(40px)', pointerEvents:'none' }} />
-        <div style={{ position:'absolute', bottom:'5%', left:'-5%', width:350, height:350, borderRadius:'50%', background:'radial-gradient(circle, rgba(124,58,237,.05), transparent 70%)', filter:'blur(40px)', pointerEvents:'none' }} />
-
-        <div className="container" style={{ paddingTop: 80, paddingBottom: 80, position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px,1fr))', gap: 56, alignItems: 'center', maxWidth: 1100, margin: '0 auto' }}>
-
-            {/* ── Text col ── */}
-            <div>
-              <div className="section-label animate-fade-in" style={{ marginBottom: 20, animationFillMode: 'both' }}>
-                // open to opportunities
-              </div>
-
-              {/* Name */}
-              <div className="animate-slide-up delay-100" style={{ animationFillMode: 'both' }}>
-                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: '#94A3B8', marginBottom: 8, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                  Hello World, I'm
-                </p>
-                <h1
-                  className="text-hero gradient-text"
-                  style={{
-                    fontSize: 'clamp(42px,7vw,78px)',
-                    marginBottom: 16,
-                    /* FIX: prevent blurry text in hero */
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    transform: 'translateZ(0)',
-                  }}
-                >
-                  {info.name}
-                </h1>
-              </div>
-
-              {/* Typewriter */}
-              <div className="animate-slide-up delay-200" style={{ animationFillMode: 'both', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                <Terminal size={15} color="#4F46E5" />
-                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 15, color: '#475569' }}>
-                  <span style={{ color: '#4F46E5' }}>~/om $ </span>
-                  <span style={{ color: '#E8F0FE' }}>{role}</span>
-                  <span className="cursor-blink" />
-                </p>
-              </div>
-
-              {/* Bio */}
-              <div className="animate-slide-up delay-300" style={{ animationFillMode: 'both', position: 'relative', maxWidth: 520, marginBottom: 20 }}>
-  {editingBio ? (
-    <div>
-      <textarea
-        value={info.bio}
-        onChange={e => updateInfo('bio', e.target.value)}
-        rows={4}
-        autoFocus
-        style={{ width: '100%', background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 14, fontFamily: 'Plus Jakarta Sans, sans-serif', outline: 'none', resize: 'vertical', color: '#E8F0FE' }}
-      />
-      <button onClick={() => setEditingBio(false)} className="btn btn-primary btn-sm" style={{ marginTop: 6 }}>Done</button>
+        <span style={{
+          width: 7, height: 14, background: '#00ffe7', marginLeft: 4,
+          animation: 'cursorBlink 1s step-end infinite',
+        }} />
+      </div>
     </div>
-  ) : (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-      <p style={{ color: '#8EA4C8', fontSize: 15, lineHeight: 1.75, flex: 1 }}>{info.bio}</p>
-      <button onClick={() => setEditingBio(true)} title="Edit bio" style={{ color: '#CBD5E1', background: 'none', border: 'none', cursor: 'pointer', padding: 2, marginTop: 3, flexShrink: 0 }}>
-        <Edit3 size={13} />
-      </button>
-    </div>
-  )}
-</div>
+  )
+}
 
-              {/* Location */}
-              <div className="animate-slide-up delay-350" style={{ animationFillMode: 'both', display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#8EA4C8', marginBottom: 20, fontFamily: 'JetBrains Mono, monospace' }}>
-                <MapPin size={11} />
-                Mumbai, India · Open to Opportunities
-              </div>
+/* ─────────────────────────────────────────────────────────
+   PROJECT CARD (3D hover)
+───────────────────────────────────────────────────────── */
+function HoloCard({ project, index }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const [hover, setHover] = useState(false)
+  const cardRef = useRef(null)
 
-              {/* Stack */}
-              <div className="animate-slide-up delay-400" style={{ animationFillMode: 'both', marginBottom: 28 }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-    <p style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#CBD5E1', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0 }}>
-      Current Stack
-    </p>
-    <button onClick={() => setEditingStack(true)} title="Edit stack" style={{ color: '#CBD5E1', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-      <Edit3 size={11} />
-    </button>
-  </div>
-  {editingStack ? (
-    <div>
-      <input
-        value={info.stack}
-        onChange={e => updateInfo('stack', e.target.value)}
-        autoFocus
-        placeholder="Java · Spring Boot · Python (use · as separator)"
-        style={{ width: '100%', maxWidth: 520, background: '#fff', border: '1px solid #C7D2FE', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontFamily: 'JetBrains Mono, monospace', outline: 'none', color: '##E8F0FE' }}
-      />
-      <button onClick={() => setEditingStack(false)} className="btn btn-primary btn-sm" style={{ marginTop: 6 }}>Done</button>
-    </div>
-  ) : (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-      {info.stack.split('·').map(t => t.trim()).filter(Boolean).map(t => (
-        <span key={t} className="tech-pill">{t}</span>
-      ))}
-    </div>
-  )}
-</div>
+  const handleMove = (e) => {
+    const rect = cardRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20
+    const y = -((e.clientY - rect.top) / rect.height - 0.5) * 20
+    setTilt({ x, y })
+  }
 
-              {/* CTAs */}
-              <div className="animate-slide-up delay-500" style={{ animationFillMode: 'both', display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 28 }}>
-                <Link href="/projects" className="btn btn-primary btn-lg">
-                  View Projects <ArrowRight size={16} />
-                </Link>
-                <a href="/resume.pdf" download className="btn btn-secondary btn-lg">
-                  <Download size={15} /> Resume
-                </a>
-                <Link href="/contact" className="btn btn-ghost btn-lg">
-                  Hire Me
-                </Link>
-              </div>
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true }}
+      onMouseMove={handleMove}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => { setHover(false); setTilt({ x: 0, y: 0 }) }}
+      style={{
+        transform: `perspective(800px) rotateY(${tilt.x}deg) rotateX(${tilt.y}deg) ${hover ? 'translateZ(20px)' : 'translateZ(0)'}`,
+        transition: hover ? 'transform 0.1s ease' : 'transform 0.5s ease',
+        willChange: 'transform',
+      }}
+    >
+      <div style={{
+        background: 'rgba(13,21,38,0.7)',
+        border: `1px solid ${hover ? project.accent + '60' : 'rgba(148,163,184,0.1)'}`,
+        borderRadius: 16,
+        overflow: 'hidden',
+        backdropFilter: 'blur(20px)',
+        boxShadow: hover
+          ? `0 0 30px ${project.accent}25, 0 24px 48px rgba(0,0,0,0.5)`
+          : '0 4px 24px rgba(0,0,0,0.4)',
+        transition: 'border-color 0.3s, box-shadow 0.3s',
+        position: 'relative',
+      }}>
+        {/* Holographic sheen on hover */}
+        {hover && (
+          <div style={{
+            position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+            background: `linear-gradient(135deg, ${project.accent}08, transparent 60%, ${project.accent}05)`,
+          }} />
+        )}
 
-              {/* Socials */}
-              <div className="animate-slide-up delay-600" style={{ animationFillMode: 'both', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16 }}>
-                {[
-                  { icon: Github,       url: 'https://github.com/omkarrr2533',                   label: '@omkarrr2533' },
-                  { icon: Linkedin,     url: 'https://www.linkedin.com/in/om-kapale-b861a228a', label: 'LinkedIn' },
-                  { icon: Mail,         url: 'mailto:omshripadkapale@gmail.com',                label: 'Email' },
-                  { icon: ExternalLink, url: 'https://leetcode.com/u/omi_/',                    label: 'LeetCode' },
-                ].map(s => (
-                  <a
-                    key={s.label}
-                    href={s.url}
-                    target={s.url.startsWith('mailto') ? '_self' : '_blank'}
-                    rel="noopener noreferrer"
-                    title={s.label}
-                    style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#94A3B8', fontSize: 12, fontFamily: 'JetBrains Mono, monospace', textDecoration: 'none', transition: 'color 150ms ease' }}
-                  >
-                    <s.icon size={15} />
-                    <span style={{ display: 'none' }} className="sm-show">{s.label}</span>
-                  </a>
-                ))}
-              </div>
+        {/* Top accent */}
+        <div style={{ height: 3, background: `linear-gradient(90deg, ${project.accent}, transparent)` }} />
+
+        <div style={{ padding: '24px 24px 20px', position: 'relative', zIndex: 1 }}>
+          {/* Tag */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
+            {project.tags.map(t => (
+              <span key={t} style={{
+                padding: '3px 10px', borderRadius: 99, fontSize: 10,
+                fontFamily: '"JetBrains Mono", monospace',
+                background: `${project.accent}15`,
+                color: project.accent,
+                border: `1px solid ${project.accent}30`,
+                fontWeight: 600, letterSpacing: '0.05em',
+              }}>{t}</span>
+            ))}
+          </div>
+
+          <h3 style={{
+            fontSize: 20, fontWeight: 700, color: '#e8f0fe', marginBottom: 8,
+            fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif', letterSpacing: '0.02em',
+          }}>{project.name}</h3>
+
+          <p style={{ fontSize: 13, color: '#8ea4c8', lineHeight: 1.7, marginBottom: 16 }}>
+            {project.desc}
+          </p>
+
+          {/* Accuracy/metric badge */}
+          {project.metric && (
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '6px 12px',
+              background: 'rgba(0,255,231,0.06)',
+              border: '1px solid rgba(0,255,231,0.2)',
+              borderRadius: 8, marginBottom: 16, fontSize: 12, color: '#00ffe7',
+              fontFamily: '"JetBrains Mono", monospace',
+            }}>
+              <Zap size={12} /> {project.metric}
             </div>
+          )}
 
-            {/* ── Right col: photo + terminal ── */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontSize: 12, fontWeight: 600, color: '#8ea4c8',
+              transition: 'color 150ms',
+            }}
+          >
+            <Github size={13} />
+            View Source <ArrowRight size={11} />
+          </a>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
-              {/* Photo */}
-              <div style={{ position: 'relative', width: 240, height: 240 }}>
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: -8,
-                    borderRadius: 24,
-                    background: 'linear-gradient(135deg,rgba(79,70,229,.12),rgba(124,58,237,.08))',
-                    filter: 'blur(16px)',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: 20,
-                    border: '1px solid rgba(79,70,229,.15)',
-                    overflow: 'hidden',
-                    background: '#EEF2FF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: admin ? 'pointer' : 'default',
-                  }}
-                  onClick={() => photoRef.current?.click()}
+/* ─────────────────────────────────────────────────────────
+   EXPERIENCE CARD
+───────────────────────────────────────────────────────── */
+function ExpCard({ exp, index }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true }}
+      style={{
+        display: 'flex', gap: 20, alignItems: 'flex-start',
+        position: 'relative',
+      }}
+    >
+      {/* Timeline dot */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          background: `linear-gradient(135deg, ${exp.accent}, ${exp.accent2 || exp.accent}80)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: `0 0 16px ${exp.accent}50`,
+          fontSize: 16,
+        }}>
+          {exp.icon}
+        </div>
+        {index < 2 && (
+          <div style={{
+            width: 1, height: 60, marginTop: 8,
+            background: `linear-gradient(to bottom, ${exp.accent}40, transparent)`,
+          }} />
+        )}
+      </div>
+
+      {/* Card */}
+      <div style={{
+        flex: 1, marginBottom: 32,
+        background: 'rgba(13,21,38,0.6)',
+        border: '1px solid rgba(148,163,184,0.1)',
+        borderRadius: 14,
+        padding: '18px 20px',
+        backdropFilter: 'blur(16px)',
+      }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
+          <h3 style={{
+            fontSize: 16, fontWeight: 700, color: '#e8f0fe',
+            fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.03em',
+          }}>{exp.role}</h3>
+          <span style={{
+            fontSize: 10, fontFamily: '"JetBrains Mono", monospace',
+            color: exp.accent, padding: '3px 10px',
+            background: `${exp.accent}15`, border: `1px solid ${exp.accent}30`,
+            borderRadius: 99,
+          }}>{exp.period}</span>
+        </div>
+        <p style={{ fontSize: 12, color: exp.accent, fontWeight: 600, marginBottom: 8 }}>{exp.org}</p>
+        <p style={{ fontSize: 13, color: '#8ea4c8', lineHeight: 1.7 }}>{exp.desc}</p>
+        {exp.tags && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
+            {exp.tags.map(t => (
+              <span key={t} style={{
+                fontSize: 10, padding: '2px 8px', borderRadius: 99,
+                background: 'rgba(148,163,184,0.1)', color: '#8ea4c8',
+                border: '1px solid rgba(148,163,184,0.15)',
+                fontFamily: '"JetBrains Mono", monospace',
+              }}>{t}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN PAGE
+═══════════════════════════════════════════════════════════ */
+export default function FuturisticPortfolio() {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [hoveredSkill, setHoveredSkill] = useState(null)
+  const { scrollY } = useScroll()
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0])
+  const heroY = useTransform(scrollY, [0, 500], [0, -80])
+
+  const { displayed: headline } = useTypewriter('Om Kapale | Software Engineer & Open Source Contributor', 48)
+
+  const handleMouseMove = useCallback((e) => {
+    setMousePos({ x: e.clientX, y: e.clientY })
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [handleMouseMove])
+
+  const PROJECTS = [
+    {
+      name: 'SatyaCheck',
+      desc: 'A Chrome extension utilizing a 7-layer AI pipeline to detect misinformation in real-time. Achieved 92.6% accuracy using fine-tuned LLMs and ensemble NLP models.',
+      tags: ['Python', 'AI/ML', 'JavaScript', 'NLP', 'Chrome Extension'],
+      metric: '92.6% accuracy · 7-layer AI pipeline',
+      accent: '#00ffe7',
+      url: 'https://github.com/omkarrr2533',
+    },
+    {
+      name: 'Real-Time Bus Tracker',
+      desc: 'Live city bus positioning system with sub-second WebSocket updates, interactive Leaflet.js map, Spring Boot REST backend, and offline-capable PWA design.',
+      tags: ['Node.js', 'WebSockets', 'REST APIs', 'Leaflet.js', 'Spring Boot'],
+      metric: 'Sub-second position updates',
+      accent: '#a78bfa',
+      url: 'https://github.com/omkarrr2533/BUS-ETA.git',
+    },
+    {
+      name: 'Hand Sign Detection',
+      desc: 'Real-time ASL alphabet recognition from webcam using MediaPipe landmark detection and a custom PyTorch CNN trained on augmented gesture datasets.',
+      tags: ['Python', 'PyTorch', 'MediaPipe', 'OpenCV', 'CNN'],
+      metric: 'Real-time gesture recognition',
+      accent: '#f59e0b',
+      url: 'https://github.com/omkarrr2533/Hand_Sign_Detection_Using_Python.git',
+    },
+  ]
+
+  const EXPERIENCE = [
+    {
+      role: 'Google Summer of Code 2026',
+      org: 'PEcAn Project (Open Source)',
+      period: 'GSoC 2026',
+      desc: 'Refactoring PEcAn's monolithic architecture for modularity and scalability. Designing plugin interfaces, decoupling core modules, and improving test coverage for climate/ecosystem models.',
+      tags: ['R', 'Python', 'Architecture', 'Modular Design', 'Open Source'],
+      accent: '#00ffe7',
+      accent2: '#4ade80',
+      icon: '🌱',
+    },
+    {
+      role: 'Realm Description Caching',
+      org: 'Zulip Open Source',
+      period: '2025',
+      desc: 'Implemented server-side caching for realm descriptions — reducing redundant DB queries on high-traffic orgs. PR reviewed and merged into the main Zulip codebase.',
+      tags: ['Python', 'Django', 'Redis', 'Performance', 'Backend'],
+      accent: '#a78bfa',
+      icon: '💬',
+    },
+    {
+      role: 'Group Merging & Library Import Fixes',
+      org: 'JabRef (Java Reference Manager)',
+      period: '2025',
+      desc: 'Fixed critical bugs in the group merging algorithm and library import pipeline. Resolved edge cases causing data corruption when importing mixed-format reference libraries.',
+      tags: ['Java', 'JavaFX', 'Bug Fix', 'UI', 'Parsing'],
+      accent: '#f59e0b',
+      icon: '📚',
+    },
+  ]
+
+  const SKILLS = [
+    { name: 'Python', hue: 210 },
+    { name: 'Java', hue: 0 },
+    { name: 'JavaScript', hue: 50 },
+    { name: 'R', hue: 200 },
+    { name: 'C', hue: 250 },
+    { name: 'Node.js', hue: 130 },
+    { name: 'PyTorch', hue: 20 },
+    { name: 'Spring Boot', hue: 140 },
+    { name: 'SQL', hue: 180 },
+    { name: 'REST API', hue: 280 },
+  ]
+
+  const parallaxX = useTransform(scrollY, [0, 300], [0, -20])
+  const parallaxY = useTransform(scrollY, [0, 300], [0, 30])
+
+  return (
+    <div style={{ background: '#060D1F', minHeight: '100vh', color: '#e8f0fe', overflowX: 'hidden' }}>
+      {/* ───── HERO ───── */}
+      <section style={{
+        minHeight: '100vh', display: 'flex', alignItems: 'center',
+        position: 'relative', overflow: 'hidden', paddingTop: 80,
+      }}>
+        {/* Scan-line overlay */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,231,0.015) 3px, rgba(0,255,231,0.015) 4px)',
+        }} />
+
+        {/* Deep glow blobs */}
+        <div style={{
+          position: 'absolute', top: '10%', left: '5%',
+          width: 500, height: 500, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(0,200,230,0.08), transparent 70%)',
+          filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
+        }} />
+        <div style={{
+          position: 'absolute', top: '20%', right: '0%',
+          width: 600, height: 600, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(130,60,255,0.07), transparent 70%)',
+          filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
+        }} />
+
+        <NodeNetwork mousePos={mousePos} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2, paddingTop: 60, paddingBottom: 80 }}>
+          <motion.div
+            style={{ opacity: heroOpacity, y: heroY }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: 60, alignItems: 'center', maxWidth: 1100, margin: '0 auto',
+            }}>
+              {/* ── Left col ── */}
+              <div>
+                {/* Status badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  style={{ marginBottom: 24 }}
                 >
-                  {photo ? (
-                    <img src={photo} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ textAlign: 'center' }}>
-                      <div
-                        style={{
-                          width: 72,
-                          height: 72,
-                          borderRadius: 18,
-                          background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontFamily: 'Plus Jakarta Sans, sans-serif',
-                          fontWeight: 800,
-                          fontSize: 24,
-                          color: '#fff',
-                          margin: '0 auto 8px',
-                        }}
-                      >
-                        OK
-                      </div>
-                      {admin && (
-                        <span style={{ fontSize: 11, color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace' }}>
-                          Click to upload
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  { photo && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: 'rgba(15,23,42,.5)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        opacity: 0,
-                        transition: 'opacity 200ms',
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.opacity = 1}
-                      onMouseLeave={e => e.currentTarget.style.opacity = 0}
-                    >
-                      <Camera size={20} color="#fff" />
-                    </div>
-                  )}
-                </div>
-                {/* Presence dot */}
-                <div style={{ position: 'absolute', top: 10, right: 10 }}>
-                  <div className="ping-dot">
-                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#10B981', display: 'block', border: '2px solid #fff' }} />
-                  </div>
-                </div>
-                <input ref={photoRef} type="file" accept="image/*" style={{ display: 'none' }}
-                  onChange={async e => {
-                    const f = e.target.files?.[0]
-                    if (!f) return
-                    const formData = new FormData()
-                    formData.append('file', f)
-                    formData.append('folder', 'portfolio/profile')
-                    formData.append('public_id', 'profile_photo')
-                    try {
-                      const res = await fetch('/api/upload', {
-                      method: 'POST',
-                      body: formData,
-                      credentials: 'include',
-                    })
-                    const data = await res.json()
-                    if (data.success) {
-                      setPhoto(data.url)
-                      localStorage.setItem('profilePhotoUrl', data.url)
-                    } else {
-                      alert(data.error || 'Upload failed — are you logged in as admin?')
-                    }
-                    } catch {
-                      alert('Upload error. Check your Cloudinary credentials in .env.local')
-                    }
-                  }}/>
-              </div>
-
-              {/* Stat pills */}
-              <div ref={statsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, width: '100%', maxWidth: 280 }}>
-                {STATS.map(s => <StatPill key={s.label} {...s} started={statsVisible} />)}
-              </div>
-
-              {/* Terminal */}
-              <div className="terminal animate-slide-up delay-700" style={{ animationFillMode: 'both', width: '100%', maxWidth: 280 }}>
-                <div className="terminal-header">
-                  <div className="terminal-dot" style={{ background: '#FF5F56' }} />
-                  <div className="terminal-dot" style={{ background: '#FFBD2E' }} />
-                  <div className="terminal-dot" style={{ background: '#27C93F' }} />
-                  <span style={{ marginLeft: 8, fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#475569' }}>
-                    om@portfolio ~ bash
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '6px 14px',
+                    background: 'rgba(0,255,231,0.06)',
+                    border: '1px solid rgba(0,255,231,0.2)',
+                    borderRadius: 99, fontSize: 11,
+                    fontFamily: '"JetBrains Mono", monospace',
+                    color: '#00ffe7', letterSpacing: '0.1em',
+                  }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px #4ade80' }} />
+                    SYSTEM ONLINE · OPEN TO COLLABORATION
                   </span>
-                </div>
-                <div className="terminal-body">
-                  <div><span className="t-muted">$ </span><span className="t-blue">whoami</span></div>
-                  <div className="t-green">om-shripad-kapale</div>
-                  <div style={{ marginTop: 4 }}><span className="t-muted">$ </span><span className="t-blue">cat skills.txt</span></div>
-                  <div className="t-violet">Java · Spring Boot · Python</div>
-                  <div className="t-violet">PyTorch · PostgreSQL · DSA</div>
-                  <div style={{ marginTop: 4 }}><span className="t-muted">$ </span><span className="t-blue">echo $STATUS</span></div>
-                  <div><span className="t-amber">⬤ </span><span className="t-white">Open to opportunities</span></div>
-                  <div style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <span className="t-muted">$ </span>
-                    <span className="cursor-blink" />
-                  </div>
-                </div>
+                </motion.div>
+
+                {/* Headline typewriter */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <h1 style={{
+                    fontSize: 'clamp(15px, 2vw, 18px)',
+                    color: '#4a6090', fontFamily: '"JetBrains Mono", monospace',
+                    letterSpacing: '0.12em', marginBottom: 12,
+                  }}>
+                    <span style={{ color: '#00ffe7' }}>~/om $</span> whoami
+                  </h1>
+                  <h2 style={{
+                    fontSize: 'clamp(32px, 5.5vw, 64px)',
+                    fontWeight: 800, lineHeight: 1.05, marginBottom: 20,
+                    fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif',
+                    letterSpacing: '0.02em',
+                  }}>
+                    <span style={{
+                      background: 'linear-gradient(135deg, #00ffe7 0%, #818cf8 50%, #a78bfa 100%)',
+                      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}>
+                      Om Kapale
+                    </span>
+                    <br />
+                    <span style={{ color: '#e8f0fe', fontSize: '0.6em', fontWeight: 600 }}>
+                      Software Engineer
+                    </span>
+                  </h2>
+                </motion.div>
+
+                {/* Typewriter line */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                  style={{
+                    fontFamily: '"JetBrains Mono", monospace',
+                    fontSize: 13, color: '#4a6090',
+                    marginBottom: 20, minHeight: 22,
+                  }}
+                >
+                  <span style={{ color: '#a78bfa' }}>{'>'}</span>{' '}
+                  <span style={{ color: '#e8f0fe' }}>{headline}</span>
+                  <span style={{
+                    display: 'inline-block', width: 8, height: 15,
+                    background: '#00ffe7', marginLeft: 2,
+                    verticalAlign: 'text-bottom',
+                    animation: 'cursorBlink 1s step-end infinite',
+                  }} />
+                </motion.div>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0 }}
+                  style={{ color: '#8ea4c8', fontSize: 15, lineHeight: 1.75, maxWidth: 500, marginBottom: 28 }}
+                >
+                  GSoC 2026 contributor · Top 5% CSE student (8.11 CGPA) ·
+                  Building scalable backends, AI-powered tools, and contributing to open source across <span style={{ color: '#00ffe7' }}>6+ organisations</span>.
+                </motion.p>
+
+                {/* CTAs */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.2 }}
+                  style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 32 }}
+                >
+                  <a
+                    href="#projects"
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
+                      padding: '12px 24px',
+                      background: 'linear-gradient(135deg, rgba(0,255,231,0.15), rgba(130,60,255,0.15))',
+                      border: '1px solid rgba(0,255,231,0.4)',
+                      borderRadius: 10, color: '#00ffe7',
+                      fontSize: 14, fontWeight: 600,
+                      textDecoration: 'none',
+                      boxShadow: '0 0 20px rgba(0,255,231,0.15)',
+                      transition: 'all 200ms ease',
+                      fontFamily: '"JetBrains Mono", monospace',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0,255,231,0.25), rgba(130,60,255,0.2))'
+                      e.currentTarget.style.boxShadow = '0 0 30px rgba(0,255,231,0.3)'
+                      e.currentTarget.style.transform = 'translateY(-2px)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0,255,231,0.15), rgba(130,60,255,0.15))'
+                      e.currentTarget.style.boxShadow = '0 0 20px rgba(0,255,231,0.15)'
+                      e.currentTarget.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    <Zap size={15} /> Explore My Universe
+                  </a>
+
+                  <a
+                    href="/resume.pdf" download
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 8,
+                      padding: '12px 24px',
+                      background: 'rgba(13,21,38,0.8)',
+                      border: '1px solid rgba(148,163,184,0.15)',
+                      borderRadius: 10, color: '#8ea4c8',
+                      fontSize: 14, fontWeight: 600, textDecoration: 'none',
+                      transition: 'all 200ms ease',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(167,139,250,0.4)'; e.currentTarget.style.color = '#a78bfa' }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(148,163,184,0.15)'; e.currentTarget.style.color = '#8ea4c8' }}
+                  >
+                    <Download size={15} /> Resume
+                  </a>
+                </motion.div>
+
+                {/* Socials */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.4 }}
+                  style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}
+                >
+                  {[
+                    { icon: Github, url: 'https://github.com/omkarrr2533', label: 'GitHub' },
+                    { icon: Linkedin, url: 'https://www.linkedin.com/in/om-kapale-b861a228a', label: 'LinkedIn' },
+                    { icon: Mail, url: 'mailto:omshripadkapale@gmail.com', label: 'Email' },
+                    { icon: Youtube, url: '#', label: 'YouTube' },
+                  ].map(s => (
+                    <a key={s.label} href={s.url} target={s.url.startsWith('mailto') ? '_self' : '_blank'}
+                      rel="noopener noreferrer" title={s.label}
+                      style={{
+                        width: 38, height: 38, borderRadius: 10,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'rgba(13,21,38,0.8)',
+                        border: '1px solid rgba(148,163,184,0.12)',
+                        color: '#4a6090', textDecoration: 'none',
+                        transition: 'all 150ms ease',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,255,231,0.4)'; e.currentTarget.style.color = '#00ffe7'; e.currentTarget.style.boxShadow = '0 0 12px rgba(0,255,231,0.2)' }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(148,163,184,0.12)'; e.currentTarget.style.color = '#4a6090'; e.currentTarget.style.boxShadow = 'none' }}
+                    >
+                      <s.icon size={16} />
+                    </a>
+                  ))}
+                </motion.div>
               </div>
-            </div>
-          </div>
 
-          {/* Scroll cue */}
-          <div className="animate-float" style={{ display: 'flex', justifyContent: 'center', marginTop: 64 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, color: '#CBD5E1' }}>
-              <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.1em' }}>SCROLL</span>
-              <ChevronDown size={15} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════
-          REPOS / PROJECTS
-      ═══════════════════════════════════ */}
-      <section style={{ padding: '88px 0', background: 'var(--bg-surface)' }}>
-        <div className="container">
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              <span className="section-label" style={{ marginBottom: 10, display: 'inline-flex' }}>
-                {ghOk && repos.length > 0 ? '// github · live sync' : '// featured projects'}
-              </span>
-              <h2 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 'clamp(28px,4vw,42px)', color: '#E8F0FE', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                {ghOk && repos.length > 0 ? <><span className="gradient-text">Top</span> Repositories</> : <>Featured <span className="gradient-text">Projects</span></>}
-              </h2>
-            </div>
-            <Link href="/projects" className="btn btn-secondary btn-sm">
-              All Projects <ArrowRight size={13} />
-            </Link>
-          </div>
-
-          {loading && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px,1fr))', gap: 16 }}>
-              {Array(6).fill(0).map((_,i) => (
-                <div key={i} className="card" style={{ padding: 18, height: 140 }}>
-                  <div className="skeleton" style={{ height: 12, width: 120, marginBottom: 10 }} />
-                  <div className="skeleton" style={{ height: 10, width: '100%', marginBottom: 6 }} />
-                  <div className="skeleton" style={{ height: 10, width: '75%' }} />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {!loading && repos.length > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px,1fr))', gap: 16 }}>
-              {repos.map((r, i) => <RepoCard key={r.id} repo={r} index={i} />)}
-            </div>
-          )}
-
-          {!loading && repos.length === 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px,1fr))', gap: 20, marginBottom: 24 }}>
-              {FEATURED.map((p,i) => <FeaturedCard key={p.id} project={p} index={i} />)}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════
-          TECH STRIP
-      ═══════════════════════════════════ */}
-      <section style={{ padding: '64px 0' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: 28 }}>
-            <span className="section-label">// tech stack</span>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', maxWidth: 720, margin: '0 auto' }}>
-            {[
-              { label:'Java',        icon:'☕' },
-              { label:'Spring Boot', icon:'🌱' },
-              { label:'Python',      icon:'🐍' },
-              { label:'PyTorch',     icon:'🔥' },
-              { label:'PostgreSQL',  icon:'🐘' },
-              { label:'REST API',    icon:'⚡' },
-              { label:'Socket.io',   icon:'🔌' },
-              { label:'DSA',         icon:'🧠' },
-              { label:'Git',         icon:'📦' },
-              { label:'LLMs',        icon:'🤖' },
-            ].map((t, i) => (
-              <div
-                key={t.label}
-                className="card animate-slide-up hover-lift"
+              {/* ── Right col: Globe ── */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6, duration: 1, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 7,
-                  padding: '8px 14px',
-                  cursor: 'default',
-                  animationDelay: `${i * 35}ms`,
-                  animationFillMode: 'both',
+                  display: 'flex', flexDirection: 'column',
+                  alignItems: 'center', gap: 24,
+                  x: parallaxX, y: parallaxY,
                 }}
               >
-                <span style={{ fontSize: 14 }}>{t.icon}</span>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, fontWeight: 600, color: '#4F46E5' }}>{t.label}</span>
-              </div>
+                <div style={{ position: 'relative' }}>
+                  <HoloGlobe mousePos={mousePos} />
+                  {/* Floating stat badges */}
+                  {[
+                    { label: 'CGPA', value: '8.11', top: '10%', left: '-20%', accent: '#00ffe7' },
+                    { label: 'Rank', value: 'Top 5%', top: '55%', right: '-25%', accent: '#a78bfa' },
+                    { label: 'GSoC', value: '2026', bottom: '8%', left: '-18%', accent: '#4ade80' },
+                  ].map(b => (
+                    <motion.div
+                      key={b.label}
+                      animate={{ y: [0, -6, 0] }}
+                      transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, ease: 'easeInOut' }}
+                      style={{
+                        position: 'absolute', ...b,
+                        background: 'rgba(6,13,31,0.9)',
+                        border: `1px solid ${b.accent}40`,
+                        borderRadius: 10, padding: '8px 14px',
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: `0 0 16px ${b.accent}20`,
+                        textAlign: 'center', minWidth: 70,
+                      }}
+                    >
+                      <div style={{ fontSize: 17, fontWeight: 800, color: b.accent, fontFamily: '"JetBrains Mono", monospace' }}>
+                        {b.value}
+                      </div>
+                      <div style={{ fontSize: 9, color: '#4a6090', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                        {b.label}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Tech strip */}
+                <div style={{
+                  display: 'flex', flexWrap: 'wrap', gap: 8,
+                  justifyContent: 'center', maxWidth: 300,
+                }}>
+                  {['Python', 'Java', 'Spring Boot', 'PyTorch', 'Node.js', 'R'].map(t => (
+                    <span key={t} style={{
+                      padding: '4px 12px', borderRadius: 99, fontSize: 11,
+                      background: 'rgba(13,21,38,0.8)',
+                      border: '1px solid rgba(148,163,184,0.12)',
+                      color: '#8ea4c8', fontFamily: '"JetBrains Mono", monospace',
+                    }}>{t}</span>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Scroll cue */}
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{
+            position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+            color: '#2a3f60', zIndex: 2,
+          }}
+        >
+          <span style={{ fontSize: 9, letterSpacing: '0.2em', fontFamily: '"JetBrains Mono", monospace' }}>SCROLL</span>
+          <ChevronDown size={14} />
+        </motion.div>
+      </section>
+
+      {/* ───── EXPERIENCE ───── */}
+      <section id="experience" style={{ padding: '100px 0', position: 'relative', background: 'rgba(5,10,23,0.7)' }}>
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          backgroundImage: 'linear-gradient(rgba(0,255,231,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,231,0.025) 1px, transparent 1px)',
+          backgroundSize: '52px 52px',
+        }} />
+        <div className="container" style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ marginBottom: 60 }}
+          >
+            <span style={{
+              fontSize: 11, fontFamily: '"JetBrains Mono", monospace',
+              color: '#00ffe7', letterSpacing: '0.15em', textTransform: 'uppercase',
+              display: 'block', marginBottom: 10,
+            }}>// open source · experience</span>
+            <h2 style={{
+              fontSize: 'clamp(32px, 5vw, 52px)',
+              fontWeight: 800, color: '#e8f0fe',
+              fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.02em',
+            }}>
+              <GlitchText>My Contributions</GlitchText>
+            </h2>
+          </motion.div>
+
+          {EXPERIENCE.map((exp, i) => <ExpCard key={i} exp={exp} index={i} />)}
+        </div>
+      </section>
+
+      {/* ───── PROJECTS ───── */}
+      <section id="projects" style={{ padding: '100px 0' }}>
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ marginBottom: 60 }}
+          >
+            <span style={{
+              fontSize: 11, fontFamily: '"JetBrains Mono", monospace',
+              color: '#a78bfa', letterSpacing: '0.15em', textTransform: 'uppercase',
+              display: 'block', marginBottom: 10,
+            }}>// holographic · project panels</span>
+            <h2 style={{
+              fontSize: 'clamp(32px, 5vw, 52px)',
+              fontWeight: 800, color: '#e8f0fe',
+              fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.02em',
+            }}>
+              <GlitchText>Featured Projects</GlitchText>
+            </h2>
+            <p style={{ color: '#4a6090', fontSize: 14, marginTop: 8 }}>
+              Hover over cards to see holographic depth effect
+            </p>
+          </motion.div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: 20,
+          }}>
+            {PROJECTS.map((p, i) => <HoloCard key={i} project={p} index={i} />)}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginTop: 40 }}
+          >
+            <Link href="/projects" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '11px 24px',
+              background: 'rgba(13,21,38,0.8)',
+              border: '1px solid rgba(148,163,184,0.15)',
+              borderRadius: 10, color: '#8ea4c8',
+              fontSize: 13, fontWeight: 600, textDecoration: 'none',
+              transition: 'all 200ms ease',
+            }}>
+              View All Projects <ArrowRight size={14} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ───── SKILLS PARTICLE MATRIX ───── */}
+      <section style={{ padding: '100px 0', background: 'rgba(5,10,23,0.6)', position: 'relative' }}>
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: 50 }}
+          >
+            <span style={{
+              fontSize: 11, fontFamily: '"JetBrains Mono", monospace',
+              color: '#f59e0b', letterSpacing: '0.15em', textTransform: 'uppercase',
+              display: 'block', marginBottom: 10,
+            }}>// particle · skills matrix</span>
+            <h2 style={{
+              fontSize: 'clamp(32px, 5vw, 52px)',
+              fontWeight: 800, color: '#e8f0fe',
+              fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.02em',
+            }}>
+              <GlitchText>Tech Arsenal</GlitchText>
+            </h2>
+            <p style={{ color: '#4a6090', fontSize: 13, marginTop: 8, fontFamily: '"JetBrains Mono", monospace' }}>
+              Hover skills to scatter the particle field
+            </p>
+          </motion.div>
+
+          <div style={{ position: 'relative', height: 360, marginBottom: 40 }}>
+            <SkillsParticles skills={SKILLS} hovered={hoveredSkill} />
+            {/* Skill labels overlaid */}
+            {SKILLS.map((skill, si) => {
+              const angle = (si / SKILLS.length) * Math.PI * 2
+              const r = 38
+              const cx = 50 + Math.cos(angle) * r
+              const cy = 50 + Math.sin(angle) * r * 0.6
+              return (
+                <motion.button
+                  key={skill.name}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: si * 0.05 }}
+                  viewport={{ once: true }}
+                  onMouseEnter={() => setHoveredSkill(si)}
+                  onMouseLeave={() => setHoveredSkill(null)}
+                  style={{
+                    position: 'absolute',
+                    left: `${cx}%`, top: `${cy}%`,
+                    transform: 'translate(-50%, -50%)',
+                    padding: '7px 16px',
+                    background: hoveredSkill === si ? `hsla(${skill.hue}, 90%, 60%, 0.2)` : 'rgba(13,21,38,0.8)',
+                    border: `1px solid ${hoveredSkill === si ? `hsla(${skill.hue}, 90%, 60%, 0.5)` : 'rgba(148,163,184,0.15)'}`,
+                    borderRadius: 99, cursor: 'pointer',
+                    color: hoveredSkill === si ? `hsla(${skill.hue}, 90%, 75%, 1)` : '#8ea4c8',
+                    fontSize: 12, fontWeight: 600,
+                    fontFamily: '"JetBrains Mono", monospace',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'all 200ms ease',
+                    boxShadow: hoveredSkill === si ? `0 0 20px hsla(${skill.hue}, 90%, 60%, 0.3)` : 'none',
+                    zIndex: 2, whiteSpace: 'nowrap',
+                  }}
+                >
+                  {skill.name}
+                </motion.button>
+              )
+            })}
+          </div>
+
+          {/* Additional skill grid */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+            {[
+              'PostgreSQL', 'MySQL', 'Redis', 'REST API', 'WebSocket',
+              'Git', 'Docker', 'Linux', 'LLMs', 'DSA', 'OOP', 'pandas', 'NumPy',
+            ].map(s => (
+              <span key={s} style={{
+                padding: '5px 14px', borderRadius: 99, fontSize: 11,
+                background: 'rgba(13,21,38,0.7)',
+                border: '1px solid rgba(148,163,184,0.1)',
+                color: '#8ea4c8', fontFamily: '"JetBrains Mono", monospace',
+              }}>{s}</span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════
-          CTA
-      ═══════════════════════════════════ */}
-      <section style={{ padding: '64px 0 96px' }}>
-        <div className="container">
-          <div
-            className="card"
+      {/* ───── TERMINAL CONTACT ───── */}
+      <section id="contact" style={{ padding: '100px 0' }}>
+        <div className="container" style={{ maxWidth: 800, margin: '0 auto', padding: '0 24px' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: 50 }}
+          >
+            <span style={{
+              fontSize: 11, fontFamily: '"JetBrains Mono", monospace',
+              color: '#4ade80', letterSpacing: '0.15em', textTransform: 'uppercase',
+              display: 'block', marginBottom: 10,
+            }}>// retro-futuristic · terminal</span>
+            <h2 style={{
+              fontSize: 'clamp(32px, 5vw, 52px)',
+              fontWeight: 800, color: '#e8f0fe',
+              fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.02em',
+            }}>
+              <GlitchText>Contact Node</GlitchText>
+            </h2>
+            <p style={{ color: '#4a6090', fontSize: 13, marginTop: 8, fontFamily: '"JetBrains Mono", monospace' }}>
+              Type <span style={{ color: '#00ffe7' }}>"contact"</span> or <span style={{ color: '#a78bfa' }}>"help"</span> to get started
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+          >
+            <TerminalContact />
+          </motion.div>
+
+          {/* Quick links */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
             style={{
-              padding: '48px 40px',
-              textAlign: 'center',
-              maxWidth: 640,
-              margin: '0 auto',
-              background: 'linear-gradient(135deg, rgba(79,70,229,0.12) 0%, rgba(124,58,237,0.1) 100%)',
-              borderColor: 'rgba(79,70,229,0.3)',
+              display: 'flex', gap: 12, justifyContent: 'center',
+              flexWrap: 'wrap', marginTop: 24,
             }}
           >
-            <div
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: 14,
-                background: 'linear-gradient(135deg,#4F46E5,#7C3AED)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 20px',
-              }}
-            >
-              <Zap size={22} color="#fff" />
-            </div>
-            <h3 style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 800, fontSize: 24, color: '#E8F0FE', marginBottom: 10, letterSpacing: '-0.02em' }}>
-              Open to Collaboration
-            </h3>
-            <p style={{ color: '#8EA4C8', fontSize: 14, marginBottom: 28, lineHeight: 1.7, maxWidth: 440, margin: '0 auto 28px' }}>
-              Interested in backend projects, AI/ML experiments, or open source? Let's build something together.
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' }}>
-              <Link href="/contact" className="btn btn-primary btn-lg">
-                Get In Touch <ArrowRight size={15} />
-              </Link>
-              <Link href="/projects" className="btn btn-secondary btn-lg">
-                See My Work
-              </Link>
-            </div>
-          </div>
+            {[
+              { label: 'GitHub', icon: Github, url: 'https://github.com/omkarrr2533', accent: '#e8f0fe' },
+              { label: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/om-kapale-b861a228a', accent: '#60a5fa' },
+              { label: 'Email', icon: Mail, url: 'mailto:omshripadkapale@gmail.com', accent: '#4ade80' },
+              { label: 'YouTube', icon: Youtube, url: '#', accent: '#f87171' },
+            ].map(s => (
+              <a key={s.label} href={s.url}
+                target={s.url.startsWith('mailto') || s.url === '#' ? '_self' : '_blank'}
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '9px 18px',
+                  background: 'rgba(13,21,38,0.7)',
+                  border: '1px solid rgba(148,163,184,0.12)',
+                  borderRadius: 10, color: '#8ea4c8',
+                  fontSize: 13, fontWeight: 600, textDecoration: 'none',
+                  transition: 'all 200ms ease',
+                  fontFamily: '"JetBrains Mono", monospace',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = s.accent; e.currentTarget.style.borderColor = s.accent + '40' }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#8ea4c8'; e.currentTarget.style.borderColor = 'rgba(148,163,184,0.12)' }}
+              >
+                <s.icon size={14} /> {s.label}
+              </a>
+            ))}
+          </motion.div>
         </div>
       </section>
 
-      <style>{`
-        @media (min-width: 640px) { .sm-show { display: block!important; } }
-        @media (max-width: 639px) { .sm-show { display: none; } }
+      <style jsx global>{`
+        @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
       `}</style>
     </div>
   )
