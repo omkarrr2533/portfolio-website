@@ -57,7 +57,7 @@ export default function FeaturedProjects() {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* ── Section header ── */}
         <div className="mb-16 max-w-xl">
-          <span className="section-badge mb-4 block w-fit">// featured work</span>
+          style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#4F46E5', textDecoration:'none', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>
           <h2
             className="font-display font-800 text-[#E8F0FE] mb-4"
             style={{ fontSize: 'clamp(32px, 5vw, 52px)' }}

@@ -181,7 +181,7 @@ function ProjectCard({ project, index, onEdit, onDelete, isCustom }) {
             {project.isPrivate ? <Lock size={11} color="#94A3B8"/> : <Globe size={11} color="#94A3B8"/>}
             {project.url ? (
               <a href={project.url} target="_blank" rel="noopener noreferrer"
-                style={{ fontFamilfontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#818CF8'y:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#4F46E5', textDecoration:'none', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>
+                style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#4F46E5', textDecoration:'none', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>
                 {project.name}
               </a>
             ) : (
