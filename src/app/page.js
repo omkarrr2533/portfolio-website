@@ -757,23 +757,70 @@ function ExpCard({ exp, index }) {
 /* ═══════════════════════════════════════════════════════════
    MAIN PAGE
 ═══════════════════════════════════════════════════════════ */
+function GsocBanner() {
+  const [show, setShow] = useState(true)
+  if (!show) return null
+  return (
+    <motion.div
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 2, duration: 0.6, ease: [0.22,1,0.36,1] }}
+      style={{
+        position: 'fixed', top: 80, left: '50%', transform: 'translateX(-50%)',
+        zIndex: 50, width: 'fit-content', maxWidth: '90vw',
+        background: 'rgba(6,13,31,0.95)',
+        border: '1px solid rgba(74,222,128,0.4)',
+        borderRadius: 14, padding: '10px 20px',
+        backdropFilter: 'blur(20px)',
+        boxShadow: '0 0 30px rgba(74,222,128,0.2), 0 8px 32px rgba(0,0,0,0.5)',
+        display: 'flex', alignItems: 'center', gap: 12,
+      }}
+    >
+      <span style={{ fontSize: 20 }}>🎉</span>
+      <div>
+        <p style={{ fontFamily: '"Plus Jakarta Sans",sans-serif', fontWeight: 700, fontSize: 13, color: '#4ade80', margin: 0 }}>
+          Just got selected for Google Summer of Code 2026!
+        </p>
+        <p style={{ fontFamily: '"JetBrains Mono",monospace', fontSize: 11, color: '#4a6090', margin: '2px 0 0' }}>
+          PEcAn Project · Refactoring Trait-Meta-analysis Pipeline · $3,000 stipend
+        </p>
+      </div>
+      <button
+        onClick={() => setShow(false)}
+        style={{ background: 'none', border: 'none', color: '#4a6090', cursor: 'pointer', fontSize: 16, padding: '0 0 0 8px' }}
+      >×</button>
+    </motion.div>
+  )
+}
+
 export default function FuturisticPortfolio() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+const [showBanner, setShowBanner] = useState(true)
+const [daysToMidterm, setDaysToMidterm] = useState(0)
   const [hoveredSkill, setHoveredSkill] = useState(null)
   const { scrollY } = useScroll()
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0])
   const heroY = useTransform(scrollY, [0, 500], [0, -80])
 
-  const { displayed: headline } = useTypewriter('Om Kapale | Software Engineer & Open Source Contributor', 48)
+  const { displayed: headline } = useTypewriter('Om Kapale | GSoC 2026 Contributor @ PEcAn Project', 48)
 
   const handleMouseMove = useCallback((e) => {
     setMousePos({ x: e.clientX, y: e.clientY })
   }, [])
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [handleMouseMove])
+  window.addEventListener('mousemove', handleMouseMove)
+  return () => window.removeEventListener('mousemove', handleMouseMove)
+}, [handleMouseMove])
+
+useEffect(() => {
+  const midterm = new Date('2026-07-10T22:00:00')
+  const update = () => {
+    const diff = Math.ceil((midterm - new Date()) / (1000 * 60 * 60 * 24))
+    setDaysToMidterm(Math.max(0, diff))
+  }
+  update()
+}, [])
 
   const PROJECTS = [
     {
@@ -804,15 +851,15 @@ export default function FuturisticPortfolio() {
 
   const EXPERIENCE = [
     {
-      role: 'Google Summer of Code 2026',
-      org: 'PEcAn Project (Open Source)',
-      period: 'GSoC 2026',
-      desc: "Refactoring PEcAn's monolithic architecture for modularity and scalability. Designing plugin interfaces, decoupling core modules, and improving test coverage for climate/ecosystem models.",
-      tags: ['R', 'Python', 'Architecture', 'Modular Design', 'Open Source'],
-      accent: '#00ffe7',
-      accent2: '#4ade80',
-      icon: '🌱',
-    },
+  role: 'Google Summer of Code 2026 — Contributor',
+  org: 'PEcAn Project · Google Open Source',
+  period: 'May – Sep 2026',
+  desc: "Selected from a record-breaking applicant pool for GSoC 2026. Refactoring PEcAn's Trait-Meta-analysis-Configuration Pipeline — increasing modularity, designing plugin interfaces, decoupling core modules, and improving test coverage. Mentor: Mike Dietze. Stipend: $3,000 USD.",
+  tags: ['R', 'Python', 'Architecture', 'Modular Design', 'GSoC', 'Open Source'],
+  accent: '#4ade80',
+  accent2: '#00ffe7',
+  icon: '🌱',
+},
     {
       role: 'Realm Description Caching',
       org: 'Zulip Open Source',
@@ -851,6 +898,48 @@ export default function FuturisticPortfolio() {
 
   return (
     <div style={{ background: '#060D1F', minHeight: '100vh', color: '#e8f0fe', overflowX: 'hidden' }}>
+
+{/* ── GSoC announcement banner ── */}
+{showBanner && (
+  <motion.div
+    initial={{ y: -100, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ delay: 2.5, duration: 0.7, ease: [0.22,1,0.36,1] }}
+    style={{
+      position: 'fixed', top: 74, left: '50%', transform: 'translateX(-50%)',
+      zIndex: 999, whiteSpace: 'nowrap',
+      background: 'rgba(6,13,31,0.97)',
+      border: '1px solid rgba(74,222,128,0.45)',
+      borderRadius: 14, padding: '10px 20px',
+      backdropFilter: 'blur(20px)',
+      boxShadow: '0 0 32px rgba(74,222,128,0.2), 0 8px 40px rgba(0,0,0,0.6)',
+      display: 'flex', alignItems: 'center', gap: 12,
+    }}
+  >
+    <span style={{ fontSize: 18 }}>🎉</span>
+    <div>
+      <p style={{
+        fontFamily: '"Plus Jakarta Sans",sans-serif', fontWeight: 700,
+        fontSize: 13, color: '#4ade80', margin: 0, lineHeight: 1.4,
+      }}>
+        Just got selected for Google Summer of Code 2026!
+      </p>
+      <p style={{
+        fontFamily: '"JetBrains Mono",monospace', fontSize: 11,
+        color: '#4a6090', margin: '2px 0 0', lineHeight: 1.4,
+      }}>
+        PEcAn Project · Trait-Meta-analysis Pipeline · $3,000 stipend
+      </p>
+    </div>
+    <button
+      onClick={() => setShowBanner(false)}
+      style={{
+        background: 'none', border: 'none', color: '#4a6090',
+        cursor: 'pointer', fontSize: 18, padding: '0 0 0 8px', lineHeight: 1,
+      }}
+    >×</button>
+  </motion.div>
+)}
       {/* ───── HERO ───── */}
       <section style={{
         minHeight: '100vh', display: 'flex', alignItems: 'center',
@@ -909,7 +998,7 @@ export default function FuturisticPortfolio() {
                     color: '#00ffe7', letterSpacing: '0.1em',
                   }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px #4ade80' }} />
-                    SYSTEM ONLINE · OPEN TO COLLABORATION
+                    🏆 GSoC 2026 SELECTED · PECAN PROJECT
                   </span>
                 </motion.div>
 
@@ -968,14 +1057,42 @@ export default function FuturisticPortfolio() {
                 </motion.div>
 
                 <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.0 }}
-                  style={{ color: '#8ea4c8', fontSize: 15, lineHeight: 1.75, maxWidth: 500, marginBottom: 28 }}
-                >
-                  GSoC 2026 contributor · Top 5% CSE student (8.11 CGPA) ·
-                  Building scalable backends, AI-powered tools, and contributing to open source across <span style={{ color: '#00ffe7' }}>6+ organisations</span>.
-                </motion.p>
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 1.0 }}
+  style={{ color: '#8ea4c8', fontSize: 15, lineHeight: 1.75, maxWidth: 500, marginBottom: 16 }}
+>
+  GSoC 2026 contributor · Top 5% CSE student (8.11 CGPA) ·
+  Building scalable backends, AI-powered tools, and contributing to open source across <span style={{ color: '#00ffe7' }}>6+ organisations</span>.
+</motion.p>
+
+{/* GSoC live indicator */}
+{daysToMidterm > 0 && (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 1.3 }}
+    style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 28 }}
+  >
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 8,
+      padding: '6px 14px',
+      background: 'rgba(74,222,128,0.06)',
+      border: '1px solid rgba(74,222,128,0.25)',
+      borderRadius: 99,
+      fontFamily: '"JetBrains Mono",monospace',
+      fontSize: 11, color: '#4ade80',
+    }}>
+      <span style={{
+        width: 6, height: 6, borderRadius: '50%',
+        background: '#4ade80', boxShadow: '0 0 8px #4ade80',
+        animation: 'cursorBlink 1.5s step-end infinite',
+      }} />
+      GSoC 2026 active · Midterm eval in {daysToMidterm} days · PEcAn Project
+    </div>
+  </motion.div>
+)}
+{daysToMidterm === 0 && <div style={{ marginBottom: 28 }} />}
 
                 {/* CTAs */}
                 <motion.div
@@ -1078,8 +1195,8 @@ export default function FuturisticPortfolio() {
                   {/* Floating stat badges */}
                   {[
                     { label: 'CGPA', value: '8.11', top: '10%', left: '-20%', accent: '#00ffe7' },
-                    { label: 'Rank', value: 'Top 5%', top: '55%', right: '-25%', accent: '#a78bfa' },
-                    { label: 'GSoC', value: '2026', bottom: '8%', left: '-18%', accent: '#4ade80' },
+                    { label: 'GSoC 2026', value: 'Selected', top: '55%', right: '-25%', accent: '#4ade80' },
+                    { label: 'Stipend', value: '$3K', bottom: '8%', left: '-18%', accent: '#f59e0b' },
                   ].map(b => (
                     <motion.div
                       key={b.label}
@@ -1124,22 +1241,22 @@ export default function FuturisticPortfolio() {
           </motion.div>
         </div>
 
-        {/* Scroll cue */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          style={{
-            position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-            color: '#2a3f60', zIndex: 2,
-          }}
-        >
-          <span style={{ fontSize: 9, letterSpacing: '0.2em', fontFamily: '"JetBrains Mono", monospace' }}>SCROLL</span>
-          <ChevronDown size={14} />
-        </motion.div>
-      </section>
+{/* Scroll cue */}
+<motion.div
+  animate={{ y: [0, 10, 0] }}
+  transition={{ duration: 2, repeat: Infinity }}
+  style={{
+    position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+    color: '#2a3f60', zIndex: 2,
+  }}
+>
+  <span style={{ fontSize: 9, letterSpacing: '0.2em', fontFamily: '"JetBrains Mono", monospace' }}>SCROLL</span>
+  <ChevronDown size={14} />
+</motion.div>
+</section>
 
-      {/* ───── EXPERIENCE ───── */}
+{/* ───── EXPERIENCE ───── */}
       <section id="experience" style={{ padding: '100px 0', position: 'relative', background: 'rgba(5,10,23,0.7)' }}>
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',

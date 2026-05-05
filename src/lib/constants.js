@@ -5,7 +5,7 @@
 // Personal Information
 export const PERSONAL_INFO = {
   name: 'Om Shripad Kapale',
-  title: 'Computer Science Student & Backend Developer',
+  title: 'GSoC 2026 Contributor · Backend Developer · AI/ML Enthusiast',
   subtitle: 'AI/ML Enthusiast | Open Source Contributor',
   email: 'omshripadkapale@gmail.com',
   phone: '+91-XXXXXXXXXX',
@@ -98,6 +98,11 @@ export const EDUCATION = {
 
 // Achievements
 export const ACHIEVEMENTS = [
+  {
+    title: 'Google Summer of Code 2026',
+    description: 'Selected contributor for PEcAn Project — Trait-Meta-analysis Pipeline refactoring. Ranked #1 proposal. $3,000 USD stipend.',
+    year: '2026'
+  },
   {
     title: 'Top 5% Academic Rank',
     description: 'Outstanding academic performance with 8.11 CGPA',

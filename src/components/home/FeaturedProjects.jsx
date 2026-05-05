@@ -65,6 +65,18 @@ export default function FeaturedProjects() {
             What I've{' '}
             <span className="gradient-text">Built</span>
           </h2>
+           {/* GSoC current work notice */}
+  <div style={{
+    display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 8,
+    padding: '7px 14px',
+    background: 'rgba(16,185,129,0.06)',
+    border: '1px solid rgba(16,185,129,0.2)',
+    borderRadius: 99,
+    fontFamily: '"JetBrains Mono",sans-serif', fontSize: 12, color: '#10B981',
+  }}>
+    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+    Currently building: PEcAn Modularity Refactor (GSoC 2026)
+  </div>
           <p className="text-[#8EA4C8] text-base leading-relaxed">
             Projects that demonstrate my approach to backend engineering and applied
             AI/ML — focused on real-world utility and clean architecture.

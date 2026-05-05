@@ -111,7 +111,7 @@ export default function Header() {
             }}>OK</div>
             <div className="desktop-nav">
               <p style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:14, color:'#E8F0FE', lineHeight:1 }}>Om Kapale</p>
-              <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#4A6080', letterSpacing:'0.08em', marginTop:2 }}>DEV · AI/ML</p>
+              <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#4ade80', letterSpacing:'0.08em', marginTop:2 }}>GSoC 2026 · PECAN</p>
             </div>
           </Link>
 
@@ -157,9 +157,9 @@ export default function Header() {
             >
               <Github size={14} /> GitHub
             </a>
-            <Link href="/contact" className="btn btn-primary btn-sm">
-              <Zap size={13} /> Hire Me
-            </Link>
+            <Link href="/contact" className="btn btn-primary btn-sm" style={{ background: 'linear-gradient(135deg, #10B981, #4F46E5)' }}>
+  <Zap size={13} /> GSoC '26 · Hire Me
+</Link>
           </div>
 
           {/* Mobile hamburger */}
@@ -254,9 +254,9 @@ export default function Header() {
           >
             <Github size={14} /> GitHub
           </a>
-          <Link href="/contact" className="btn btn-primary" style={{ justifyContent:'center', fontSize:13 }}>
-            <Zap size={13} /> Hire Me
-          </Link>
+          <Link href="/contact" className="btn btn-primary" style={{ justifyContent:'center', fontSize:13, background:'linear-gradient(135deg,#10B981,#4F46E5)' }}>
+  <Zap size={13} /> GSoC '26 · Hire Me
+</Link>
         </div>
       </div>
 

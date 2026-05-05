@@ -5,16 +5,30 @@ import { Camera, Edit2, Save, X, Plus, Trash2, MapPin, Mail, ExternalLink, Check
 
 const DEFAULT_ABOUT = {
   name: 'Om Shripad Kapale',
-  title: 'Backend Developer & AI/ML Enthusiast',
+  title: 'GSoC 2026 Contributor · Backend Developer · AI/ML Enthusiast',
   location: 'Mumbai, Maharashtra, India',
   email: 'omshripadkapale@gmail.com',
-  bio: `Passionate Computer Science student ranked in the top 5% of my college with 8.11 CGPA. I love building scalable backend systems, exploring AI/ML frontiers, and contributing to open source across 6+ organisations.\n\nCurrently in my 3rd year of B.Tech CSE, I focus on Java/Spring Boot for backend work and Python/PyTorch for AI/ML projects. I believe in writing clean, maintainable code that solves real problems.`,
+  bio: `Selected for Google Summer of Code 2026 at PEcAn Project — refactoring the Trait-Meta-analysis-Configuration Pipeline under mentor Mike Dietze. Chosen from a record-breaking applicant pool to work on real open-source climate/ecosystem modeling software.\n\nComputer Science student ranked in the top 5% of my college with 8.11 CGPA. I build scalable backend systems with Java/Spring Boot, explore AI/ML frontiers with Python/PyTorch, and contribute to open source across 6+ organisations. I believe in clean, maintainable code that solves real problems.`,
   cgpa: '8.11',
   rank: 'Top 5%',
+  gsoc: 'GSoC 2026',
   education: 'B.Tech Computer Science Engineering',
   college: 'Your College Name',
   period: '2023 – Present',
   experience: [
+    {
+    id:'e0',
+    title: 'Google Summer of Code 2026 Contributor',
+    company: 'PEcAn Project · Google',
+    period: 'May – Sep 2026',
+    bullets: [
+      'Selected for GSoC 2026 from a record-breaking applicant pool worldwide',
+      'Refactoring the Trait-Meta-analysis-Configuration Pipeline for better modularity',
+      'Designing plugin interfaces and decoupling core modules in PEcAn codebase',
+      'Improving test coverage for open-source climate and ecosystem modeling software',
+      'Mentor: Mike Dietze · Stipend: $3,000 USD · Ranking: #1 proposal',
+    ],
+  },
     {
       id:'e1', title:'Backend Developer (Learning)', company:'Personal Projects',
       period:'2023–Present',

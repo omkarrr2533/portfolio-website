@@ -5,6 +5,19 @@ import { Download, Briefcase, GraduationCap, Award, Code } from 'lucide-react'
 export default function ResumePage() {
   const experience = [
     {
+    title: 'Google Summer of Code 2026 — Contributor',
+    company: 'PEcAn Project (Open Source) · Google',
+    location: 'Remote',
+    period: 'May 2026 – Sep 2026',
+    responsibilities: [
+      'Selected for GSoC 2026 from a record-breaking global applicant pool — Ranking #1 proposal at PEcAn',
+      'Refactoring the Trait-Meta-analysis-Configuration Pipeline to increase PEcAn modularity',
+      'Designing plugin interfaces and decoupling core modules to improve maintainability and extensibility',
+      'Improving test coverage for climate/ecosystem modeling software used by researchers worldwide',
+      'Earning $3,000 USD stipend: $1,350 after midterm (Jul 10) and $1,650 after final evaluation',
+    ],
+  },
+    {
       title: 'Backend Developer (Self-Directed)',
       company: 'Personal Projects & Open Source',
       location: 'Mumbai, India',
@@ -50,7 +63,8 @@ export default function ResumePage() {
   }
 
   const certifications = [
-    { name: 'Rapid Application Development with LLMs', issuer: 'NVIDIA', year: '2025' },
+  { name: 'Google Summer of Code 2026 Contributor', issuer: 'Google · PEcAn Project', year: '2026' },
+  { name: 'Rapid Application Development with LLMs', issuer: 'NVIDIA', year: '2025' },
     { name: 'Artificial Intelligence Fundamentals', issuer: 'IBM', year: '2025' },
     { name: 'Ultimate Job Ready Data Science Course', issuer: 'Code with Harry', year: '2025' },
     { name: 'AI/ML and Data Science', issuer: 'Apna College', year: '2024' },
