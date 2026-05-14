@@ -46,19 +46,44 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-24" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen pb-24" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
-        {/* ── Header ── */}
-        <div className="text-center mb-16 pt-8 animate-fade-in">
-          <span className="section-badge mb-4 mx-auto block w-fit">// get in touch</span>
-          <h1 className="section-heading mb-4" style={{ fontSize: 'clamp(36px,5vw,56px)' }}>
-            Let's <span className="gradient-text">Connect</span>
+        {/* ── Hook Header ── */}
+        <div className="page-hook-banner animate-fade-in" style={{ paddingTop: 100 }}>
+          <span className="section-badge" style={{ marginBottom: 18, display: 'inline-flex' }}>// get in touch</span>
+
+          {/* Availability badge */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+            <span className="available-badge">
+              <span className="available-dot" />
+              Currently Available — Open to Opportunities
+            </span>
+          </div>
+
+          <h1 className="page-title glow-heading" style={{ marginBottom: 12 }}>
+            Let's Build <span className="gradient-text">Something</span> Great
           </h1>
-          <p className="text-[#4A6090] text-base max-w-xl mx-auto leading-relaxed">
-            Have a project idea, collaboration in mind, or just want to chat about tech?
-            My inbox is always open.
+          <span className="accent-line" />
+          <p className="hook-subtext" style={{ marginBottom: 24 }}>
+            Have a project idea, internship opportunity, or want to collaborate on open source?
+            I respond within <strong style={{ color: '#34D399' }}>24 hours</strong>.
           </p>
+
+          {/* Open-to chips */}
+          <div className="achievement-strip" style={{ marginBottom: 0 }}>
+            {[
+              { dot: '#818CF8', text: 'Backend Development' },
+              { dot: '#06B6D4', text: 'AI / ML Projects' },
+              { dot: '#4ade80', text: 'Open Source' },
+              { dot: '#f59e0b', text: 'Internships' },
+            ].map(chip => (
+              <span key={chip.text} className="achievement-chip">
+                <span className="chip-dot" style={{ background: chip.dot }} />
+                {chip.text}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-5xl mx-auto">
@@ -68,7 +93,7 @@ export default function ContactPage() {
 
             {/* Contact info */}
             <div className="glass-card p-6">
-              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>
+              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif', letterSpacing: '0.02em' }}>
                 Contact Info
               </h2>
               <div className="space-y-4">
@@ -95,7 +120,7 @@ export default function ContactPage() {
 
             {/* Social links */}
             <div className="glass-card p-6">
-              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Syne, sans-serif' }}>
+              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif', letterSpacing: '0.02em' }}>
                 Find Me Online
               </h2>
               <div className="space-y-2">
@@ -108,8 +133,8 @@ export default function ContactPage() {
                     className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group"
                     style={{ border: '1px solid transparent' }}
                     onMouseEnter={e => {
-                      e.currentTarget.style.background = '#F1F5F9'
-                     e.currentTarget.style.borderColor = '#E2E8F0'
+                      e.currentTarget.style.background = 'rgba(79,70,229,0.08)'
+                      e.currentTarget.style.borderColor = 'rgba(79,70,229,0.25)'
                       e.currentTarget.style.transform = 'translateX(4px)'
                     }}
                     onMouseLeave={e => {
@@ -145,7 +170,7 @@ export default function ContactPage() {
           {/* ── Contact form ── */}
           <div className="lg:col-span-3 animate-slide-up delay-100" style={{ animationFillMode: 'both' }}>
             <div className="glass-card p-8">
-              <h2 className="text-lg font-bold text-[#EDF2FF] mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
+              <h2 className="text-lg font-bold text-[#EDF2FF] mb-2" style={{ fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif', letterSpacing: '0.02em' }}>
                 Send a Message
               </h2>
               <p className="text-sm text-[#4A6090] mb-7">Fill out the form and I'll get back to you shortly.</p>

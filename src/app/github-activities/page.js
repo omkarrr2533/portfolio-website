@@ -241,7 +241,7 @@ function ProfileCard({ stats }) {
           { label: 'Stars', value: stats.totalStars, icon: Star, accent: '#F59E0B' },
         ].map(s => (
           <div key={s.label} className="p-3 rounded-lg text-center"
-            style={{ background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
+            style={{ background: 'rgba(13,21,38,0.8)', border: '1px solid rgba(148,163,184,0.1)' }}>
             <s.icon size={14} className="mx-auto mb-1" style={{ color: s.accent }} />
             <div className="text-base font-800 font-mono" style={{ color: '#E8F0FE' }}>{s.value}</div>
 <div className="text-xs" style={{ color: '#8EA4C8' }}>{s.label}</div>
@@ -332,27 +332,50 @@ export default function GitHubActivitiesPage() {
   const TABS = ['overview', 'contributions', 'repositories']
 
   return (
-    <div className="min-h-screen pt-24 pb-20"
-      style={{ background: 'transparent' }}>
-      <div className="container mx-auto px-4 sm:px-6">
+    <div className="min-h-screen pb-20" style={{ background: 'transparent' }}>
 
-        {/* Header */}
-        <div className="mb-8 flex items-end justify-between flex-wrap gap-4">
-          <div className="animate-fade-in">
-            <span className="section-badge mb-3 block w-fit">// github stats · live</span>
-            <h1 className="font-display font-800 text-[#E8F0FE] mb-2"
-              style={{ fontSize: 'clamp(32px,5vw,52px)' }}>
-              GitHub <span className="gradient-text">Activity</span>
-            </h1>
-            <p className="text-[#64B5F6] text-sm font-mono">
-              Contributions, repositories, open source PRs & more
-            </p>
+      {/* ── Hook Banner ── */}
+      <div className="page-hook-banner animate-fade-in" style={{ paddingTop:100, marginBottom:8 }}>
+        <div style={{ maxWidth:760, margin:'0 auto' }}>
+          <div style={{ display:'flex', justifyContent:'flex-end', maxWidth:760, margin:'0 auto 12px' }}>
+            <button onClick={fetchAll} disabled={loading} className="btn-secondary text-sm">
+              <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
+              {loading ? 'Syncing…' : 'Refresh'}
+            </button>
           </div>
-          <button onClick={fetchAll} disabled={loading} className="btn-secondary text-sm">
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-            {loading ? 'Syncing…' : 'Refresh'}
-          </button>
+
+          <span className="section-badge" style={{ marginBottom:18, display:'inline-flex' }}>// github · live</span>
+
+          <h1 className="page-title glow-heading" style={{ marginBottom:12 }}>
+            Code in <span className="gradient-text">Motion</span>
+          </h1>
+          <span className="accent-line" />
+          <p className="hook-subtext" style={{ marginBottom:24 }}>
+            Live GitHub stats — contributions, repositories, open source PRs, and the languages powering it all.
+          </p>
+
+          {/* Live stats strip */}
+          <div className="achievement-strip">
+            {(stats ? [
+              { dot:'#3B82F6', text:`${stats.totalRepos} Repositories` },
+              { dot:'#F59E0B', text:`${stats.totalStars} Stars Earned` },
+              { dot:'#34D399', text:`${prs.total || '—'} PRs Merged` },
+              { dot:'#818CF8', text:`${Object.keys(langMap).length} Languages` },
+            ] : [
+              { dot:'#06B6D4', text:'Contributions · Repos · PRs' },
+              { dot:'#818CF8', text:'Live GitHub Data' },
+              { dot:'#4ade80', text:'@omkarrr2533' },
+            ]).map(chip => (
+              <span key={chip.text} className="achievement-chip">
+                <span className="chip-dot" style={{ background:chip.dot }} />
+                {chip.text}
+              </span>
+            ))}
+          </div>
         </div>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6">
 
         {/* Not configured */}
         {!loading && !githubConfigured && (

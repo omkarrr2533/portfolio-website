@@ -223,36 +223,64 @@ export default function CertificationsPage() {
   const [modal, setModal] = useState(null) // null | 'add' | cert object
 
   return (
-    <div className="min-h-screen pt-24 pb-16" style={{ background:'var(--bg)' }}>
+    <div className="min-h-screen pb-16" style={{ background:'var(--bg)' }}>
+
+      {/* ── Hook Banner ── */}
+      <div className="page-hook-banner animate-fade-in" style={{ paddingTop:100, marginBottom:8 }}>
+        <div style={{ maxWidth:800, margin:'0 auto' }}>
+          <span className="section-badge" style={{ marginBottom:18, display:'inline-flex' }}>// certifications</span>
+
+          <h1 className="page-title glow-heading" style={{ marginBottom:12 }}>
+            Certified by the <span className="gradient-text">Best</span>
+          </h1>
+          <span className="accent-line" />
+          <p className="hook-subtext" style={{ marginBottom:24 }}>
+            Professional credentials from world-class organizations — each one earned, verified, and building toward mastery.
+          </p>
+
+          {/* Issuer badges */}
+          <div style={{ display:'flex', justifyContent:'center', flexWrap:'wrap', gap:12, marginBottom:20 }}>
+            {[
+              { name:'IBM', color:'#1F70C1', bg:'rgba(31,112,193,0.1)', border:'rgba(31,112,193,0.3)' },
+              { name:'NVIDIA', color:'#76B900', bg:'rgba(118,185,0,0.1)', border:'rgba(118,185,0,0.3)' },
+              { name:'Code with Harry', color:'#818CF8', bg:'rgba(129,140,248,0.1)', border:'rgba(129,140,248,0.3)' },
+            ].map(issuer => (
+              <span key={issuer.name} style={{
+                display:'inline-flex', alignItems:'center', gap:6,
+                padding:'8px 18px',
+                background: issuer.bg,
+                border: `1px solid ${issuer.border}`,
+                borderRadius:10,
+                fontSize:13, fontWeight:700, color: issuer.color,
+                fontFamily:'"Plus Jakarta Sans",sans-serif',
+              }}>
+                <Award size={13} /> {issuer.name}
+              </span>
+            ))}
+          </div>
+
+          {/* Stats chips */}
+          <div className="achievement-strip">
+            <span className="achievement-chip">
+              <span className="chip-dot" style={{ background:'#F59E0B' }} />
+              {certs.length} Certifications Earned
+            </span>
+            <span className="achievement-chip">
+              <span className="chip-dot" style={{ background:'#34D399' }} />
+              {certs.filter(c=>c.link && c.link!=='#').length} Verifiable Online
+            </span>
+            <span className="achievement-chip">
+              <span className="chip-dot" style={{ background:'#818CF8' }} />
+              AI · ML · Data Science · LLMs
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 sm:px-6">
 
-        {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <div className="flex justify-center mb-3">
-            <Award className="w-14 h-14 text-[#F59E0B]" />
-          </div>
-          <h1 className="font-display font-800 text-[#E8F0FE] mb-3" style={{ fontSize:'clamp(32px,5vw,52px)' }}>
-            <span className="gradient-text">Certifications</span>
-          </h1>
-          <p className="text-[#8EA4C8] text-base max-w-xl mx-auto">
-            Professional certifications that validate my expertise — all verifiable online
-          </p>
-        </div>
-
         {/* Controls */}
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
-          <div className="flex gap-3 flex-wrap">
-            <div className="stat-card flex items-center gap-2">
-              <Award size={14} className="text-[#F59E0B]" />
-              <span className="font-mono text-sm text-[#E8F0FE] font-700">{certs.length}</span>
-              <span className="text-xs text-[#64B5F6]">Total</span>
-            </div>
-            <div className="stat-card flex items-center gap-2">
-              <span className="text-xs text-[#64B5F6] font-mono">
-                {certs.filter(c=>c.link && c.link!=='#').length} verifiable online
-              </span>
-            </div>
-          </div>
+        <div className="flex items-center justify-end mb-8 flex-wrap gap-3">
           <div className="flex gap-2">
             <button onClick={() => setEditMode(v=>!v)}
               className={`text-sm font-mono flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${

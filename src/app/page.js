@@ -1256,6 +1256,33 @@ useEffect(() => {
 </motion.div>
 </section>
 
+{/* ───── STATS STRIP ───── */}
+      <div style={{
+        borderTop: '1px solid rgba(148,163,184,0.06)',
+        borderBottom: '1px solid rgba(148,163,184,0.06)',
+        background: 'rgba(5,10,23,0.6)',
+        backdropFilter: 'blur(12px)',
+      }}>
+        <div className="container">
+          <div className="stats-strip">
+            {[
+              { number: '3+',   label: 'Projects Shipped' },
+              { number: '6+',   label: 'Open Source Orgs' },
+              { number: '8.11', label: 'CGPA Score' },
+              { number: '$3K',  label: 'GSoC Stipend' },
+            ].map((stat, i) => (
+              <div key={stat.label} style={{ display: 'flex', alignItems: 'center' }}>
+                {i > 0 && <div className="stats-divider" />}
+                <div className="stat-item">
+                  <div className="metric-number">{stat.number}</div>
+                  <div className="metric-label">{stat.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
 {/* ───── EXPERIENCE ───── */}
       <section id="experience" style={{ padding: '100px 0', position: 'relative', background: 'rgba(5,10,23,0.7)' }}>
         <div style={{

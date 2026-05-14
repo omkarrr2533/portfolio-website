@@ -103,15 +103,19 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" style={{ display:'flex', alignItems:'center', gap:10, textDecoration:'none' }}>
             <div style={{
-              width:34, height:34, borderRadius:10,
+              width:36, height:36, borderRadius:10,
               background:'linear-gradient(135deg,#4F46E5,#7C3AED)',
               display:'flex', alignItems:'center', justifyContent:'center',
-              fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:13, color:'#fff',
-              boxShadow:'0 0 16px rgba(79,70,229,0.4)',
+              fontFamily:'Rajdhani,Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:14, color:'#fff',
+              boxShadow:'0 0 18px rgba(79,70,229,0.45)',
+              flexShrink:0,
             }}>OK</div>
             <div className="desktop-nav">
-              <p style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:14, color:'#E8F0FE', lineHeight:1 }}>Om Kapale</p>
-              <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#4ade80', letterSpacing:'0.08em', marginTop:2 }}>GSoC 2026 · PECAN</p>
+              <p style={{ fontFamily:'Rajdhani,Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:15, color:'#E8F0FE', lineHeight:1, letterSpacing:'0.01em' }}>Om Kapale</p>
+              <div style={{ display:'flex', alignItems:'center', gap:5, marginTop:3 }}>
+                <span style={{ width:5, height:5, borderRadius:'50%', background:'#4ade80', boxShadow:'0 0 5px #4ade80', display:'inline-block', flexShrink:0 }} />
+                <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#4ade80', letterSpacing:'0.08em' }}>GSoC 2026 · AVAILABLE</p>
+              </div>
             </div>
           </Link>
 
@@ -157,9 +161,14 @@ export default function Header() {
             >
               <Github size={14} /> GitHub
             </a>
-            <Link href="/contact" className="btn btn-primary btn-sm" style={{ background: 'linear-gradient(135deg, #10B981, #4F46E5)' }}>
-  <Zap size={13} /> GSoC '26 · Hire Me
-</Link>
+            <Link href="/contact" className="btn btn-primary btn-sm" style={{
+              background: 'linear-gradient(135deg, #4F46E5, #7C3AED)',
+              boxShadow: '0 0 20px rgba(79,70,229,0.35)',
+              fontFamily: 'JetBrains Mono, monospace',
+              letterSpacing: '0.03em',
+            }}>
+              <Zap size={13} /> Hire Me
+            </Link>
           </div>
 
           {/* Mobile hamburger */}

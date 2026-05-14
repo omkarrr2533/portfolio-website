@@ -113,8 +113,17 @@ function Field({ value, onChange, tag:Tag='p', multiline=false, className='', pl
 
 function SectionTitle({ children }) {
   return (
-    <h2 className="text-2xl font-bold text-[#E8F0FE] mb-6 flex items-center gap-3">
-      <span className="h-0.5 w-8 bg-gradient-to-r from-blue-500 to-transparent" />
+    <h2 style={{
+      fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif',
+      fontWeight: 800, fontSize: 22, color: '#E8F0FE',
+      marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12,
+      letterSpacing: '0.02em',
+    }}>
+      <span style={{
+        height: 2, width: 32, flexShrink: 0, borderRadius: 2,
+        background: 'linear-gradient(90deg, #4F46E5, #06B6D4)',
+        display: 'block',
+      }} />
       {children}
     </h2>
   )
@@ -150,40 +159,94 @@ export default function AboutPage() {
   const removeSkill = (id) => update('skills', data.skills.filter(s=>s.id!==id))
 
   return (
-    <div className="min-h-screen pt-24 pb-16" style={{ background: 'var(--bg)' }}>
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between mb-8">
-          <span className="section-badge">// about me</span>
-          <button onClick={() => setEditMode(v=>!v)}
-            className={`text-sm font-mono flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
-              editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
-                       : 'text-[#64B5F6] bg-white/5 border border-white/10 hover:border-blue-500/30'
-            }`}
-          >
-            {editMode ? <><Save size={12}/> Editing (click fields)</> : <><Edit2 size={12}/> Enable Editing</>}
-          </button>
+    <div className="min-h-screen pb-16" style={{ background: 'var(--bg)' }}>
+
+      {/* ── Hook Banner ── */}
+      <div className="page-hook-banner" style={{ paddingTop: 96 }}>
+        <div className="container mx-auto px-4 sm:px-6" style={{ maxWidth: 860 }}>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
+            <button onClick={() => setEditMode(v=>!v)}
+              className={`text-xs font-mono flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+                editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
+                         : 'text-[#64B5F6] bg-white/5 border border-white/10 hover:border-blue-500/30'
+              }`}
+            >
+              {editMode ? <><Save size={11}/> Editing</> : <><Edit2 size={11}/> Edit</>}
+            </button>
+          </div>
+
+          <span className="section-badge" style={{ marginBottom: 18, display: 'inline-flex' }}>// about me</span>
+
+          <h1 className="page-title glow-heading" style={{ marginBottom: 14 }}>
+            The <span className="gradient-text-animate">Story</span> Behind the Code
+          </h1>
+          <span className="accent-line" />
+          <p className="hook-subtext" style={{ marginBottom: 28 }}>
+            CSE student turned open source contributor — building scalable systems, shipping AI tools, and making an impact globally.
+          </p>
+
+          {/* Achievement chips */}
+          <div className="achievement-strip">
+            {[
+              { dot: '#4ade80', text: 'GSoC 2026 · PEcAn Project' },
+              { dot: '#818CF8', text: 'Top 5% of College' },
+              { dot: '#06B6D4', text: '8.11 CGPA' },
+              { dot: '#f59e0b', text: '6+ Open Source Orgs' },
+              { dot: '#a78bfa', text: 'Mumbai, India' },
+            ].map(chip => (
+              <span key={chip.text} className="achievement-chip">
+                <span className="chip-dot" style={{ background: chip.dot }} />
+                {chip.text}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-16">
           <div className="lg:col-span-1">
-            <div className="glass-card p-6 text-center sticky top-24">
-              <div className="relative w-32 h-32 mx-auto mb-4 cursor-pointer group"
+            <div style={{
+              background: 'rgba(13,21,38,0.7)',
+              border: '1px solid rgba(148,163,184,0.1)',
+              borderRadius: 20,
+              backdropFilter: 'blur(20px)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
+              padding: 28,
+              textAlign: 'center',
+              position: 'sticky', top: 88,
+            }}>
+              {/* Avatar */}
+              <div className="relative mx-auto mb-5 cursor-pointer group"
+                style={{ width: 120, height: 120 }}
                 onClick={() => editMode && photoRef.current?.click()}>
-                <div className="w-full h-full rounded-2xl overflow-hidden"
-                  style={{ background: 'linear-gradient(135deg, rgba(79,70,229,0.2), rgba(124,58,237,0.2))' }}>
-                  {photo
-                    ? <img src={photo} alt="Profile" className="w-full h-full object-cover" />
-                    : <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-[#64B5F6]">OK</div>
-                  }
+                <div style={{
+                  position: 'absolute', inset: -3, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #4F46E5, #06B6D4, #7C3AED)',
+                  padding: 3,
+                }}>
+                  <div style={{
+                    width: '100%', height: '100%', borderRadius: '50%',
+                    background: 'rgba(13,21,38,0.95)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    overflow: 'hidden', fontSize: 32, fontWeight: 800,
+                    color: '#818CF8',
+                    fontFamily: 'Rajdhani, sans-serif',
+                  }}>
+                    {photo
+                      ? <img src={photo} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : 'OK'
+                    }
+                  </div>
                 </div>
                 {editMode && (
-                  <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <Camera size={20} className="text-white" />
                   </div>
                 )}
               </div>
+
               <input ref={photoRef} type="file" accept="image/*" className="hidden"
                 onChange={e => {
                   const f = e.target.files?.[0]
@@ -192,36 +255,59 @@ export default function AboutPage() {
                   reader.onload = ev => savePhoto(ev.target.result)
                   reader.readAsDataURL(f)
                 }} />
-              {editMode && <p className="text-xs text-[#64B5F6] mb-3 font-mono">Click photo to change</p>}
+              {editMode && <p className="text-xs text-[#64B5F6] mb-2 font-mono">Click photo to change</p>}
 
+              {/* Name */}
               {editMode
                 ? <Field value={data.name} onChange={v=>update('name',v)} tag="h2" className="text-xl font-bold text-[#E8F0FE] mb-1 text-center" />
-                : <h2 className="text-xl font-bold text-[#E8F0FE] mb-1">{data.name}</h2>
-              }
-              {editMode
-                ? <Field value={data.title} onChange={v=>update('title',v)} tag="p" className="text-sm text-[#60A5FA] mb-4 text-center" />
-                : <p className="text-sm text-[#60A5FA] mb-4">{data.title}</p>
+                : <h2 style={{ fontFamily:'Rajdhani,sans-serif', fontWeight:800, fontSize:22, color:'#E8F0FE', marginBottom:4 }}>{data.name}</h2>
               }
 
-              <div className="space-y-2 text-sm text-[#64B5F6] text-left">
-                <div className="flex items-center gap-2">
-                  <MapPin size={13} className="shrink-0" />
-                  {editMode ? <Field value={data.location} onChange={v=>update('location',v)} className="text-sm" /> : <span>{data.location}</span>}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail size={13} className="shrink-0" />
-                  {editMode ? <Field value={data.email} onChange={v=>update('email',v)} className="text-sm" /> : <a href={`mailto:${data.email}`} className="text-[#60A5FA] hover:text-white text-sm">{data.email}</a>}
-                </div>
+              {/* GSoC badge */}
+              <div style={{ marginBottom: 12 }}>
+                <span className="available-badge">
+                  <span className="available-dot" />
+                  GSoC 2026 Active
+                </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 mt-5">
-                {[{ label:'CGPA', key:'cgpa' }, { label:'Rank', key:'rank' }].map(s => (
-                  <div key={s.key} style={{ background:'rgba(79,70,229,0.1)', border:'1px solid rgba(79,70,229,0.25)', borderRadius:10 }} className="p-3 text-center">
+              {editMode
+                ? <Field value={data.title} onChange={v=>update('title',v)} tag="p" className="text-xs text-[#60A5FA] mb-4 text-center" />
+                : <p style={{ fontSize:12, color:'#8EA4C8', marginBottom:20, lineHeight:1.6 }}>{data.title}</p>
+              }
+
+              {/* Contact info */}
+              <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:20 }}>
+                {[
+                  { icon: MapPin, content: editMode
+                      ? <Field value={data.location} onChange={v=>update('location',v)} className="text-sm" />
+                      : <span style={{ fontSize:12, color:'#8EA4C8' }}>{data.location}</span>
+                  },
+                  { icon: Mail, content: editMode
+                      ? <Field value={data.email} onChange={v=>update('email',v)} className="text-sm" />
+                      : <a href={`mailto:${data.email}`} style={{ fontSize:12, color:'#60A5FA' }}>{data.email}</a>
+                  },
+                ].map((item, i) => (
+                  <div key={i} style={{ display:'flex', alignItems:'center', gap:8, justifyContent:'center', color:'#4A6080' }}>
+                    <item.icon size={12} style={{ flexShrink:0 }} />
+                    {item.content}
+                  </div>
+                ))}
+              </div>
+
+              {/* Stats grid */}
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginTop:8 }}>
+                {[{ label:'CGPA', key:'cgpa', accent:'#818CF8' }, { label:'Rank', key:'rank', accent:'#06B6D4' }].map(s => (
+                  <div key={s.key} style={{
+                    background:'rgba(79,70,229,0.08)',
+                    border:'1px solid rgba(79,70,229,0.2)',
+                    borderRadius:12, padding:'12px 8px', textAlign:'center',
+                  }}>
                     {editMode
-                      ? <Field value={data[s.key]} onChange={v=>update(s.key,v)} className="text-lg font-bold font-mono text-center block text-[#818CF8]" />
-                      : <div className="text-lg font-bold font-mono text-[#818CF8]">{data[s.key]}</div>
+                      ? <Field value={data[s.key]} onChange={v=>update(s.key,v)} className="text-lg font-bold font-mono text-center block" style={{ color: s.accent }} />
+                      : <div style={{ fontFamily:'JetBrains Mono,monospace', fontWeight:800, fontSize:18, color:s.accent, lineHeight:1 }}>{data[s.key]}</div>
                     }
-                    <div className="text-xs text-[#64B5F6]">{s.label}</div>
+                    <div style={{ fontSize:10, color:'#4A6080', textTransform:'uppercase', letterSpacing:'0.08em', marginTop:4, fontFamily:'JetBrains Mono,monospace' }}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -284,8 +370,27 @@ export default function AboutPage() {
           </div>
           <div className="space-y-6 max-w-4xl">
             {data.experience.map((exp) => (
-              <div key={exp.id} className="relative border-l-2 border-blue-600 pl-6 glass-card p-5">
-                <div className="absolute -left-2 top-4 w-4 h-4 bg-blue-600 rounded-full ring-4" style={{ '--tw-ring-color': 'var(--bg)' }} />
+              <div key={exp.id} className="relative pl-6" style={{
+                borderLeft: '2px solid rgba(79,70,229,0.35)',
+              }}>
+                <div style={{
+                  position:'absolute', left:-8, top:16,
+                  width:16, height:16, borderRadius:'50%',
+                  background:'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                  boxShadow:'0 0 12px rgba(79,70,229,0.5)',
+                }} className="timeline-dot" />
+                <div style={{
+                  background:'rgba(13,21,38,0.65)',
+                  border:'1px solid rgba(148,163,184,0.1)',
+                  borderRadius:14,
+                  backdropFilter:'blur(16px)',
+                  padding:'20px 22px',
+                  boxShadow:'0 4px 20px rgba(0,0,0,0.3)',
+                  transition:'all 220ms ease',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(79,70,229,0.3)'; e.currentTarget.style.transform='translateX(4px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(148,163,184,0.1)'; e.currentTarget.style.transform='translateX(0)' }}
+                >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     {editMode
@@ -327,6 +432,7 @@ export default function AboutPage() {
                       <Trash2 size={15}/>
                     </button>
                   )}
+                </div>
                 </div>
               </div>
             ))}

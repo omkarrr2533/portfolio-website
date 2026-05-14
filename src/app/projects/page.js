@@ -312,46 +312,50 @@ export default function ProjectsPage() {
   const totalStars = ghRepos.reduce((s,r)=>s+r.stars,0)
 
   return (
-    <div style={{ minHeight:'100vh', background:'var(--bg)', paddingTop:80, paddingBottom:96 }}>
-      <div className="container" style={{ paddingTop:32 }}>
+    <div style={{ minHeight:'100vh', background:'var(--bg)', paddingBottom:96 }}>
 
-        {/* Header */}
-        <div style={{ marginBottom:40 }}>
-          <span className="section-label" style={{ display:'inline-flex', marginBottom:14 }}>// projects</span>
-          <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:14 }}>
-            <div>
-              <h1 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:'clamp(32px,5vw,52px)', color:'#E8F0FE', letterSpacing:'-0.03em', lineHeight:1.1 }}>
-                All <span className="gradient-text">Projects</span>
-              </h1>
-              <p style={{ fontSize:14, color:'#64748B', marginTop:6 }}>Your custom projects + live GitHub repositories</p>
-            </div>
-            {admin && (
-              <div style={{ display:'flex', gap:8 }}>
-                <button onClick={()=>setGhPicker(true)} className="btn btn-secondary btn-sm">
-                  <Github size={14}/> From GitHub
-                </button>
-                <button onClick={()=>setModal('add')} className="btn btn-primary btn-sm">
-                  <Plus size={14}/> Add Project
-                </button>
-              </div>
-            )}
+      {/* ── Hook Banner ── */}
+      <div className="page-hook-banner" style={{ paddingTop:100, marginBottom:8 }}>
+        <div style={{ maxWidth:760, margin:'0 auto' }}>
+          <span className="section-badge" style={{ marginBottom:18, display:'inline-flex' }}>// projects</span>
+          <h1 className="page-title glow-heading" style={{ marginBottom:12 }}>
+            Code That <span className="gradient-text">Ships</span>
+          </h1>
+          <span className="accent-line" />
+          <p className="hook-subtext" style={{ marginBottom:24 }}>
+            From AI-powered Chrome extensions to real-time transit systems — projects built to solve real problems.
+          </p>
+
+          {/* Live stats chips */}
+          <div className="achievement-strip" style={{ justifyContent:'center' }}>
+            {[
+              { dot:'#059669', text:`${customProjects.length || '3'}+ Custom Projects` },
+              ghOk && { dot:'#4F46E5', text:`${ghRepos.length} GitHub Repos` },
+              ghOk && { dot:'#D97706', text:`${totalStars} Total Stars` },
+              { dot:'#06B6D4', text:'Python · Java · JS · R' },
+            ].filter(Boolean).map(chip=>(
+              <span key={chip.text} className="achievement-chip">
+                <span className="chip-dot" style={{ background:chip.dot }} />
+                {chip.text}
+              </span>
+            ))}
           </div>
         </div>
+      </div>
 
-        {/* Stats */}
-        <div style={{ display:'flex', flexWrap:'wrap', gap:10, marginBottom:28 }}>
-          {[
-            { icon:Code2,    v:customProjects.length, label:'My Projects', accent:'#059669' },
-            ghOk&&{ icon:Globe,   v:ghRepos.length,      label:'GitHub Repos', accent:'#4F46E5' },
-            ghOk&&{ icon:Star,    v:totalStars,           label:'Total Stars',  accent:'#D97706' },
-          ].filter(Boolean).map(s=>(
-            <div key={s.label} className="stat-card" style={{ display:'flex', alignItems:'center', gap:10 }}>
-              <s.icon size={14} style={{ color:s.accent }}/>
-              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:700, color:'#E8F0FE' }}>{s.v}</span>
-              <span style={{ fontSize:12, color:'#64B5F6' }}>{s.label}</span>
-            </div>
-          ))}
-        </div>
+      <div className="container" style={{ paddingTop:16 }}>
+
+        {/* Admin controls */}
+        {admin && (
+          <div style={{ display:'flex', justifyContent:'flex-end', gap:8, marginBottom:24 }}>
+            <button onClick={()=>setGhPicker(true)} className="btn btn-secondary btn-sm">
+              <Github size={14}/> From GitHub
+            </button>
+            <button onClick={()=>setModal('add')} className="btn btn-primary btn-sm">
+              <Plus size={14}/> Add Project
+            </button>
+          </div>
+        )}
 
         {/* Tabs */}
         <div style={{ display:'flex', gap:2, marginBottom:20, padding:4,
