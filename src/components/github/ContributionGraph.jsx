@@ -24,7 +24,7 @@ export default function ContributionGraph({ data }) {
           {contributions.map((intensity, i) => (
             <div
               key={i}
-              className={`w-3 h-3 rounded-sm ${colors[intensity]} hover:ring-2 hover:ring-blue-500 transition-all cursor-pointer`}
+              className={`w-3 h-3 rounded-sm ${colors[intensity]} hover:ring-2 hover:ring-emerald-500 transition-all cursor-pointer`}
               title={`${intensity} contributions`}
             />
           ))}

@@ -1,6 +1,8 @@
 /**
  * Utility functions for the portfolio
  */
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 /**
  * Format date to readable string
@@ -187,10 +189,10 @@ export function isEmpty(obj) {
 }
 
 /**
- * Merge class names (useful for Tailwind)
+ * Merge class names (shadcn-style: clsx + tailwind-merge)
  */
-export function cn(...classes) {
-  return classes.filter(Boolean).join(' ')
+export function cn(...inputs) {
+  return twMerge(clsx(inputs))
 }
 
 /**

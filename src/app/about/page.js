@@ -5,15 +5,15 @@ import { Camera, Edit2, Save, X, Plus, Trash2, MapPin, Mail, ExternalLink, Check
 
 const DEFAULT_ABOUT = {
   name: 'Om Shripad Kapale',
-  title: 'GSoC 2026 Contributor · Backend Developer · AI/ML Enthusiast',
-  location: 'Mumbai, Maharashtra, India',
+  title: 'GSoC 2026 Contributor · Backend Developer · Open Source',
+  location: 'Chh. Sambhajinagar, Maharashtra, India',
   email: 'omshripadkapale@gmail.com',
-  bio: `Selected for Google Summer of Code 2026 at PEcAn Project — refactoring the Trait-Meta-analysis-Configuration Pipeline under mentor Mike Dietze. Chosen from a record-breaking applicant pool to work on real open-source climate/ecosystem modeling software.\n\nComputer Science student ranked in the top 5% of my college with 8.11 CGPA. I build scalable backend systems with Java/Spring Boot, explore AI/ML frontiers with Python/PyTorch, and contribute to open source across 6+ organisations. I believe in clean, maintainable code that solves real problems.`,
-  cgpa: '8.11',
+  bio: `Selected for Google Summer of Code 2026 at the PEcAn Project as the #1 ranked contributor globally — refactoring the Trait-Meta-analysis-Configuration Pipeline under mentor Mike Dietze (Boston University), working on real open-source climate/ecosystem modeling software.\n\nFinal-year Computer Science student. I build scalable backend systems with Java/Spring Boot, explore ecological informatics and LLM integration with Python, and contribute to open source across 5+ organisations with 15+ merged PRs. I believe in clean, maintainable code that solves real problems.`,
+  cgpa: '7.67',
   rank: 'Top 5%',
   gsoc: 'GSoC 2026',
   education: 'B.Tech Computer Science Engineering',
-  college: 'Your College Name',
+  college: 'CSMSS Chh. Shahu College of Engineering',
   period: '2023 – Present',
   experience: [
     {
@@ -35,9 +35,9 @@ const DEFAULT_ABOUT = {
       bullets:['Building REST APIs with Spring Boot & Java','Implementing WebSocket real-time features','Working with PostgreSQL, MySQL, Oracle databases','Developing AI/ML models with PyTorch & Pandas'],
     },
     {
-      id:'e2', title:'Open Source Contributor', company:'GitHub',
+      id:'e2', title:'Open Source Contributor', company:'Zulip · JabRef · FreeCAD · CircuitVerse',
       period:'2024–Present',
-      bullets:['Contributing to 6+ organisations','Getting PRs merged in various projects','Collaborating with global developers'],
+      bullets:['15+ merged PRs (~3000+ lines of code) across 5+ organisations','Implemented server-side caching for realm descriptions in Zulip','Fixed group-merging and library-import bugs in JabRef','Collaborating with global developers'],
     },
   ],
   skills: [
@@ -90,9 +90,9 @@ function Field({ value, onChange, tag:Tag='p', multiline=false, className='', pl
       <div className="relative">
         {multiline
           ? <textarea value={draft} onChange={e=>setDraft(e.target.value)} rows={5} autoFocus
-              className="w-full bg-[#0B1325] border border-indigo-500/50 rounded-lg px-3 py-2 text-sm outline-none resize-none text-[#E8F0FE]" />
+              className="w-full bg-[#0A100E] border border-emerald-500/50 rounded-lg px-3 py-2 text-sm outline-none resize-none text-[#ECF2EF]" />
           : <input value={draft} onChange={e=>setDraft(e.target.value)} autoFocus
-              className="w-full bg-[#0B1325] border border-indigo-500/50 rounded-lg px-3 py-2 text-sm outline-none text-[#E8F0FE]" />
+              className="w-full bg-[#0A100E] border border-emerald-500/50 rounded-lg px-3 py-2 text-sm outline-none text-[#ECF2EF]" />
         }
         <div className="flex gap-2 mt-2">
           <button onClick={save} className="text-xs btn-primary py-1 px-3 flex items-center gap-1"><Check size={12}/> Save</button>
@@ -105,8 +105,8 @@ function Field({ value, onChange, tag:Tag='p', multiline=false, className='', pl
     <Tag onClick={() => { setDraft(value); setEditing(true) }}
       className={`cursor-pointer group relative hover:bg-white/5 rounded px-1 -mx-1 transition-colors ${className}`}
     >
-      {value || <span className="text-[#64B5F6] italic text-sm">{placeholder}</span>}
-      <Edit2 size={11} className="absolute right-1 top-1 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+      {value || <span className="text-[#9CAFA7] italic text-sm">{placeholder}</span>}
+      <Edit2 size={11} className="absolute right-1 top-1 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity" />
     </Tag>
   )
 }
@@ -114,14 +114,14 @@ function Field({ value, onChange, tag:Tag='p', multiline=false, className='', pl
 function SectionTitle({ children }) {
   return (
     <h2 style={{
-      fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif',
-      fontWeight: 800, fontSize: 22, color: '#E8F0FE',
+      fontFamily: 'Playfair Display, "Inter", sans-serif',
+      fontWeight: 800, fontSize: 22, color: '#ECF2EF',
       marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12,
       letterSpacing: '0.02em',
     }}>
       <span style={{
         height: 2, width: 32, flexShrink: 0, borderRadius: 2,
-        background: 'linear-gradient(90deg, #4F46E5, #06B6D4)',
+        background: 'linear-gradient(90deg, #10B981, #22D3EE)',
         display: 'block',
       }} />
       {children}
@@ -169,7 +169,7 @@ export default function AboutPage() {
             <button onClick={() => setEditMode(v=>!v)}
               className={`text-xs font-mono flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
                 editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
-                         : 'text-[#64B5F6] bg-white/5 border border-white/10 hover:border-blue-500/30'
+                         : 'text-[#9CAFA7] bg-white/5 border border-white/10 hover:border-emerald-500/30'
               }`}
             >
               {editMode ? <><Save size={11}/> Editing</> : <><Edit2 size={11}/> Edit</>}
@@ -190,10 +190,10 @@ export default function AboutPage() {
           <div className="achievement-strip">
             {[
               { dot: '#4ade80', text: 'GSoC 2026 · PEcAn Project' },
-              { dot: '#818CF8', text: 'Top 5% of College' },
-              { dot: '#06B6D4', text: '8.11 CGPA' },
-              { dot: '#f59e0b', text: '6+ Open Source Orgs' },
-              { dot: '#a78bfa', text: 'Mumbai, India' },
+              { dot: '#34D399', text: 'Top 5% of College' },
+              { dot: '#22D3EE', text: '7.67 CGPA' },
+              { dot: '#f59e0b', text: '5+ Open Source Orgs' },
+              { dot: '#22D3EE', text: 'Chh. Sambhajinagar, India' },
             ].map(chip => (
               <span key={chip.text} className="achievement-chip">
                 <span className="chip-dot" style={{ background: chip.dot }} />
@@ -208,8 +208,8 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-16">
           <div className="lg:col-span-1">
             <div style={{
-              background: 'rgba(13,21,38,0.7)',
-              border: '1px solid rgba(148,163,184,0.1)',
+              background: 'rgba(10,16,14,0.7)',
+              border: '1px solid rgba(236,242,239,0.1)',
               borderRadius: 20,
               backdropFilter: 'blur(20px)',
               boxShadow: '0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
@@ -223,16 +223,16 @@ export default function AboutPage() {
                 onClick={() => editMode && photoRef.current?.click()}>
                 <div style={{
                   position: 'absolute', inset: -3, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #4F46E5, #06B6D4, #7C3AED)',
+                  background: 'linear-gradient(135deg, #10B981, #22D3EE, #0D9488)',
                   padding: 3,
                 }}>
                   <div style={{
                     width: '100%', height: '100%', borderRadius: '50%',
-                    background: 'rgba(13,21,38,0.95)',
+                    background: 'rgba(10,16,14,0.95)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     overflow: 'hidden', fontSize: 32, fontWeight: 800,
-                    color: '#818CF8',
-                    fontFamily: 'Rajdhani, sans-serif',
+                    color: '#34D399',
+                    fontFamily: 'Playfair Display, sans-serif',
                   }}>
                     {photo
                       ? <img src={photo} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -255,12 +255,12 @@ export default function AboutPage() {
                   reader.onload = ev => savePhoto(ev.target.result)
                   reader.readAsDataURL(f)
                 }} />
-              {editMode && <p className="text-xs text-[#64B5F6] mb-2 font-mono">Click photo to change</p>}
+              {editMode && <p className="text-xs text-[#9CAFA7] mb-2 font-mono">Click photo to change</p>}
 
               {/* Name */}
               {editMode
-                ? <Field value={data.name} onChange={v=>update('name',v)} tag="h2" className="text-xl font-bold text-[#E8F0FE] mb-1 text-center" />
-                : <h2 style={{ fontFamily:'Rajdhani,sans-serif', fontWeight:800, fontSize:22, color:'#E8F0FE', marginBottom:4 }}>{data.name}</h2>
+                ? <Field value={data.name} onChange={v=>update('name',v)} tag="h2" className="text-xl font-bold text-[#ECF2EF] mb-1 text-center" />
+                : <h2 style={{ fontFamily:'Playfair Display,sans-serif', fontWeight:800, fontSize:22, color:'#ECF2EF', marginBottom:4 }}>{data.name}</h2>
               }
 
               {/* GSoC badge */}
@@ -272,8 +272,8 @@ export default function AboutPage() {
               </div>
 
               {editMode
-                ? <Field value={data.title} onChange={v=>update('title',v)} tag="p" className="text-xs text-[#60A5FA] mb-4 text-center" />
-                : <p style={{ fontSize:12, color:'#8EA4C8', marginBottom:20, lineHeight:1.6 }}>{data.title}</p>
+                ? <Field value={data.title} onChange={v=>update('title',v)} tag="p" className="text-xs text-[#34D399] mb-4 text-center" />
+                : <p style={{ fontSize:12, color:'#9CAFA7', marginBottom:20, lineHeight:1.6 }}>{data.title}</p>
               }
 
               {/* Contact info */}
@@ -281,14 +281,14 @@ export default function AboutPage() {
                 {[
                   { icon: MapPin, content: editMode
                       ? <Field value={data.location} onChange={v=>update('location',v)} className="text-sm" />
-                      : <span style={{ fontSize:12, color:'#8EA4C8' }}>{data.location}</span>
+                      : <span style={{ fontSize:12, color:'#9CAFA7' }}>{data.location}</span>
                   },
                   { icon: Mail, content: editMode
                       ? <Field value={data.email} onChange={v=>update('email',v)} className="text-sm" />
-                      : <a href={`mailto:${data.email}`} style={{ fontSize:12, color:'#60A5FA' }}>{data.email}</a>
+                      : <a href={`mailto:${data.email}`} style={{ fontSize:12, color:'#34D399' }}>{data.email}</a>
                   },
                 ].map((item, i) => (
-                  <div key={i} style={{ display:'flex', alignItems:'center', gap:8, justifyContent:'center', color:'#4A6080' }}>
+                  <div key={i} style={{ display:'flex', alignItems:'center', gap:8, justifyContent:'center', color:'#5F7169' }}>
                     <item.icon size={12} style={{ flexShrink:0 }} />
                     {item.content}
                   </div>
@@ -297,17 +297,17 @@ export default function AboutPage() {
 
               {/* Stats grid */}
               <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginTop:8 }}>
-                {[{ label:'CGPA', key:'cgpa', accent:'#818CF8' }, { label:'Rank', key:'rank', accent:'#06B6D4' }].map(s => (
+                {[{ label:'CGPA', key:'cgpa', accent:'#34D399' }, { label:'Rank', key:'rank', accent:'#22D3EE' }].map(s => (
                   <div key={s.key} style={{
-                    background:'rgba(79,70,229,0.08)',
-                    border:'1px solid rgba(79,70,229,0.2)',
+                    background:'rgba(16,185,129,0.08)',
+                    border:'1px solid rgba(16,185,129,0.2)',
                     borderRadius:12, padding:'12px 8px', textAlign:'center',
                   }}>
                     {editMode
                       ? <Field value={data[s.key]} onChange={v=>update(s.key,v)} className="text-lg font-bold font-mono text-center block" style={{ color: s.accent }} />
                       : <div style={{ fontFamily:'JetBrains Mono,monospace', fontWeight:800, fontSize:18, color:s.accent, lineHeight:1 }}>{data[s.key]}</div>
                     }
-                    <div style={{ fontSize:10, color:'#4A6080', textTransform:'uppercase', letterSpacing:'0.08em', marginTop:4, fontFamily:'JetBrains Mono,monospace' }}>{s.label}</div>
+                    <div style={{ fontSize:10, color:'#5F7169', textTransform:'uppercase', letterSpacing:'0.08em', marginTop:4, fontFamily:'JetBrains Mono,monospace' }}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -318,8 +318,8 @@ export default function AboutPage() {
             <div className="glass-card p-6">
               <SectionTitle>About</SectionTitle>
               {editMode
-                ? <Field value={data.bio} onChange={v=>update('bio',v)} multiline className="text-[#8EA4C8] text-sm leading-relaxed" />
-                : <div className="text-[#8EA4C8] text-sm leading-relaxed whitespace-pre-line">{data.bio}</div>
+                ? <Field value={data.bio} onChange={v=>update('bio',v)} multiline className="text-[#9CAFA7] text-sm leading-relaxed" />
+                : <div className="text-[#9CAFA7] text-sm leading-relaxed whitespace-pre-line">{data.bio}</div>
               }
             </div>
 
@@ -328,14 +328,14 @@ export default function AboutPage() {
               <div className="border-l-2 border-blue-600 pl-5">
                 {editMode
                   ? <>
-                      <Field value={data.education} onChange={v=>update('education',v)} tag="h3" className="text-lg font-bold text-[#E8F0FE] mb-1" />
-                      <Field value={data.college} onChange={v=>update('college',v)} tag="p" className="text-[#60A5FA] text-sm font-semibold mb-1" />
-                      <Field value={data.period} onChange={v=>update('period',v)} tag="p" className="text-[#64B5F6] text-xs" />
+                      <Field value={data.education} onChange={v=>update('education',v)} tag="h3" className="text-lg font-bold text-[#ECF2EF] mb-1" />
+                      <Field value={data.college} onChange={v=>update('college',v)} tag="p" className="text-[#34D399] text-sm font-semibold mb-1" />
+                      <Field value={data.period} onChange={v=>update('period',v)} tag="p" className="text-[#9CAFA7] text-xs" />
                     </>
                   : <>
-                      <h3 className="text-lg font-bold text-[#E8F0FE] mb-1">{data.education}</h3>
-                      <p className="text-[#60A5FA] text-sm font-semibold mb-1">{data.college}</p>
-                      <p className="text-[#64B5F6] text-xs">{data.period} · CGPA {data.cgpa} · {data.rank} of College</p>
+                      <h3 className="text-lg font-bold text-[#ECF2EF] mb-1">{data.education}</h3>
+                      <p className="text-[#34D399] text-sm font-semibold mb-1">{data.college}</p>
+                      <p className="text-[#9CAFA7] text-xs">{data.period} · CGPA {data.cgpa} · {data.rank} of College</p>
                     </>
                 }
               </div>
@@ -347,10 +347,10 @@ export default function AboutPage() {
                 {data.values.map(v => (
                   <div key={v.id} className="glass-card p-5">
                     <div className="text-2xl mb-2">{v.emoji}</div>
-                    <h4 className="font-bold text-[#E8F0FE] text-sm mb-1">{v.title}</h4>
+                    <h4 className="font-bold text-[#ECF2EF] text-sm mb-1">{v.title}</h4>
                     {editMode
-                      ? <Field value={v.desc} onChange={val=>update('values', data.values.map(vv=>vv.id===v.id?{...vv,desc:val}:vv))} className="text-xs text-[#8EA4C8]" />
-                      : <p className="text-xs text-[#8EA4C8]">{v.desc}</p>
+                      ? <Field value={v.desc} onChange={val=>update('values', data.values.map(vv=>vv.id===v.id?{...vv,desc:val}:vv))} className="text-xs text-[#9CAFA7]" />
+                      : <p className="text-xs text-[#9CAFA7]">{v.desc}</p>
                     }
                   </div>
                 ))}
@@ -371,39 +371,39 @@ export default function AboutPage() {
           <div className="space-y-6 max-w-4xl">
             {data.experience.map((exp) => (
               <div key={exp.id} className="relative pl-6" style={{
-                borderLeft: '2px solid rgba(79,70,229,0.35)',
+                borderLeft: '2px solid rgba(16,185,129,0.35)',
               }}>
                 <div style={{
                   position:'absolute', left:-8, top:16,
                   width:16, height:16, borderRadius:'50%',
-                  background:'linear-gradient(135deg,#4F46E5,#7C3AED)',
-                  boxShadow:'0 0 12px rgba(79,70,229,0.5)',
+                  background:'linear-gradient(135deg,#10B981,#0D9488)',
+                  boxShadow:'0 0 12px rgba(16,185,129,0.5)',
                 }} className="timeline-dot" />
                 <div style={{
-                  background:'rgba(13,21,38,0.65)',
-                  border:'1px solid rgba(148,163,184,0.1)',
+                  background:'rgba(10,16,14,0.65)',
+                  border:'1px solid rgba(236,242,239,0.1)',
                   borderRadius:14,
                   backdropFilter:'blur(16px)',
                   padding:'20px 22px',
                   boxShadow:'0 4px 20px rgba(0,0,0,0.3)',
                   transition:'all 220ms ease',
                 }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(79,70,229,0.3)'; e.currentTarget.style.transform='translateX(4px)' }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(148,163,184,0.1)'; e.currentTarget.style.transform='translateX(0)' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(16,185,129,0.3)'; e.currentTarget.style.transform='translateX(4px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(236,242,239,0.1)'; e.currentTarget.style.transform='translateX(0)' }}
                 >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     {editMode
                       ? <>
-                          <Field value={exp.title} onChange={v=>updateExp(exp.id,'title',v)} tag="h3" className="text-lg font-bold text-[#E8F0FE] mb-1" />
-                          <Field value={exp.company} onChange={v=>updateExp(exp.id,'company',v)} tag="p" className="text-[#60A5FA] text-sm font-semibold mb-1" />
-                          <Field value={exp.period} onChange={v=>updateExp(exp.id,'period',v)} tag="p" className="text-[#64B5F6] text-xs mb-3" />
+                          <Field value={exp.title} onChange={v=>updateExp(exp.id,'title',v)} tag="h3" className="text-lg font-bold text-[#ECF2EF] mb-1" />
+                          <Field value={exp.company} onChange={v=>updateExp(exp.id,'company',v)} tag="p" className="text-[#34D399] text-sm font-semibold mb-1" />
+                          <Field value={exp.period} onChange={v=>updateExp(exp.id,'period',v)} tag="p" className="text-[#9CAFA7] text-xs mb-3" />
                         </>
                       : <>
-                          <h3 className="text-lg font-bold text-[#E8F0FE] mb-1">{exp.title}</h3>
+                          <h3 className="text-lg font-bold text-[#ECF2EF] mb-1">{exp.title}</h3>
                           <div className="flex items-center gap-3 mb-3">
-                            <span className="text-[#60A5FA] text-sm font-semibold">{exp.company}</span>
-                            <span className="text-[#64B5F6] text-xs">{exp.period}</span>
+                            <span className="text-[#34D399] text-sm font-semibold">{exp.company}</span>
+                            <span className="text-[#9CAFA7] text-xs">{exp.period}</span>
                           </div>
                         </>
                     }
@@ -413,16 +413,16 @@ export default function AboutPage() {
                           <span className="text-[#3B82F6] mt-1.5 text-xs">▸</span>
                           {editMode
                             ? <div className="flex gap-2 flex-1">
-                                <Field value={b} onChange={v=>updateBullet(exp.id,bi,v)} className="text-sm text-[#8EA4C8] flex-1" />
+                                <Field value={b} onChange={v=>updateBullet(exp.id,bi,v)} className="text-sm text-[#9CAFA7] flex-1" />
                                 <button onClick={()=>removeBullet(exp.id,bi)} className="text-red-400/50 hover:text-red-400"><X size={12}/></button>
                               </div>
-                            : <span className="text-sm text-[#8EA4C8]">{b}</span>
+                            : <span className="text-sm text-[#9CAFA7]">{b}</span>
                           }
                         </li>
                       ))}
                     </ul>
                     {editMode && (
-                      <button onClick={()=>addBullet(exp.id)} className="mt-2 text-xs text-[#64B5F6] hover:text-[#60A5FA] flex items-center gap-1 font-mono">
+                      <button onClick={()=>addBullet(exp.id)} className="mt-2 text-xs text-[#9CAFA7] hover:text-[#34D399] flex items-center gap-1 font-mono">
                         <Plus size={11}/> Add bullet
                       </button>
                     )}
@@ -453,8 +453,8 @@ export default function AboutPage() {
               <div key={sk.id} className="glass-card p-5">
                 <div className="flex items-start justify-between mb-3">
                   {editMode
-                    ? <Field value={sk.category} onChange={v=>updateSkill(sk.id,'category',v)} tag="h3" className="font-bold text-[#E8F0FE] text-sm" />
-                    : <h3 className="font-bold text-[#E8F0FE] text-sm">{sk.category}</h3>
+                    ? <Field value={sk.category} onChange={v=>updateSkill(sk.id,'category',v)} tag="h3" className="font-bold text-[#ECF2EF] text-sm" />
+                    : <h3 className="font-bold text-[#ECF2EF] text-sm">{sk.category}</h3>
                   }
                   {editMode && (
                     <button onClick={()=>removeSkill(sk.id)} className="text-red-400/50 hover:text-red-400">
@@ -463,7 +463,7 @@ export default function AboutPage() {
                   )}
                 </div>
                 {editMode
-                  ? <Field value={sk.items} onChange={v=>updateSkill(sk.id,'items',v)} className="text-xs text-[#8EA4C8]" />
+                  ? <Field value={sk.items} onChange={v=>updateSkill(sk.id,'items',v)} className="text-xs text-[#9CAFA7]" />
                   : (
                     <div className="flex flex-wrap gap-1.5">
                       {sk.items.split(',').map(s => s.trim()).filter(Boolean).map(s => (

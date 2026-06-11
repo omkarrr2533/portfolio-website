@@ -47,7 +47,7 @@ export default function ProjectCard({ project, index = 0 }) {
             {project.techStack.map((tech) => (
               <span
                 key={tech}
-                className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-xs font-medium"
+                className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-emerald-400 rounded-full text-xs font-medium"
               >
                 {tech}
               </span>
