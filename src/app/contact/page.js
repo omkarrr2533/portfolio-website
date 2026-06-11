@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Mail, Phone, MapPin, Send, Github, Linkedin, ExternalLink, CheckCircle, AlertCircle, Loader, ArrowRight, MessageSquare } from 'lucide-react'
+import { ShaderAnimation } from '@/components/ui/shader-animation'
 
 const SOCIAL = [
   { icon: Github,       label: 'GitHub',   sub: '@omkarrr2533',            url: 'https://github.com/omkarrr2533',                   color: '#EDF2FF' },
@@ -49,8 +50,20 @@ export default function ContactPage() {
     <div className="min-h-screen pb-24" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto px-4 sm:px-6">
 
-        {/* ── Hook Header ── */}
-        <div className="page-hook-banner animate-fade-in" style={{ paddingTop: 100 }}>
+        {/* ── Hook Header — over the shader animation ── */}
+        <div
+          className="relative overflow-hidden rounded-3xl animate-fade-in"
+          style={{ marginTop: 92, border: '1px solid var(--border)' }}
+        >
+          <div className="absolute inset-0 opacity-70" aria-hidden="true">
+            <ShaderAnimation />
+          </div>
+          <div
+            className="absolute inset-0"
+            aria-hidden="true"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(5,8,7,0.3), rgba(5,8,7,0.94) 88%)' }}
+          />
+          <div className="page-hook-banner relative z-10" style={{ paddingTop: 56 }}>
           <span className="section-badge" style={{ marginBottom: 18, display: 'inline-flex' }}>// get in touch</span>
 
           {/* Availability badge */}
@@ -84,9 +97,10 @@ export default function ContactPage() {
               </span>
             ))}
           </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-5xl mx-auto" style={{ marginTop: 48 }}>
 
           {/* ── Left sidebar ── */}
           <div className="lg:col-span-2 space-y-4 animate-slide-up">

@@ -7,6 +7,39 @@ import {
   ChevronDown, ArrowRight, CheckCircle,
 } from 'lucide-react'
 import { AdminOnly, useAdmin } from '@/lib/admin'
+import { CardStack } from '@/components/ui/card-stack'
+
+/* Fan-stack showcase data for the flagship projects */
+const SHOWCASE = [
+  {
+    id: 'satyacheck',
+    title: 'SatyaCheck',
+    description: '7-layer AI pipeline detecting misinformation in real time — 92.6% accuracy',
+    imageSrc: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1280&auto=format&fit=crop',
+    href: 'https://github.com/omkarrr2533',
+  },
+  {
+    id: 'bus-tracker',
+    title: 'Real-Time Bus Tracker',
+    description: 'Sub-second WebSocket updates on live Leaflet.js maps',
+    imageSrc: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?q=80&w=1280&auto=format&fit=crop',
+    href: 'https://github.com/omkarrr2533/BUS-ETA.git',
+  },
+  {
+    id: 'hand-sign',
+    title: 'Hand Sign Detection',
+    description: 'Real-time ASL recognition with MediaPipe + a custom PyTorch CNN',
+    imageSrc: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1280&auto=format&fit=crop',
+    href: 'https://github.com/omkarrr2533/Hand_Sign_Detection_Using_Python.git',
+  },
+  {
+    id: 'portfolio',
+    title: 'Premium Portfolio',
+    description: 'Next.js 14 · Three.js particle hero · liquid-glass UI',
+    imageSrc: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?q=80&w=1280&auto=format&fit=crop',
+    href: 'https://omkar2533.netlify.app/',
+  },
+]
 
 const LANG_CLR = {
   JavaScript:'#F59E0B', TypeScript:'#3B82F6', Python:'#8B5CF6',
@@ -341,6 +374,20 @@ export default function ProjectsPage() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* ── Flagship fan-stack showcase ── */}
+      <div className="container" style={{ paddingTop: 8, paddingBottom: 32 }}>
+        <CardStack
+          items={SHOWCASE}
+          initialIndex={0}
+          cardWidth={460}
+          cardHeight={290}
+          autoAdvance
+          intervalMs={3200}
+          pauseOnHover
+          showDots
+        />
       </div>
 
       <div className="container" style={{ paddingTop:16 }}>

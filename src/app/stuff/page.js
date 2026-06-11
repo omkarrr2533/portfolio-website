@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Edit2, Plus, Trash2, Save, X, BookOpen, Heart, Trophy, Code, Target, Zap, Coffee, TrendingUp, Check } from 'lucide-react'
+import { BluetoothKey } from '@/components/ui/bluetooth-key'
 
 const ICON_MAP = { BookOpen, Heart, Trophy, Code, Target, Zap, Coffee, TrendingUp }
 
@@ -140,12 +141,20 @@ export default function StuffPage() {
     /* FIXED: was #F8FAFC (light), now uses dark theme */
     <div className="min-h-screen pt-24 pb-16" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-6 animate-fade-in">
           <h1 className="font-display font-800 text-[#ECF2EF] mb-3" style={{ fontSize:'clamp(32px,5vw,52px)' }}>
             My <span className="gradient-text">Stuff</span>
           </h1>
           <p className="text-[#9CAFA7] text-base max-w-xl mx-auto">
             Things I care about, blog posts, hobbies and favorites — all editable from here
+          </p>
+        </div>
+
+        {/* Interactive bluetooth key — go on, press it */}
+        <div className="mb-10 animate-fade-in">
+          <BluetoothKey />
+          <p className="text-center font-mono text-[10px] tracking-[0.25em] uppercase -mt-10" style={{ color: 'var(--text-faint)' }}>
+            Press the key
           </p>
         </div>
 
