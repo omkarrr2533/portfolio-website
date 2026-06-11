@@ -106,12 +106,12 @@ export function AdminWidget() {
           borderRadius: '50%',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: admin
-            ? 'linear-gradient(135deg,#4F46E5,#7C3AED)'
-            : 'rgba(13,21,38,0.9)',
-          border: `1px solid ${admin ? 'rgba(79,70,229,0.5)' : 'rgba(148,163,184,0.15)'}`,
+            ? 'linear-gradient(135deg,#10B981,#0D9488)'
+            : 'rgba(10,16,14,0.9)',
+          border: `1px solid ${admin ? 'rgba(16,185,129,0.5)' : 'rgba(236,242,239,0.15)'}`,
           color: '#fff',
           cursor: 'pointer',
-          boxShadow: admin ? '0 0 20px rgba(79,70,229,0.5)' : '0 4px 16px rgba(0,0,0,0.4)',
+          boxShadow: admin ? '0 0 20px rgba(16,185,129,0.5)' : '0 4px 16px rgba(0,0,0,0.4)',
           transition: 'all 200ms ease',
         }}
       >
@@ -124,10 +124,10 @@ export function AdminWidget() {
           style={{
             position: 'fixed', bottom: 70, right: 20, zIndex: 900,
             width: 288,
-            background: 'rgba(13,21,38,0.95)',
-            border: '1px solid rgba(148,163,184,0.12)',
+            background: 'rgba(10,16,14,0.95)',
+            border: '1px solid rgba(236,242,239,0.12)',
             borderRadius: 16,
-            boxShadow: '0 0 40px rgba(0,0,0,0.6), 0 0 24px rgba(79,70,229,0.15)',
+            boxShadow: '0 0 40px rgba(0,0,0,0.6), 0 0 24px rgba(16,185,129,0.15)',
             backdropFilter: 'blur(20px)',
             overflow: 'hidden',
             animation: 'scaleIn 0.2s ease both',
@@ -137,16 +137,16 @@ export function AdminWidget() {
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '14px 16px',
-            borderBottom: '1px solid rgba(148,163,184,0.08)',
-            background: admin ? 'rgba(79,70,229,0.08)' : 'transparent',
+            borderBottom: '1px solid rgba(236,242,239,0.08)',
+            background: admin ? 'rgba(16,185,129,0.08)' : 'transparent',
           }}>
             <div style={{ display:'flex', alignItems:'center', gap: 8 }}>
-              {admin ? <ShieldCheck size={15} color="#818CF8" /> : <Lock size={14} color="#4A6080" />}
-              <span style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:13, color: admin ? '#818CF8' : '#E8F0FE' }}>
+              {admin ? <ShieldCheck size={15} color="#34D399" /> : <Lock size={14} color="#5F7169" />}
+              <span style={{ fontFamily:'Inter,sans-serif', fontWeight:700, fontSize:13, color: admin ? '#34D399' : '#ECF2EF' }}>
                 {admin ? 'Admin Active' : 'Admin Login'}
               </span>
             </div>
-            <button onClick={() => setOpen(false)} style={{ color:'#4A6080', cursor:'pointer' }}>
+            <button onClick={() => setOpen(false)} style={{ color:'#5F7169', cursor:'pointer' }}>
               <X size={15} />
             </button>
           </div>
@@ -154,7 +154,7 @@ export function AdminWidget() {
           <div style={{ padding: 16 }}>
             {admin ? (
               <div style={{ display:'flex', flexDirection:'column', gap: 12 }}>
-                <p style={{ fontSize:12, color:'#8EA4C8', lineHeight:1.6 }}>
+                <p style={{ fontSize:12, color:'#9CAFA7', lineHeight:1.6 }}>
                   Edit controls are visible across the site. Your session expires in 24 hours.
                 </p>
                 <button
@@ -171,7 +171,7 @@ export function AdminWidget() {
               </div>
             ) : (
               <div style={{ display:'flex', flexDirection:'column', gap: 12 }}>
-                <p style={{ fontSize:12, color:'#4A6080', lineHeight:1.6 }}>
+                <p style={{ fontSize:12, color:'#5F7169', lineHeight:1.6 }}>
                   Enter your admin password to unlock editing controls.
                 </p>
 
@@ -185,14 +185,14 @@ export function AdminWidget() {
                     autoFocus
                     style={{
                       width:'100%', padding:'9px 38px 9px 12px',
-                      background:'rgba(5,10,23,0.8)', border:'1px solid rgba(148,163,184,0.15)',
-                      borderRadius:9, color:'#E8F0FE', fontSize:13, outline:'none',
+                      background:'rgba(3,5,4,0.8)', border:'1px solid rgba(236,242,239,0.15)',
+                      borderRadius:9, color:'#ECF2EF', fontSize:13, outline:'none',
                       fontFamily:'JetBrains Mono,monospace',
                     }}
                   />
                   <button
                     onClick={() => setShowPw(v => !v)}
-                    style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', color:'#4A6080', cursor:'pointer' }}
+                    style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', color:'#5F7169', cursor:'pointer' }}
                   >
                     {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
@@ -208,7 +208,7 @@ export function AdminWidget() {
                   style={{
                     display:'flex', alignItems:'center', justifyContent:'center', gap:6,
                     width:'100%', padding:'9px 0',
-                    background:'linear-gradient(135deg,#4F46E5,#7C3AED)',
+                    background:'linear-gradient(135deg,#10B981,#0D9488)',
                     border:'none', borderRadius:9,
                     color:'#fff', fontSize:13, fontWeight:600, cursor:'pointer',
                     opacity: (!password || loading) ? 0.5 : 1,

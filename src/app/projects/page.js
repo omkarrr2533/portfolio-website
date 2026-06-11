@@ -10,7 +10,7 @@ import { AdminOnly, useAdmin } from '@/lib/admin'
 
 const LANG_CLR = {
   JavaScript:'#F59E0B', TypeScript:'#3B82F6', Python:'#8B5CF6',
-  Java:'#EF4444', Go:'#06B6D4', Rust:'#F97316', Ruby:'#E11D48',
+  Java:'#EF4444', Go:'#22D3EE', Rust:'#F97316', Ruby:'#E11D48',
   HTML:'#F97316', CSS:'#EC4899', 'C++':'#14B8A6', C:'#64748B',
 }
 
@@ -47,10 +47,10 @@ function ProjectModal({ project, onSave, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content animate-scale-in" style={{ padding: 24 }} onClick={e=>e.stopPropagation()}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
-          <h2 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:18, color:'#E8F0FE' }}>
+          <h2 style={{ fontFamily:'Inter,sans-serif', fontWeight:700, fontSize:18, color:'#ECF2EF' }}>
             {project ? 'Edit Project' : 'Add Project'}
           </h2>
-          <button onClick={onClose} style={{ color:'#64B5F6', cursor:'pointer' }}><X size={18}/></button>
+          <button onClick={onClose} style={{ color:'#9CAFA7', cursor:'pointer' }}><X size={18}/></button>
         </div>
         <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
           {[
@@ -61,18 +61,18 @@ function ProjectModal({ project, onSave, onClose }) {
             { key:'techStack',   label:'Tech Stack (comma-sep)', ph:'React, Node.js, MongoDB' },
           ].map(f => (
             <div key={f.key}>
-              <label style={{ display:'block', fontSize:11, fontFamily:'JetBrains Mono,monospace', color:'#64B5F6', marginBottom:5, textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.label}</label>
+              <label style={{ display:'block', fontSize:11, fontFamily:'JetBrains Mono,monospace', color:'#9CAFA7', marginBottom:5, textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.label}</label>
               <input value={form[f.key]||''} onChange={e=>set(f.key,e.target.value)} placeholder={f.ph} className="input" />
             </div>
           ))}
           <div>
-            <label style={{ display:'block', fontSize:11, fontFamily:'JetBrains Mono,monospace', color:'#64B5F6', marginBottom:5, textTransform:'uppercase', letterSpacing:'0.06em' }}>Description</label>
+            <label style={{ display:'block', fontSize:11, fontFamily:'JetBrains Mono,monospace', color:'#9CAFA7', marginBottom:5, textTransform:'uppercase', letterSpacing:'0.06em' }}>Description</label>
             <textarea value={form.description||''} onChange={e=>set('description',e.target.value)} placeholder="What does this project do?" rows={3} className="input" />
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
             {[{key:'stars',label:'Stars'},{key:'forks',label:'Forks'}].map(f=>(
               <div key={f.key}>
-                <label style={{ display:'block', fontSize:11, fontFamily:'JetBrains Mono,monospace', color:'#64B5F6', marginBottom:5, textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.label}</label>
+                <label style={{ display:'block', fontSize:11, fontFamily:'JetBrains Mono,monospace', color:'#9CAFA7', marginBottom:5, textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.label}</label>
                 <input type="number" value={form[f.key]||0} onChange={e=>set(f.key,parseInt(e.target.value)||0)} className="input" />
               </div>
             ))}
@@ -100,34 +100,34 @@ function GitHubPickerModal({ repos, existing, onAdd, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content animate-scale-in" style={{ padding:24, maxWidth:560 }} onClick={e=>e.stopPropagation()}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16 }}>
-          <h2 style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:18, color:'#E8F0FE' }}>
+          <h2 style={{ fontFamily:'Inter,sans-serif', fontWeight:700, fontSize:18, color:'#ECF2EF' }}>
             Add from GitHub
           </h2>
-          <button onClick={onClose} style={{ color:'#64B5F6', cursor:'pointer' }}><X size={18}/></button>
+          <button onClick={onClose} style={{ color:'#9CAFA7', cursor:'pointer' }}><X size={18}/></button>
         </div>
         <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search repositories…" className="input" style={{ marginBottom:14 }} />
         <div style={{ maxHeight:360, overflowY:'auto', display:'flex', flexDirection:'column', gap:6 }}>
           {filtered.length === 0 ? (
-            <p style={{ textAlign:'center', color:'#64B5F6', fontSize:13, padding:'24px 0' }}>No repositories found</p>
+            <p style={{ textAlign:'center', color:'#9CAFA7', fontSize:13, padding:'24px 0' }}>No repositories found</p>
           ) : filtered.map(r => (
             <button
               key={r.id}
               onClick={() => { onAdd(r); }}
               style={{
                 display:'flex', alignItems:'center', gap:12, padding:'11px 14px',
-                background:'rgba(13,21,38,0.7)', border:'1px solid rgba(148,163,184,0.1)', borderRadius:9, cursor:'pointer',
+                background:'rgba(10,16,14,0.7)', border:'1px solid rgba(236,242,239,0.1)', borderRadius:9, cursor:'pointer',
                 textAlign:'left', transition:'all 150ms ease',
               }}
             >
               <Github size={14} color="#94A3B8" style={{ flexShrink:0 }} />
               <div style={{ flex:1, minWidth:0 }}>
-                <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#818CF8', marginBottom:2 }}>{r.name}</p>
-                <p className="line-clamp-1" style={{ fontSize:11.5, color:'#8EA4C8' }}>{r.description||'No description'}</p>
+                <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#34D399', marginBottom:2 }}>{r.name}</p>
+                <p className="line-clamp-1" style={{ fontSize:11.5, color:'#9CAFA7' }}>{r.description||'No description'}</p>
               </div>
-              <div style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'#64B5F6', flexShrink:0 }}>
+              <div style={{ display:'flex', alignItems:'center', gap:6, fontSize:11, color:'#9CAFA7', flexShrink:0 }}>
                 <Star size={10}/>{r.stars}
               </div>
-              <CheckCircle size={14} color="#4F46E5" style={{ flexShrink:0 }} />
+              <CheckCircle size={14} color="#10B981" style={{ flexShrink:0 }} />
             </button>
           ))}
         </div>
@@ -181,11 +181,11 @@ function ProjectCard({ project, index, onEdit, onDelete, isCustom }) {
             {project.isPrivate ? <Lock size={11} color="#94A3B8"/> : <Globe size={11} color="#94A3B8"/>}
             {project.url ? (
               <a href={project.url} target="_blank" rel="noopener noreferrer"
-                style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#4F46E5', textDecoration:'none', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>
+                style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#10B981', textDecoration:'none', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>
                 {project.name}
               </a>
             ) : (
-              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#818CF8', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>{project.name}</span>
+              <span style={{ fontFamily:'JetBrains Mono,monospace', fontSize:13, fontWeight:600, color:'#34D399', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:150 }}>{project.name}</span>
             )}
           </div>
           {updatedAgo && <span style={{ fontSize:10, fontFamily:'JetBrains Mono,monospace', color:'#CBD5E1', flexShrink:0, marginLeft:6 }}>{updatedAgo}</span>}
@@ -198,27 +198,27 @@ function ProjectCard({ project, index, onEdit, onDelete, isCustom }) {
         {topics.length>0 && (
           <div style={{ display:'flex', flexWrap:'wrap', gap:5, marginBottom:10 }}>
             {topics.slice(0,4).map(t=><span key={t} className="tech-pill" style={{ fontSize:11, padding:'3px 8px' }}>{t}</span>)}
-            {topics.length>4 && <span style={{ fontSize:11, color:'#64B5F6', padding:'3px 4px' }}>+{topics.length-4}</span>}
+            {topics.length>4 && <span style={{ fontSize:11, color:'#9CAFA7', padding:'3px 4px' }}>+{topics.length-4}</span>}
           </div>
         )}
 
         <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:10, borderTop:'1px solid #F1F5F9' }}>
           {project.language && (
-            <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color:'#64B5F6' }}>
+            <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color:'#9CAFA7' }}>
               <span style={{ width:8, height:8, borderRadius:'50%', background:langColor, display:'inline-block' }}/>
               {project.language}
             </span>
           )}
-          <span style={{ display:'flex', alignItems:'center', gap:3, fontSize:11, color:'#64B5F6' }}><Star size={10}/>{project.stars||0}</span>
-          <span style={{ display:'flex', alignItems:'center', gap:3, fontSize:11, color:'#64B5F6' }}><GitFork size={10}/>{project.forks||0}</span>
+          <span style={{ display:'flex', alignItems:'center', gap:3, fontSize:11, color:'#9CAFA7' }}><Star size={10}/>{project.stars||0}</span>
+          <span style={{ display:'flex', alignItems:'center', gap:3, fontSize:11, color:'#9CAFA7' }}><GitFork size={10}/>{project.forks||0}</span>
           <div style={{ marginLeft:'auto', display:'flex', alignItems:'center', gap:8 }}>
             {project.url && (
-              <a href={project.url} target="_blank" rel="noopener noreferrer" style={{ color:'#64B5F6', transition:'color 150ms ease' }} title="Source">
+              <a href={project.url} target="_blank" rel="noopener noreferrer" style={{ color:'#9CAFA7', transition:'color 150ms ease' }} title="Source">
                 <Github size={13}/>
               </a>
             )}
             {project.homepage && (
-              <a href={project.homepage} target="_blank" rel="noopener noreferrer" style={{ color:'#64B5F6', transition:'color 150ms ease' }} title="Live demo">
+              <a href={project.homepage} target="_blank" rel="noopener noreferrer" style={{ color:'#9CAFA7', transition:'color 150ms ease' }} title="Live demo">
                 <ExternalLink size={13}/>
               </a>
             )}
@@ -330,9 +330,9 @@ export default function ProjectsPage() {
           <div className="achievement-strip" style={{ justifyContent:'center' }}>
             {[
               { dot:'#059669', text:`${customProjects.length || '3'}+ Custom Projects` },
-              ghOk && { dot:'#4F46E5', text:`${ghRepos.length} GitHub Repos` },
+              ghOk && { dot:'#10B981', text:`${ghRepos.length} GitHub Repos` },
               ghOk && { dot:'#D97706', text:`${totalStars} Total Stars` },
-              { dot:'#06B6D4', text:'Python · Java · JS · R' },
+              { dot:'#22D3EE', text:'Python · Java · JS · R' },
             ].filter(Boolean).map(chip=>(
               <span key={chip.text} className="achievement-chip">
                 <span className="chip-dot" style={{ background:chip.dot }} />
@@ -359,7 +359,7 @@ export default function ProjectsPage() {
 
         {/* Tabs */}
         <div style={{ display:'flex', gap:2, marginBottom:20, padding:4,
-  background:'rgba(13,21,38,0.8)', border:'1px solid rgba(148,163,184,0.1)',
+  background:'rgba(10,16,14,0.8)', border:'1px solid rgba(236,242,239,0.1)',
   borderRadius:10, width:'fit-content' }}>
           {[
             { id:'all',    label:`All (${allProjects.length})` },
@@ -371,11 +371,11 @@ export default function ProjectsPage() {
               onClick={()=>setTab(t.id)}
               style={{
                 padding:'7px 16px', borderRadius:7, fontSize:13, fontWeight:600,
-                 background: tab===t.id ? 'rgba(79,70,229,0.15)':'transparent',
-                color:      tab===t.id ? '#4F46E5':'#64748B',
+                 background: tab===t.id ? 'rgba(16,185,129,0.15)':'transparent',
+                color:      tab===t.id ? '#10B981':'#64748B',
                 boxShadow:  tab===t.id ? '0 1px 3px rgba(15,23,42,.08)':'none',
                 border:'none', cursor:'pointer', transition:'all 150ms ease',
-                fontFamily:'Plus Jakarta Sans,sans-serif',
+                fontFamily:'Inter,sans-serif',
               }}
             >
               {t.label}

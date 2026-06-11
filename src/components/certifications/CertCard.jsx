@@ -39,7 +39,7 @@ export default function CertCard({ cert, index = 0 }) {
             {cert.skills.map((skill) => (
               <span
                 key={skill}
-                className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-xs font-medium"
+                className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-emerald-400 rounded-full text-xs font-medium"
               >
                 {skill}
               </span>

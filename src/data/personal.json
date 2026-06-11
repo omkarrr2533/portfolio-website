@@ -1,90 +1,99 @@
 {
   "name": "Om Shripad Kapale",
-  "title": "Computer Science Student & Backend Developer",
-  "subtitle": "AI/ML Enthusiast | Open Source Contributor",
-  "bio": "Passionate Computer Science student ranked in the top 5% of my college with a strong focus on backend development, AI/ML, and clean code. I love solving complex problems with scalable solutions.",
+  "title": "Backend Developer & Open Source Contributor",
+  "subtitle": "GSoC 2026 Contributor @ PEcAn Project",
+  "bio": "Final-year Computer Science student and GSoC 2026 contributor at the PEcAn Project — selected as the #1 ranked contributor globally. I build scalable backends with Java, Spring Boot and Python, and contribute across the open-source ecosystem.",
   "avatar": "/images/profile.jpg",
   "email": "omshripadkapale@gmail.com",
-  "phone": "+91-XXXXXXXXXX",
-  "location": "Mumbai, Maharashtra, India",
-  "availability": "Open to opportunities",
-  
+  "phone": "+91-7499970603",
+  "location": "Chh. Sambhajinagar, Maharashtra, India",
+  "availability": "Open to SDE roles & collaboration",
+
   "social": {
     "github": "https://github.com/omkarrr2533",
     "linkedin": "https://www.linkedin.com/in/om-kapale-b861a228a",
-    "leetcode": "https://leetcode.com/u/omi_/",
+    "leetcode": "https://leetcode.com/u/omii_/",
     "instagram": "https://www.instagram.com/its_omkarrrrrr/?hl=en",
     "email": "mailto:omshripadkapale@gmail.com"
   },
-  
+
   "education": {
-    "degree": "Bachelor of Science in Computer Science",
-    "school": "Your College Name",
-    "location": "Mumbai, Maharashtra",
+    "degree": "Bachelor of Technology in Computer Science",
+    "school": "CSMSS Chh. Shahu College of Engineering",
+    "location": "Chh. Sambhajinagar, Maharashtra",
     "period": "2023 - Present",
-    "cgpa": "8.11",
+    "cgpa": "7.67",
     "rank": "Top 5% of College",
-    "details": "First Year CGPA: 8.11, Outstanding Academic Performance"
+    "details": "Final-year B.Tech CSE · Active in technical clubs and coding contests"
   },
-  
+
   "experience": [
     {
-      "title": "Backend Developer (Learning Phase)",
-      "company": "Personal Projects",
+      "title": "GSoC 2026 Contributor",
+      "company": "PEcAn Project · Google Summer of Code",
       "location": "Remote",
-      "period": "2023 - Present",
+      "period": "May 2026 - September 2026",
       "responsibilities": [
-        "Building REST APIs with Spring Boot and Java",
-        "Working with databases: MySQL, PostgreSQL, Oracle",
-        "Implementing real-time features with Socket.io and WebSocket",
-        "Learning and applying AI/ML concepts with PyTorch and Pandas"
+        "Selected as #1 ranked contributor globally at the PEcAn Project",
+        "Refactoring the Trait-Meta-analysis-Configuration Pipeline for modularity",
+        "Working under mentor Mike Dietze (Boston University)",
+        "7+ PRs merged, ~2000+ lines of code changed"
+      ]
+    },
+    {
+      "title": "Open Source Contributor",
+      "company": "Zulip · JabRef · FreeCAD · CircuitVerse",
+      "location": "Remote",
+      "period": "2025 - Present",
+      "responsibilities": [
+        "15+ merged PRs (~3000+ lines of code) across 5+ organisations",
+        "Implemented server-side caching for realm descriptions in Zulip",
+        "Fixed group-merging and library-import bugs in JabRef",
+        "Contributed fixes to FreeCAD and CircuitVerse"
       ]
     }
   ],
-  
+
   "achievements": [
-    "Top 5% of College with 8.11 CGPA",
+    "GSoC 2026 — Selected #1 globally at the PEcAn Project",
+    "15+ merged PRs across 5+ open-source organisations",
+    "244+ LeetCode problems solved · 1416 contest rating",
+    "100 Days Badge 2026 · 191 active days · 29-day max streak on LeetCode",
     "Nvidia Certified in Application Development using LLMs",
-    "IBM Certified in AI Fundamentals (Diffusion Models, NLP, ML)",
-    "Completed 6+ professional certifications",
-    "Active LeetCode problem solver",
-    "Strong foundation in Data Structures and Algorithms"
+    "IBM Certified in AI Fundamentals (Diffusion Models, NLP, ML)"
   ],
-  
+
   "skills": {
-    "languages": ["Java", "Python", "C", "JavaScript", "Ruby", "SQL"],
-    "frameworks": ["Spring Boot", "Express.js"],
-    "databases": ["MySQL", "PostgreSQL", "Oracle"],
-    "aiml": ["PyTorch", "Pandas", "NumPy", "Matplotlib", "NLP"],
-    "tools": ["Git", "Socket.io", "REST API", "WebSocket"],
-    "concepts": ["DSA", "OOP", "Database Design", "Backend Development"]
+    "languages": ["Java", "Python", "JavaScript", "R", "C", "SQL"],
+    "frameworks": ["Spring Boot", "Spring AI", "Django", "Node.js", "Express.js"],
+    "databases": ["PostgreSQL", "MySQL", "Redis"],
+    "aiml": ["PyTorch", "LLM Integration", "RAG Agents", "NLP", "MediaPipe"],
+    "tools": ["Git", "GitHub Actions", "Linux", "Socket.io", "REST API", "WebSocket"],
+    "concepts": ["DSA", "OOP", "Database Design", "Backend Development", "Modular Architecture"]
   },
-  
+
   "interests": [
-    "Problem Solving",
-    "Clean Code",
-    "Scalable Solutions",
-    "Data Science",
-    "AI/ML",
-    "Backend Development",
+    "Ecological Informatics",
+    "Backend Systems",
     "Open Source",
-    "Innovation"
+    "LLM Integration",
+    "Problem Solving",
+    "Clean Code"
   ],
-  
-  "languages_spoken": ["English", "Hindi"],
-  
+
+  "languages_spoken": ["English", "Hindi", "Marathi"],
+
   "currentFocus": [
-    "Data Science",
-    "AI/ML",
-    "Backend Development",
-    "Large Language Models",
-    "Advanced Java"
+    "Ecological Forecasting (PEcAn)",
+    "Backend Systems",
+    "DSA",
+    "RAG Agents & LLM Integration"
   ],
-  
+
   "openTo": [
-    "Collaboration",
-    "Open Source Contributions",
-    "Innovative Projects",
+    "SDE Roles",
+    "Open Source Collaboration",
     "Internship Opportunities",
+    "Innovative Projects"
   ]
 }

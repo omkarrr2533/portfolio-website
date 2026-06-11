@@ -14,7 +14,7 @@ export default function Achievements() {
       icon: Target,
       title: 'Problem Solver',
       description: 'Solved 100+ LeetCode problems',
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-emerald-500 to-cyan-500'
     },
     {
       icon: Zap,
@@ -25,7 +25,7 @@ export default function Achievements() {
     {
       icon: Award,
       title: 'Academic Excellence',
-      description: 'Top 5% of college with 8.11 CGPA',
+      description: 'Top 5% of college with 7.67 CGPA',
       color: 'from-green-500 to-emerald-500'
     }
   ]

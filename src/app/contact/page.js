@@ -5,14 +5,14 @@ import { Mail, Phone, MapPin, Send, Github, Linkedin, ExternalLink, CheckCircle,
 
 const SOCIAL = [
   { icon: Github,       label: 'GitHub',   sub: '@omkarrr2533',            url: 'https://github.com/omkarrr2533',                   color: '#EDF2FF' },
-  { icon: Linkedin,     label: 'LinkedIn', sub: 'Om Kapale',               url: 'https://www.linkedin.com/in/om-kapale-b861a228a',  color: '#60A5FA' },
+  { icon: Linkedin,     label: 'LinkedIn', sub: 'Om Kapale',               url: 'https://www.linkedin.com/in/om-kapale-b861a228a',  color: '#34D399' },
   { icon: Mail,         label: 'Email',    sub: 'omshripadkapale@gmail.com',url: 'mailto:omshripadkapale@gmail.com',                 color: '#34D399' },
-  { icon: ExternalLink, label: 'LeetCode', sub: '@omi_',                   url: 'https://leetcode.com/u/omi_/',                    color: '#FCD34D' },
+  { icon: ExternalLink, label: 'LeetCode', sub: '@omii_',                   url: 'https://leetcode.com/u/omii_/',                    color: '#FCD34D' },
 ]
 
 const CONTACT_ITEMS = [
   { icon: Mail,    label: 'Email',    value: 'omshripadkapale@gmail.com', link: 'mailto:omshripadkapale@gmail.com' },
-  { icon: MapPin,  label: 'Location', value: 'Mumbai, Maharashtra, India', link: null },
+  { icon: MapPin,  label: 'Location', value: 'Chh. Sambhajinagar, Maharashtra, India', link: null },
   { icon: MessageSquare, label: 'Response', value: 'Usually within 24 hours', link: null },
 ]
 
@@ -73,8 +73,8 @@ export default function ContactPage() {
           {/* Open-to chips */}
           <div className="achievement-strip" style={{ marginBottom: 0 }}>
             {[
-              { dot: '#818CF8', text: 'Backend Development' },
-              { dot: '#06B6D4', text: 'AI / ML Projects' },
+              { dot: '#34D399', text: 'Backend Development' },
+              { dot: '#22D3EE', text: 'AI / ML Projects' },
               { dot: '#4ade80', text: 'Open Source' },
               { dot: '#f59e0b', text: 'Internships' },
             ].map(chip => (
@@ -93,7 +93,7 @@ export default function ContactPage() {
 
             {/* Contact info */}
             <div className="glass-card p-6">
-              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif', letterSpacing: '0.02em' }}>
+              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Playfair Display, "Inter", sans-serif', letterSpacing: '0.02em' }}>
                 Contact Info
               </h2>
               <div className="space-y-4">
@@ -101,12 +101,12 @@ export default function ContactPage() {
                   <div key={item.label} className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
                       style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)' }}>
-                      <item.icon size={14} className="text-[#60A5FA]" />
+                      <item.icon size={14} className="text-[#34D399]" />
                     </div>
                     <div>
                       <p className="text-[10px] font-mono text-[#4A6090] uppercase tracking-wider mb-0.5">{item.label}</p>
                       {item.link ? (
-                        <a href={item.link} className="text-sm text-[#EDF2FF] hover:text-[#60A5FA] transition-colors">
+                        <a href={item.link} className="text-sm text-[#EDF2FF] hover:text-[#34D399] transition-colors">
                           {item.value}
                         </a>
                       ) : (
@@ -120,7 +120,7 @@ export default function ContactPage() {
 
             {/* Social links */}
             <div className="glass-card p-6">
-              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif', letterSpacing: '0.02em' }}>
+              <h2 className="text-base font-bold text-[#EDF2FF] mb-5" style={{ fontFamily: 'Playfair Display, "Inter", sans-serif', letterSpacing: '0.02em' }}>
                 Find Me Online
               </h2>
               <div className="space-y-2">
@@ -133,8 +133,8 @@ export default function ContactPage() {
                     className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group"
                     style={{ border: '1px solid transparent' }}
                     onMouseEnter={e => {
-                      e.currentTarget.style.background = 'rgba(79,70,229,0.08)'
-                      e.currentTarget.style.borderColor = 'rgba(79,70,229,0.25)'
+                      e.currentTarget.style.background = 'rgba(16,185,129,0.08)'
+                      e.currentTarget.style.borderColor = 'rgba(16,185,129,0.25)'
                       e.currentTarget.style.transform = 'translateX(4px)'
                     }}
                     onMouseLeave={e => {
@@ -159,9 +159,9 @@ export default function ContactPage() {
 
             {/* Quick tip */}
             <div className="glass-card p-5"
-              style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)' }}>
+              style={{ background: 'rgba(16,185,129,0.08)', borderColor: 'rgba(16,185,129,0.2)' }}>
               <p className="text-xs text-[#4A6090] leading-relaxed">
-                <span className="text-[#60A5FA] font-semibold">Quick note:</span> I'm currently open to internships,
+                <span className="text-[#34D399] font-semibold">Quick note:</span> I'm currently open to internships,
                 freelance work, and collaborative projects in backend development and AI/ML.
               </p>
             </div>
@@ -170,7 +170,7 @@ export default function ContactPage() {
           {/* ── Contact form ── */}
           <div className="lg:col-span-3 animate-slide-up delay-100" style={{ animationFillMode: 'both' }}>
             <div className="glass-card p-8">
-              <h2 className="text-lg font-bold text-[#EDF2FF] mb-2" style={{ fontFamily: 'Rajdhani, "Plus Jakarta Sans", sans-serif', letterSpacing: '0.02em' }}>
+              <h2 className="text-lg font-bold text-[#EDF2FF] mb-2" style={{ fontFamily: 'Playfair Display, "Inter", sans-serif', letterSpacing: '0.02em' }}>
                 Send a Message
               </h2>
               <p className="text-sm text-[#4A6090] mb-7">Fill out the form and I'll get back to you shortly.</p>

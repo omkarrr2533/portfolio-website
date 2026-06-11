@@ -56,13 +56,13 @@ export default function Header() {
 
   /* ── Shared active link styles ── */
   const activeStyle = {
-    background: 'rgba(79,70,229,0.12)',
-    color: '#818CF8',
-    border: '1px solid rgba(79,70,229,0.25)',
+    background: 'rgba(16,185,129,0.1)',
+    color: '#34D399',
+    border: '1px solid rgba(16,185,129,0.25)',
   }
   const inactiveStyle = {
     background: 'transparent',
-    color: '#8EA4C8',
+    color: '#9CAFA7',
     border: '1px solid transparent',
   }
 
@@ -73,9 +73,9 @@ export default function Header() {
         <div style={{
           position:'fixed', top:0, left:0, zIndex:1001,
           height:2, width:`${scrollPct}%`,
-          background:'linear-gradient(90deg,#4F46E5,#06B6D4)',
+          background:'linear-gradient(90deg,#10B981,#22D3EE)',
           transition:'width 80ms linear',
-          boxShadow:'0 0 8px rgba(79,70,229,0.6)',
+          boxShadow:'0 0 8px rgba(16,185,129,0.6)',
         }} />
       )}
 
@@ -86,10 +86,10 @@ export default function Header() {
         transform:'translateZ(0)',
         transition:'background 250ms ease, box-shadow 250ms ease, border-color 250ms ease',
         ...(scrolled ? {
-          background:'rgba(6,13,31,0.85)',
-          WebkitBackdropFilter:'blur(20px) saturate(180%)',
-          backdropFilter:'blur(20px) saturate(180%)',
-          borderBottom:'1px solid rgba(148,163,184,0.08)',
+          background:'rgba(5,8,7,0.85)',
+          WebkitBackdropFilter:'blur(20px) saturate(160%)',
+          backdropFilter:'blur(20px) saturate(160%)',
+          borderBottom:'1px solid rgba(236,242,239,0.07)',
           boxShadow:'0 4px 24px rgba(0,0,0,0.3)',
         } : {
           background:'transparent',
@@ -104,17 +104,17 @@ export default function Header() {
           <Link href="/" style={{ display:'flex', alignItems:'center', gap:10, textDecoration:'none' }}>
             <div style={{
               width:36, height:36, borderRadius:10,
-              background:'linear-gradient(135deg,#4F46E5,#7C3AED)',
+              background:'linear-gradient(135deg,#10B981,#0D9488)',
               display:'flex', alignItems:'center', justifyContent:'center',
-              fontFamily:'Rajdhani,Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:14, color:'#fff',
-              boxShadow:'0 0 18px rgba(79,70,229,0.45)',
+              fontFamily:'"Playfair Display",Georgia,serif', fontWeight:700, fontSize:15, color:'#04150F',
+              boxShadow:'0 0 18px rgba(16,185,129,0.4)',
               flexShrink:0,
             }}>OK</div>
             <div className="desktop-nav">
-              <p style={{ fontFamily:'Rajdhani,Plus Jakarta Sans,sans-serif', fontWeight:800, fontSize:15, color:'#E8F0FE', lineHeight:1, letterSpacing:'0.01em' }}>Om Kapale</p>
+              <p style={{ fontFamily:'Inter,sans-serif', fontWeight:700, fontSize:15, color:'#ECF2EF', lineHeight:1, letterSpacing:'0.01em' }}>Om Kapale</p>
               <div style={{ display:'flex', alignItems:'center', gap:5, marginTop:3 }}>
-                <span style={{ width:5, height:5, borderRadius:'50%', background:'#4ade80', boxShadow:'0 0 5px #4ade80', display:'inline-block', flexShrink:0 }} />
-                <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#4ade80', letterSpacing:'0.08em' }}>GSoC 2026 · AVAILABLE</p>
+                <span style={{ width:5, height:5, borderRadius:'50%', background:'#34D399', boxShadow:'0 0 5px #34D399', display:'inline-block', flexShrink:0 }} />
+                <p style={{ fontFamily:'JetBrains Mono,monospace', fontSize:9, color:'#34D399', letterSpacing:'0.08em' }}>GSOC 2026 · AVAILABLE</p>
               </div>
             </div>
           </Link>
@@ -130,7 +130,7 @@ export default function Header() {
                   borderRadius:8,
                   fontSize:13,
                   fontWeight: active ? 600 : 500,
-                  fontFamily:'Plus Jakarta Sans,sans-serif',
+                  fontFamily:'Inter,sans-serif',
                   textDecoration:'none',
                   transition:'all 150ms ease',
                   ...(active ? activeStyle : inactiveStyle),
@@ -162,8 +162,6 @@ export default function Header() {
               <Github size={14} /> GitHub
             </a>
             <Link href="/contact" className="btn btn-primary btn-sm" style={{
-              background: 'linear-gradient(135deg, #4F46E5, #7C3AED)',
-              boxShadow: '0 0 20px rgba(79,70,229,0.35)',
               fontFamily: 'JetBrains Mono, monospace',
               letterSpacing: '0.03em',
             }}>
@@ -178,10 +176,10 @@ export default function Header() {
             className="mobile-only"
             style={{
               display:'flex', alignItems:'center', justifyContent:'center',
-              width:40, height:40, borderRadius:10,
-              background: open ? 'rgba(79,70,229,0.12)' : 'rgba(13,21,38,0.8)',
-              border:`1px solid ${open ? 'rgba(79,70,229,0.3)' : 'rgba(148,163,184,0.1)'}`,
-              color: open ? '#818CF8' : '#8EA4C8',
+              width:44, height:44, borderRadius:10,
+              background: open ? 'rgba(16,185,129,0.1)' : 'rgba(10,16,14,0.8)',
+              border:`1px solid ${open ? 'rgba(16,185,129,0.3)' : 'rgba(236,242,239,0.1)'}`,
+              color: open ? '#34D399' : '#9CAFA7',
               cursor:'pointer',
               transition:'all 150ms ease',
             }}
@@ -195,7 +193,7 @@ export default function Header() {
       {/* Mobile drawer backdrop */}
       <div onClick={() => setOpen(false)} style={{
         position:'fixed', inset:0, zIndex:998,
-        background:'rgba(4,8,20,0.75)',
+        background:'rgba(3,5,4,0.75)',
         backdropFilter:'blur(4px)',
         transition:'opacity 250ms ease',
         opacity: open ? 1 : 0,
@@ -205,9 +203,9 @@ export default function Header() {
       {/* Mobile drawer panel */}
       <div style={{
         position:'fixed', top:0, right:0, bottom:0, width:280, zIndex:999,
-        background:'rgba(9,15,28,0.98)',
+        background:'rgba(8,13,11,0.98)',
         backdropFilter:'blur(24px)',
-        borderLeft:'1px solid rgba(148,163,184,0.08)',
+        borderLeft:'1px solid rgba(236,242,239,0.08)',
         boxShadow:'-12px 0 48px rgba(0,0,0,0.6)',
         transform: open ? 'translateX(0)' : 'translateX(100%)',
         transition:'transform 300ms cubic-bezier(0.4,0,0.2,1)',
@@ -217,12 +215,12 @@ export default function Header() {
         <div style={{
           display:'flex', alignItems:'center', justifyContent:'space-between',
           padding:'18px 20px',
-          borderBottom:'1px solid rgba(148,163,184,0.07)',
+          borderBottom:'1px solid rgba(236,242,239,0.07)',
         }}>
-          <span style={{ fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, fontSize:14, color:'#E8F0FE' }}>
+          <span style={{ fontFamily:'Inter,sans-serif', fontWeight:700, fontSize:14, color:'#ECF2EF' }}>
             Navigation
           </span>
-          <button onClick={() => setOpen(false)} style={{ color:'#4A6080', cursor:'pointer' }}>
+          <button onClick={() => setOpen(false)} style={{ color:'#5F7169', cursor:'pointer', padding:8 }} aria-label="Close menu">
             <X size={17} />
           </button>
         </div>
@@ -235,16 +233,16 @@ export default function Header() {
               <Link key={item.path} href={item.path} style={{
                 display:'flex', alignItems:'center', gap:10,
                 padding:'11px 14px', borderRadius:10, marginBottom:2,
-                fontFamily:'Plus Jakarta Sans,sans-serif', fontSize:14,
+                fontFamily:'Inter,sans-serif', fontSize:14,
                 fontWeight: active ? 600 : 500,
                 textDecoration:'none',
                 transition:'all 150ms ease',
-                ...(active ? activeStyle : { color:'#8EA4C8', background:'transparent', border:'1px solid transparent' }),
+                ...(active ? activeStyle : { color:'#9CAFA7', background:'transparent', border:'1px solid transparent' }),
               }}>
                 <span style={{
                   width:6, height:6, borderRadius:'50%', flexShrink:0,
-                  background: active ? '#818CF8' : '#2A3F60',
-                  boxShadow: active ? '0 0 6px rgba(129,140,248,0.6)' : 'none',
+                  background: active ? '#34D399' : '#36443F',
+                  boxShadow: active ? '0 0 6px rgba(52,211,153,0.6)' : 'none',
                 }} />
                 {item.name}
               </Link>
@@ -253,7 +251,7 @@ export default function Header() {
         </div>
 
         {/* Panel footer */}
-        <div style={{ padding:16, borderTop:'1px solid rgba(148,163,184,0.07)', display:'flex', flexDirection:'column', gap:8 }}>
+        <div style={{ padding:16, borderTop:'1px solid rgba(236,242,239,0.07)', display:'flex', flexDirection:'column', gap:8 }}>
           <a
             href="https://github.com/omkarrr2533"
             target="_blank"
@@ -263,9 +261,9 @@ export default function Header() {
           >
             <Github size={14} /> GitHub
           </a>
-          <Link href="/contact" className="btn btn-primary" style={{ justifyContent:'center', fontSize:13, background:'linear-gradient(135deg,#10B981,#4F46E5)' }}>
-  <Zap size={13} /> GSoC '26 · Hire Me
-</Link>
+          <Link href="/contact" className="btn btn-primary" style={{ justifyContent:'center', fontSize:13 }}>
+            <Zap size={13} /> GSoC &apos;26 · Hire Me
+          </Link>
         </div>
       </div>
 

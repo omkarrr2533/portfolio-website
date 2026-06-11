@@ -35,15 +35,15 @@ function ContribCalendar({ weeks, total }) {
   return (
     <div className="glass-card p-6">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-700 text-[#E8F0FE] flex items-center gap-2">
-          <Activity size={18} className="text-[#60A5FA]" />
+        <h2 className="text-lg font-700 text-[#ECF2EF] flex items-center gap-2">
+          <Activity size={18} className="text-[#34D399]" />
           Contribution Activity
         </h2>
         {total > 0 && (
           <span className="text-sm font-mono text-[#34D399] font-700">{total.toLocaleString()} contributions</span>
         )}
       </div>
-      {mock && <p className="text-xs text-[#64B5F6] font-mono mb-3">⚠ Add GITHUB_TOKEN for live data</p>}
+      {mock && <p className="text-xs text-[#9CAFA7] font-mono mb-3">⚠ Add GITHUB_TOKEN for live data</p>}
       <div className="scroll-x pb-2">
         <div className="flex gap-1 min-w-max">
           {data.map((week, wi) => (
@@ -58,7 +58,7 @@ function ContribCalendar({ weeks, total }) {
           ))}
         </div>
       </div>
-      <div className="flex items-center gap-2 mt-3 text-xs text-[#64B5F6]">
+      <div className="flex items-center gap-2 mt-3 text-xs text-[#9CAFA7]">
         <span>Less</span>
         {[0, 1, 2, 3, 4].map(l => <div key={l} className={`contrib-cell contrib-${l}`} />)}
         <span>More</span>
@@ -75,8 +75,8 @@ function LanguageChart({ languages }) {
 
   return (
     <div className="glass-card p-6">
-      <h2 className="text-lg font-700 text-[#E8F0FE] mb-5 flex items-center gap-2">
-        <Code2 size={18} className="text-[#60A5FA]" /> Languages
+      <h2 className="text-lg font-700 text-[#ECF2EF] mb-5 flex items-center gap-2">
+        <Code2 size={18} className="text-[#34D399]" /> Languages
       </h2>
       <div className="flex h-3 rounded-full overflow-hidden mb-5 gap-0.5">
         {entries.map(([lang, count]) => (
@@ -91,15 +91,15 @@ function LanguageChart({ languages }) {
           <div key={lang} className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full shrink-0"
               style={{ background: LANG_COLOR[lang] || '#8b949e' }} />
-            <span className="text-xs text-[#64B5F6] font-mono flex-1">{lang}</span>
-            <div className="flex-1 h-1.5 rounded-full bg-[#0B1325] overflow-hidden">
+            <span className="text-xs text-[#9CAFA7] font-mono flex-1">{lang}</span>
+            <div className="flex-1 h-1.5 rounded-full bg-[#0A100E] overflow-hidden">
               <div className="h-full rounded-full" style={{
                 width: `${(count / entries[0][1]) * 100}%`,
                 background: LANG_COLOR[lang] || '#8b949e',
                 opacity: 0.7,
               }} />
             </div>
-            <span className="text-xs text-[#64B5F6] font-mono w-10 text-right">
+            <span className="text-xs text-[#9CAFA7] font-mono w-10 text-right">
               {Math.round((count / total) * 100)}%
             </span>
           </div>
@@ -124,10 +124,10 @@ function PRCard({ pr, index }) {
       <div className="flex items-start gap-3">
         <CheckCircle size={15} className="text-[#10B981] shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-600 text-[#E8F0FE] group-hover:text-white line-clamp-2 mb-1">{pr.title}</p>
+          <p className="text-sm font-600 text-[#ECF2EF] group-hover:text-white line-clamp-2 mb-1">{pr.title}</p>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs font-mono text-[#60A5FA]">{owner}/{repoName}</span>
-            <span className="text-xs text-[#64B5F6] flex items-center gap-1"><Clock size={10} />{timeAgo}</span>
+            <span className="text-xs font-mono text-[#34D399]">{owner}/{repoName}</span>
+            <span className="text-xs text-[#9CAFA7] flex items-center gap-1"><Clock size={10} />{timeAgo}</span>
           </div>
           {pr.labels?.length > 0 && (
             <div className="flex gap-1 mt-1.5 flex-wrap">
@@ -140,7 +140,7 @@ function PRCard({ pr, index }) {
             </div>
           )}
         </div>
-        <ExternalLink size={12} className="text-[#64B5F6] group-hover:text-[#60A5FA] shrink-0" />
+        <ExternalLink size={12} className="text-[#9CAFA7] group-hover:text-[#34D399] shrink-0" />
       </div>
     </a>
   )
@@ -151,15 +151,15 @@ function RepoCard({ repo, rank }) {
   const langColor = LANG_COLOR[repo.language] || '#8b949e'
   return (
     <a href={repo.url} target="_blank" rel="noopener noreferrer"
-      className="glass-card p-4 flex items-start gap-3 group hover:border-blue-500/30 transition-all">
+      className="glass-card p-4 flex items-start gap-3 group hover:border-emerald-500/30 transition-all">
       <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-800 shrink-0"
-        style={{ background: 'rgba(59,130,246,0.1)', color: '#60A5FA' }}>
+        style={{ background: 'rgba(59,130,246,0.1)', color: '#34D399' }}>
         #{rank}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-mono text-sm font-700 text-[#60A5FA] group-hover:text-white truncate mb-0.5">{repo.name}</p>
-        <p className="text-xs text-[#64B5F6] line-clamp-1 mb-2">{repo.description || 'No description'}</p>
-        <div className="flex items-center gap-3 text-xs text-[#64B5F6]">
+        <p className="font-mono text-sm font-700 text-[#34D399] group-hover:text-white truncate mb-0.5">{repo.name}</p>
+        <p className="text-xs text-[#9CAFA7] line-clamp-1 mb-2">{repo.description || 'No description'}</p>
+        <div className="flex items-center gap-3 text-xs text-[#9CAFA7]">
           {repo.language && (
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full" style={{ background: langColor }} />
@@ -171,7 +171,7 @@ function RepoCard({ repo, rank }) {
           {repo.isPrivate ? <Lock size={10} /> : <Globe size={10} />}
         </div>
       </div>
-      <ExternalLink size={13} className="text-[#64B5F6] group-hover:text-[#60A5FA] shrink-0" />
+      <ExternalLink size={13} className="text-[#9CAFA7] group-hover:text-[#34D399] shrink-0" />
     </a>
   )
 }
@@ -184,7 +184,7 @@ function RecentActivityFeed({ repos }) {
 
   return (
     <div className="glass-card p-6">
-      <h2 className="text-lg font-700 text-[#E8F0FE] mb-5 flex items-center gap-2">
+      <h2 className="text-lg font-700 text-[#ECF2EF] mb-5 flex items-center gap-2">
         <GitCommit size={18} className="text-[#8B5CF6]" />
         Recent Activity
       </h2>
@@ -197,14 +197,14 @@ function RecentActivityFeed({ repos }) {
             <div key={repo.id} className="flex items-center gap-3 group">
               <div className="w-1.5 h-1.5 rounded-full shrink-0"
                 style={{ background: LANG_COLOR[repo.language] || '#8b949e' }} />
-              <GitBranch size={13} className="text-[#64B5F6] shrink-0" />
+              <GitBranch size={13} className="text-[#9CAFA7] shrink-0" />
               <a href={repo.url} target="_blank" rel="noopener noreferrer"
-                className="font-mono text-xs text-[#60A5FA] hover:text-white transition-colors flex-1 truncate">
+                className="font-mono text-xs text-[#34D399] hover:text-white transition-colors flex-1 truncate">
                 {repo.name}
               </a>
-              <span className="text-xs text-[#64B5F6] shrink-0">{timeAgo}</span>
+              <span className="text-xs text-[#9CAFA7] shrink-0">{timeAgo}</span>
               {repo.language && (
-                <span className="text-xs text-[#64B5F6] shrink-0 hidden sm:block">{repo.language}</span>
+                <span className="text-xs text-[#9CAFA7] shrink-0 hidden sm:block">{repo.language}</span>
               )}
             </div>
           )
@@ -224,10 +224,10 @@ function ProfileCard({ stats }) {
           <img src={stats.avatar} alt="avatar" className="w-12 h-12 rounded-xl" />
         )}
         <div>
-          <h3 className="font-700 text-[#E8F0FE]">{stats.name || 'GitHub Profile'}</h3>
-          {stats.bio && <p className="text-xs text-[#64B5F6] mt-0.5 line-clamp-1">{stats.bio}</p>}
+          <h3 className="font-700 text-[#ECF2EF]">{stats.name || 'GitHub Profile'}</h3>
+          {stats.bio && <p className="text-xs text-[#9CAFA7] mt-0.5 line-clamp-1">{stats.bio}</p>}
           {stats.location && (
-            <p className="text-xs text-[#64B5F6] mt-0.5 flex items-center gap-1">
+            <p className="text-xs text-[#9CAFA7] mt-0.5 flex items-center gap-1">
               <Globe size={10} />{stats.location}
             </p>
           )}
@@ -237,14 +237,14 @@ function ProfileCard({ stats }) {
         {[
           { label: 'Repositories', value: stats.totalRepos, icon: BookOpen, accent: '#3B82F6' },
           { label: 'Followers', value: stats.followers, icon: Users, accent: '#8B5CF6' },
-          { label: 'Following', value: stats.following, icon: Users, accent: '#06B6D4' },
+          { label: 'Following', value: stats.following, icon: Users, accent: '#22D3EE' },
           { label: 'Stars', value: stats.totalStars, icon: Star, accent: '#F59E0B' },
         ].map(s => (
           <div key={s.label} className="p-3 rounded-lg text-center"
-            style={{ background: 'rgba(13,21,38,0.8)', border: '1px solid rgba(148,163,184,0.1)' }}>
+            style={{ background: 'rgba(10,16,14,0.8)', border: '1px solid rgba(236,242,239,0.1)' }}>
             <s.icon size={14} className="mx-auto mb-1" style={{ color: s.accent }} />
-            <div className="text-base font-800 font-mono" style={{ color: '#E8F0FE' }}>{s.value}</div>
-<div className="text-xs" style={{ color: '#8EA4C8' }}>{s.label}</div>
+            <div className="text-base font-800 font-mono" style={{ color: '#ECF2EF' }}>{s.value}</div>
+<div className="text-xs" style={{ color: '#9CAFA7' }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -256,15 +256,15 @@ function ProfileCard({ stats }) {
 function NotConfiguredBanner() {
   return (
     <div className="glass-card p-8 text-center" style={{ borderColor: 'rgba(245,158,11,0.2)' }}>
-      <Github size={40} className="text-[#64B5F6] mx-auto mb-4 opacity-50" />
-      <h3 className="text-lg font-700 text-[#E8F0FE] mb-2">GitHub Not Connected</h3>
-      <p className="text-[#64B5F6] text-sm mb-4">Add your GitHub credentials to see live stats</p>
+      <Github size={40} className="text-[#9CAFA7] mx-auto mb-4 opacity-50" />
+      <h3 className="text-lg font-700 text-[#ECF2EF] mb-2">GitHub Not Connected</h3>
+      <p className="text-[#9CAFA7] text-sm mb-4">Add your GitHub credentials to see live stats</p>
       <div className="bg-slate-800 rounded-lg p-4 text-left font-mono text-xs max-w-sm mx-auto">
-        <div className="text-[#64B5F6] mb-1"># .env.local</div>
-        <div className="text-[#34D399]">GITHUB_USERNAME=<span className="text-[#60A5FA]">omkarrr2533</span></div>
-        <div className="text-[#34D399]">GITHUB_TOKEN=<span className="text-[#60A5FA]">ghp_your_token_here</span></div>
+        <div className="text-[#9CAFA7] mb-1"># .env.local</div>
+        <div className="text-[#34D399]">GITHUB_USERNAME=<span className="text-[#34D399]">omkarrr2533</span></div>
+        <div className="text-[#34D399]">GITHUB_TOKEN=<span className="text-[#34D399]">ghp_your_token_here</span></div>
       </div>
-      <p className="text-xs text-[#64B5F6] mt-3 font-mono">
+      <p className="text-xs text-[#9CAFA7] mt-3 font-mono">
         Get token at github.com/settings/tokens (needs repo, user scopes)
       </p>
     </div>
@@ -326,7 +326,7 @@ export default function GitHubActivitiesPage() {
     { label: 'Forks', value: stats.totalForks, icon: GitFork, accent: '#10B981' },
     { label: 'Followers', value: stats.followers, icon: Users, accent: '#8B5CF6' },
     { label: 'OSS PRs Merged', value: prs.total || '—', icon: GitPullRequest, accent: '#34D399' },
-    { label: 'Languages', value: Object.keys(langMap).length, icon: Code2, accent: '#06B6D4' },
+    { label: 'Languages', value: Object.keys(langMap).length, icon: Code2, accent: '#22D3EE' },
   ] : []
 
   const TABS = ['overview', 'contributions', 'repositories']
@@ -360,10 +360,10 @@ export default function GitHubActivitiesPage() {
               { dot:'#3B82F6', text:`${stats.totalRepos} Repositories` },
               { dot:'#F59E0B', text:`${stats.totalStars} Stars Earned` },
               { dot:'#34D399', text:`${prs.total || '—'} PRs Merged` },
-              { dot:'#818CF8', text:`${Object.keys(langMap).length} Languages` },
+              { dot:'#34D399', text:`${Object.keys(langMap).length} Languages` },
             ] : [
-              { dot:'#06B6D4', text:'Contributions · Repos · PRs' },
-              { dot:'#818CF8', text:'Live GitHub Data' },
+              { dot:'#22D3EE', text:'Contributions · Repos · PRs' },
+              { dot:'#34D399', text:'Live GitHub Data' },
               { dot:'#4ade80', text:'@omkarrr2533' },
             ]).map(chip => (
               <span key={chip.text} className="achievement-chip">
@@ -392,11 +392,11 @@ export default function GitHubActivitiesPage() {
         ) : stats ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 animate-slide-up">
             {statItems.map((s, i) => (
-              <div key={s.label} className="glass-card p-5 text-center hover:border-blue-500/20 transition-colors"
+              <div key={s.label} className="glass-card p-5 text-center hover:border-emerald-500/20 transition-colors"
                 style={{ animationDelay: `${i * 60}ms` }}>
                 <s.icon size={20} className="mx-auto mb-2" style={{ color: s.accent }} />
-                <p className="text-2xl font-800 font-mono" style={{ color: '#E8F0FE' }}>{s.value}</p>
-<p className="text-xs mt-1" style={{ color: '#64B5F6' }}>{s.label}</p>
+                <p className="text-2xl font-800 font-mono" style={{ color: '#ECF2EF' }}>{s.value}</p>
+<p className="text-xs mt-1" style={{ color: '#9CAFA7' }}>{s.label}</p>
               </div>
             ))}
           </div>
@@ -409,8 +409,8 @@ export default function GitHubActivitiesPage() {
             <button key={t} onClick={() => setActiveTab(t)}
               className="px-4 py-2 rounded-lg text-sm font-600 transition-all capitalize"
               style={{
-                background: activeTab === t ? 'rgba(79,70,229,0.15)' : 'transparent',
-                color: activeTab === t ? '#4F46E5' : '#64B5F6',
+                background: activeTab === t ? 'rgba(16,185,129,0.15)' : 'transparent',
+                color: activeTab === t ? '#10B981' : '#9CAFA7',
               }}>
               {t}
             </button>
@@ -435,7 +435,7 @@ export default function GitHubActivitiesPage() {
             {/* Top repos */}
             {topRepos.length > 0 && (
               <div>
-                <h2 className="text-lg font-700 text-[#E8F0FE] mb-4 flex items-center gap-2">
+                <h2 className="text-lg font-700 text-[#ECF2EF] mb-4 flex items-center gap-2">
                   <Star size={16} className="text-[#F59E0B]" /> Most Starred Repositories
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -450,7 +450,7 @@ export default function GitHubActivitiesPage() {
             {/* Open source PRs */}
             {prs.items.length > 0 && (
               <div>
-                <h2 className="text-lg font-700 text-[#E8F0FE] mb-4 flex items-center gap-2">
+                <h2 className="text-lg font-700 text-[#ECF2EF] mb-4 flex items-center gap-2">
                   <GitPullRequest size={16} className="text-[#34D399]" />
                   Open Source Contributions
                   <span className="section-badge ml-2">{prs.total} merged PRs</span>
@@ -460,7 +460,7 @@ export default function GitHubActivitiesPage() {
                 </div>
                 {prs.total > 4 && (
                   <button onClick={() => setActiveTab('contributions')}
-                    className="mt-4 text-xs text-[#60A5FA] font-mono hover:text-white transition-colors">
+                    className="mt-4 text-xs text-[#34D399] font-mono hover:text-white transition-colors">
                     View all {prs.total} merged PRs →
                   </button>
                 )}
@@ -473,18 +473,18 @@ export default function GitHubActivitiesPage() {
                 <div className="space-y-4">
                   <div className="glass-card p-5 text-center">
                     <Award size={24} className="text-[#F59E0B] mx-auto mb-2" />
-                    <p className="text-sm font-700 text-[#E8F0FE]">Top 5% Academic Rank</p>
-                    <p className="text-xs text-[#64B5F6]">8.11 CGPA</p>
+                    <p className="text-sm font-700 text-[#ECF2EF]">Top 5% Academic Rank</p>
+                    <p className="text-xs text-[#9CAFA7]">7.67 CGPA</p>
                   </div>
                   <div className="glass-card p-5 text-center">
                     <GitPullRequest size={24} className="text-[#34D399] mx-auto mb-2" />
-                    <p className="text-sm font-700 text-[#E8F0FE]">Open Source Contributor</p>
-                    <p className="text-xs text-[#64B5F6]">6+ organisations</p>
+                    <p className="text-sm font-700 text-[#ECF2EF]">Open Source Contributor</p>
+                    <p className="text-xs text-[#9CAFA7]">5+ organisations</p>
                   </div>
                   <div className="glass-card p-5 text-center">
                     <Zap size={24} className="text-[#8B5CF6] mx-auto mb-2" />
-                    <p className="text-sm font-700 text-[#E8F0FE]">Multiple Certifications</p>
-                    <p className="text-xs text-[#64B5F6]">Nvidia, IBM, and more</p>
+                    <p className="text-sm font-700 text-[#ECF2EF]">Multiple Certifications</p>
+                    <p className="text-xs text-[#9CAFA7]">Nvidia, IBM, and more</p>
                   </div>
                 </div>
               </div>
@@ -510,8 +510,8 @@ export default function GitHubActivitiesPage() {
                       <s.icon size={20} style={{ color: s.accent }} />
                     </div>
                     <div>
-                      <p className="text-xl font-800 text-[#E8F0FE] font-mono">{s.value}</p>
-                      <p className="text-xs text-[#64B5F6]">{s.label}</p>
+                      <p className="text-xl font-800 text-[#ECF2EF] font-mono">{s.value}</p>
+                      <p className="text-xs text-[#9CAFA7]">{s.label}</p>
                     </div>
                   </div>
                 ))}
@@ -519,13 +519,13 @@ export default function GitHubActivitiesPage() {
             )}
 
             <div>
-              <h2 className="text-lg font-700 text-[#E8F0FE] mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-700 text-[#ECF2EF] mb-4 flex items-center gap-2">
                 <CheckCircle size={16} className="text-[#34D399]" />
                 Merged PRs in Open Source
                 {prs.total > 0 && <span className="section-badge ml-2">{prs.total} total</span>}
               </h2>
               {prs.items.length === 0 ? (
-                <div className="glass-card p-8 text-center text-[#64B5F6]">
+                <div className="glass-card p-8 text-center text-[#9CAFA7]">
                   <GitPullRequest size={32} className="mx-auto mb-3 opacity-30" />
                   <p className="font-mono text-sm">Connect GitHub to see your merged PRs</p>
                 </div>
@@ -547,7 +547,7 @@ export default function GitHubActivitiesPage() {
             </div>
 
             <div>
-              <h2 className="text-lg font-700 text-[#E8F0FE] mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-700 text-[#ECF2EF] mb-4 flex items-center gap-2">
                 <Star size={16} className="text-[#F59E0B]" /> All Repositories
                 <span className="section-badge ml-2">{repos.length}</span>
               </h2>
@@ -556,7 +556,7 @@ export default function GitHubActivitiesPage() {
                   {topRepos.map((r, i) => <RepoCard key={r.id} repo={r} rank={i + 1} />)}
                 </div>
               ) : (
-                <div className="glass-card p-8 text-center text-[#64B5F6]">
+                <div className="glass-card p-8 text-center text-[#9CAFA7]">
                   <Code2 size={32} className="mx-auto mb-3 opacity-30" />
                   <p className="font-mono text-sm">Connect GitHub to see your repositories</p>
                 </div>
@@ -566,17 +566,17 @@ export default function GitHubActivitiesPage() {
         )}
 
         {/* Profile CTA */}
-        <div style={{ marginTop: 48, textAlign: 'center', padding: '32px 24px', background: 'linear-gradient(135deg, rgba(79,70,229,0.1), rgba(124,58,237,0.08))', borderRadius: 16, border: '1px solid rgba(79,70,229,0.25)', maxWidth: 480, margin: '48px auto 0' }}>
-  <div style={{ width: 44, height: 44, borderRadius: 12, background: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+        <div style={{ marginTop: 48, textAlign: 'center', padding: '32px 24px', background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(13,148,136,0.08))', borderRadius: 16, border: '1px solid rgba(16,185,129,0.25)', maxWidth: 480, margin: '48px auto 0' }}>
+  <div style={{ width: 44, height: 44, borderRadius: 12, background: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
     <Github size={20} color="#fff" />
   </div>
-  <p style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontWeight: 700, fontSize: 16, color: '#E8F0FE', marginBottom: 6 }}>See the full picture</p>
-  <p style={{ fontSize: 13, color: '#64B5F6', marginBottom: 20 }}>Stars, contributions, followers and all repositories</p>
+  <p style={{ fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 16, color: '#ECF2EF', marginBottom: 6 }}>See the full picture</p>
+  <p style={{ fontSize: 13, color: '#9CAFA7', marginBottom: 20 }}>Stars, contributions, followers and all repositories</p>
   <a
     href="https://github.com/omkarrr2533"
     target="_blank"
     rel="noopener noreferrer"
-    style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: '#4F46E5', color: '#fff', borderRadius: 9, fontSize: 14, fontWeight: 600, fontFamily: 'Plus Jakarta Sans, sans-serif', textDecoration: 'none', transition: 'background 150ms ease' }}
+    style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 28px', background: '#10B981', color: '#fff', borderRadius: 9, fontSize: 14, fontWeight: 600, fontFamily: 'Inter, sans-serif', textDecoration: 'none', transition: 'background 150ms ease' }}
   >
     <Github size={16} /> View GitHub Profile
     <ArrowRight size={14} />

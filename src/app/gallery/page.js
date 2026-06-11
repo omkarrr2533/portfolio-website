@@ -49,13 +49,13 @@ function UploadModal({ onClose, onUpload }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(4,8,20,0.85)', backdropFilter:'blur(8px)' }}
+      style={{ background:'rgba(3,5,4,0.85)', backdropFilter:'blur(8px)' }}
       onClick={onClose}
     >
       <div className="glass-card w-full max-w-md p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-[#E8F0FE]">Upload Photo</h2>
-          <button onClick={onClose} className="text-[#64B5F6] hover:text-white"><X size={18}/></button>
+          <h2 className="text-lg font-bold text-[#ECF2EF]">Upload Photo</h2>
+          <button onClick={onClose} className="text-[#9CAFA7] hover:text-white"><X size={18}/></button>
         </div>
 
         <div
@@ -64,14 +64,14 @@ function UploadModal({ onClose, onUpload }) {
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
           className="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer mb-4 transition-all"
-          style={{ borderColor: dragging ? '#4F46E5' : 'rgba(100,181,246,0.4)', background: dragging ? 'rgba(79,70,229,0.1)':'transparent' }}
+          style={{ borderColor: dragging ? '#10B981' : 'rgba(100,181,246,0.4)', background: dragging ? 'rgba(16,185,129,0.1)':'transparent' }}
         >
           {preview ? (
             <img src={preview} alt="preview" className="w-full h-32 object-cover rounded-lg" />
           ) : (
-            <div className="flex flex-col items-center gap-2 text-[#64B5F6]">
+            <div className="flex flex-col items-center gap-2 text-[#9CAFA7]">
               <Upload size={28} />
-              <p className="text-sm">Drag & drop or <span className="text-[#60A5FA]">browse</span></p>
+              <p className="text-sm">Drag & drop or <span className="text-[#34D399]">browse</span></p>
               <p className="text-xs text-[#4A6090]">PNG, JPG, GIF, WebP — from your PC</p>
             </div>
           )}
@@ -101,7 +101,7 @@ function UploadModal({ onClose, onUpload }) {
 function Lightbox({ item, onClose, onDelete }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background:'rgba(4,8,20,0.9)', backdropFilter:'blur(8px)' }}
+      style={{ background:'rgba(3,5,4,0.9)', backdropFilter:'blur(8px)' }}
       onClick={onClose}
     >
       <div className="relative max-w-3xl w-full" onClick={e => e.stopPropagation()}>
@@ -111,9 +111,9 @@ function Lightbox({ item, onClose, onDelete }) {
         <img src={item.src} alt={item.title} className="w-full rounded-xl max-h-[60vh] object-contain" />
         <div className="glass-card p-5 mt-3 flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-lg font-bold text-[#E8F0FE] mb-1">{item.title}</h3>
-            {item.description && <p className="text-sm text-[#8EA4C8] mb-2">{item.description}</p>}
-            <div className="flex items-center gap-4 text-xs text-[#64B5F6]">
+            <h3 className="text-lg font-bold text-[#ECF2EF] mb-1">{item.title}</h3>
+            {item.description && <p className="text-sm text-[#9CAFA7] mb-2">{item.description}</p>}
+            <div className="flex items-center gap-4 text-xs text-[#9CAFA7]">
               <span className="flex items-center gap-1"><Calendar size={11}/>{item.date}</span>
               <span className="flex items-center gap-1"><Tag size={11}/>{item.category}</span>
             </div>
@@ -143,7 +143,7 @@ function GalleryCard({ item, onClick, onDelete }) {
         ) : (
           <div className="w-full h-full flex items-center justify-center"
             style={{ background:'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2))' }}>
-            <Image size={32} className="text-[#64B5F6]" />
+            <Image size={32} className="text-[#9CAFA7]" />
           </div>
         )}
       </div>
@@ -158,7 +158,7 @@ function GalleryCard({ item, onClick, onDelete }) {
       </div>
       <div className="absolute top-3 left-3">
         <span className="text-xs font-mono px-2 py-0.5 rounded-full"
-          style={{ background:'rgba(0,0,0,0.6)', color:'#60A5FA', border:'1px solid rgba(59,130,246,0.3)' }}>
+          style={{ background:'rgba(0,0,0,0.6)', color:'#34D399', border:'1px solid rgba(59,130,246,0.3)' }}>
           {item.category}
         </span>
       </div>
@@ -186,10 +186,10 @@ export default function GalleryPage() {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 animate-fade-in">
           <span className="section-badge mb-4 block w-fit mx-auto">// photo gallery</span>
-          <h1 className="font-display font-800 text-[#E8F0FE] mb-3" style={{ fontSize:'clamp(32px,5vw,52px)' }}>
+          <h1 className="font-display font-800 text-[#ECF2EF] mb-3" style={{ fontSize:'clamp(32px,5vw,52px)' }}>
             My <span className="gradient-text">Gallery</span>
           </h1>
-          <p className="text-[#8EA4C8] text-base max-w-xl mx-auto">
+          <p className="text-[#9CAFA7] text-base max-w-xl mx-auto">
             Upload photos directly from your PC — events, achievements, travel & more
           </p>
         </div>
@@ -200,8 +200,8 @@ export default function GalleryPage() {
               <button key={cat} onClick={() => setFilter(cat)}
                 className="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
                 style={{
-                  background: filter===cat ? 'linear-gradient(135deg,#3B82F6,#6366F1)':'rgba(15,26,46,0.8)',
-                  color: filter===cat ? '#fff':'#8EA4C8',
+                  background: filter===cat ? 'linear-gradient(135deg,#3B82F6,#34D399)':'rgba(15,26,46,0.8)',
+                  color: filter===cat ? '#fff':'#9CAFA7',
                   border: filter===cat ? 'none':'1px solid rgba(99,120,162,0.2)',
                 }}>
                 {cat} {cat !== 'All' && <span className="text-xs opacity-70">({items.filter(i=>i.category===cat).length})</span>}
@@ -218,17 +218,17 @@ export default function GalleryPage() {
             ...CATEGORIES.filter(c=>c!=='All').map(c => ({ label:c, value:items.filter(i=>i.category===c).length }))
           ].map(s => (
             <div key={s.label} className="stat-card flex items-center gap-2">
-              <span className="font-mono font-bold text-[#60A5FA] text-sm">{s.value}</span>
-              <span className="text-xs text-[#64B5F6]">{s.label}</span>
+              <span className="font-mono font-bold text-[#34D399] text-sm">{s.value}</span>
+              <span className="text-xs text-[#9CAFA7]">{s.label}</span>
             </div>
           ))}
         </div>
 
         {filtered.length === 0 ? (
           <div className="glass-card p-16 text-center">
-            <FolderOpen size={48} className="text-[#64B5F6] mx-auto mb-4 opacity-50" />
-            <p className="text-[#8EA4C8] mb-2">No photos yet</p>
-            <p className="text-xs text-[#64B5F6] mb-6">
+            <FolderOpen size={48} className="text-[#9CAFA7] mx-auto mb-4 opacity-50" />
+            <p className="text-[#9CAFA7] mb-2">No photos yet</p>
+            <p className="text-xs text-[#9CAFA7] mb-6">
               {filter !== 'All' ? `No ${filter} photos — try another category` : 'Click "Upload Photo" to add your first photo from your PC'}
             </p>
             <button onClick={() => setShowUpload(true)} className="btn-primary text-sm flex items-center gap-2 mx-auto">
@@ -240,10 +240,10 @@ export default function GalleryPage() {
             <div
               onClick={() => setShowUpload(true)}
               className="aspect-square rounded-xl border-2 border-dashed flex flex-col items-center justify-center cursor-pointer group transition-all"
-              style={{ borderColor:'rgba(100,181,246,0.4)', background:'rgba(13,21,38,0.5)' }}
+              style={{ borderColor:'rgba(100,181,246,0.4)', background:'rgba(10,16,14,0.5)' }}
             >
-              <Plus size={24} className="text-[#64B5F6] group-hover:text-[#60A5FA] mb-2 transition-colors" />
-              <span className="text-xs text-[#64B5F6] group-hover:text-[#60A5FA] font-mono transition-colors">Add Photo</span>
+              <Plus size={24} className="text-[#9CAFA7] group-hover:text-[#34D399] mb-2 transition-colors" />
+              <span className="text-xs text-[#9CAFA7] group-hover:text-[#34D399] font-mono transition-colors">Add Photo</span>
             </div>
             {filtered.map(item => (
               <GalleryCard key={item.id} item={item} onClick={() => setSelected(item)} onDelete={remove} />

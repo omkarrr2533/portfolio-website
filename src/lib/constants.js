@@ -9,18 +9,18 @@ export const PERSONAL_INFO = {
   subtitle: 'AI/ML Enthusiast | Open Source Contributor',
   email: 'omshripadkapale@gmail.com',
   phone: '+91-XXXXXXXXXX',
-  location: 'Mumbai, Maharashtra, India',
-  bio: 'Passionate Computer Science student ranked in the top 5% of my college with 8.11 CGPA. Focused on backend development, AI/ML, and building scalable solutions with clean code.',
+  location: 'Chh. Sambhajinagar, Maharashtra, India',
+  bio: 'Passionate Computer Science student ranked in the top 5% of my college with 7.67 CGPA. Focused on backend development, AI/ML, and building scalable solutions with clean code.',
   tagline: 'Problem Solving | Clean Code | Scalable Solutions',
   rank: 'Top 5% of College',
-  cgpa: '8.11',
+  cgpa: '7.67',
 }
 
 // Social Media Links
 export const SOCIAL_LINKS = {
   github: 'https://github.com/omkarrr2533',
   linkedin: 'https://www.linkedin.com/in/om-kapale-b861a228a',
-  leetcode: 'https://leetcode.com/u/omi_/',
+  leetcode: 'https://leetcode.com/u/omii_/',
   instagram: 'https://www.instagram.com/its_omkarrrrrr/?hl=en',
   email: 'mailto:omshripadkapale@gmail.com',
 }
@@ -88,10 +88,10 @@ export const CERTIFICATIONS_SUMMARY = {
 // Education
 export const EDUCATION = {
   degree: 'Bachelor of Science in Computer Science',
-  school: 'Your College Name',
-  location: 'Mumbai, Maharashtra',
+  school: 'CSMSS Chh. Shahu College of Engineering',
+  location: 'Chh. Sambhajinagar, Maharashtra',
   period: '2023 - Present',
-  cgpa: '8.11',
+  cgpa: '7.67',
   rank: 'Top 5% of College',
   year: 'First Year',
 }
@@ -105,7 +105,7 @@ export const ACHIEVEMENTS = [
   },
   {
     title: 'Top 5% Academic Rank',
-    description: 'Outstanding academic performance with 8.11 CGPA',
+    description: 'Outstanding academic performance with 7.67 CGPA',
     year: '2024'
   },
   {
@@ -194,7 +194,7 @@ export const SEO = {
     'Spring Boot',
     'Java Developer',
     'Data Science',
-    'Mumbai',
+    'Chh. Sambhajinagar',
     'LeetCode',
     'Open Source'
   ],
@@ -206,7 +206,7 @@ export const SEO = {
 export const CONTACT_INFO = {
   email: 'omshripadkapale@gmail.com',
   phone: '+91-XXXXXXXXXX',
-  location: 'Mumbai, Maharashtra, India',
+  location: 'Chh. Sambhajinagar, Maharashtra, India',
   availability: 'Open to opportunities',
   responseTime: '24-48 hours',
 }

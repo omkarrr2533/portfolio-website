@@ -32,7 +32,7 @@ const REAL_CERTS = [
 
 // Color options for new certs
 const COLOR_OPTIONS = [
-  { label:'Blue',   value:'from-blue-500 to-cyan-500',     accent:'#3B82F6' },
+  { label:'Blue',   value:'from-emerald-500 to-cyan-500',     accent:'#3B82F6' },
   { label:'Purple', value:'from-purple-500 to-pink-500',   accent:'#8B5CF6' },
   { label:'Green',  value:'from-green-500 to-emerald-500', accent:'#10B981' },
   { label:'Orange', value:'from-orange-500 to-yellow-500', accent:'#F59E0B' },
@@ -59,7 +59,7 @@ function EditModal({ cert, onSave, onClose }) {
   const [form, setForm] = useState(cert || {
     id: Date.now().toString(),
     title:'', issuer:'', date:'', credentialId:'', link:'',
-    skills:'', color:'from-blue-500 to-cyan-500', accent:'#3B82F6',
+    skills:'', color:'from-emerald-500 to-cyan-500', accent:'#3B82F6',
   })
   const isNew = !cert
 
@@ -80,8 +80,8 @@ function EditModal({ cert, onSave, onClose }) {
       <div className="glass-card w-full max-w-lg p-6 animate-scale-in max-h-[90vh] overflow-y-auto"
         onClick={e=>e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-700 text-[#E8F0FE]">{isNew ? 'Add Certification':'Edit Certification'}</h2>
-          <button onClick={onClose} className="text-[#64B5F6] hover:text-white"><X size={18}/></button>
+          <h2 className="text-lg font-700 text-[#ECF2EF]">{isNew ? 'Add Certification':'Edit Certification'}</h2>
+          <button onClick={onClose} className="text-[#9CAFA7] hover:text-white"><X size={18}/></button>
         </div>
 
         <div className="space-y-3">
@@ -93,7 +93,7 @@ function EditModal({ cert, onSave, onClose }) {
             { key:'link', label:'Verify Link', placeholder:'https://...' },
           ].map(f => (
             <div key={f.key}>
-              <label className="text-xs text-[#64B5F6] font-mono mb-1 block">{f.label}</label>
+              <label className="text-xs text-[#9CAFA7] font-mono mb-1 block">{f.label}</label>
               <input value={form[f.key] || ''}
                 onChange={e=>setForm(p=>({...p,[f.key]:e.target.value}))}
                 placeholder={f.placeholder}
@@ -102,7 +102,7 @@ function EditModal({ cert, onSave, onClose }) {
           ))}
 
           <div>
-            <label className="text-xs text-[#64B5F6] font-mono mb-1 block">Skills (comma-separated)</label>
+            <label className="text-xs text-[#9CAFA7] font-mono mb-1 block">Skills (comma-separated)</label>
             <input
               value={typeof form.skills==='string' ? form.skills : form.skills?.join(', ') || ''}
               onChange={e=>setForm(p=>({...p, skills:e.target.value}))}
@@ -112,7 +112,7 @@ function EditModal({ cert, onSave, onClose }) {
           </div>
 
           <div>
-            <label className="text-xs text-[#64B5F6] font-mono mb-2 block">Card Color</label>
+            <label className="text-xs text-[#9CAFA7] font-mono mb-2 block">Card Color</label>
             <div className="flex gap-2 flex-wrap">
               {COLOR_OPTIONS.map(c => (
                 <button key={c.value} onClick={()=>setForm(p=>({...p,color:c.value,accent:c.accent}))}
@@ -172,14 +172,14 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
       {/* Content */}
       <div className="p-5 space-y-3">
         <div>
-          <h3 className="text-base font-700 text-[#E8F0FE] mb-2 leading-snug group-hover:text-white transition-colors">
+          <h3 className="text-base font-700 text-[#ECF2EF] mb-2 leading-snug group-hover:text-white transition-colors">
             {cert.title}
           </h3>
-          <div className="flex items-center gap-1.5 text-[#8EA4C8] text-xs mb-1">
+          <div className="flex items-center gap-1.5 text-[#9CAFA7] text-xs mb-1">
             <Building size={11} /> {cert.issuer}
           </div>
           {cert.date && (
-            <div className="flex items-center gap-1.5 text-[#64B5F6] text-xs">
+            <div className="flex items-center gap-1.5 text-[#9CAFA7] text-xs">
               <Calendar size={11} /> {cert.date}
             </div>
           )}
@@ -191,14 +191,14 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
               <span key={s} className="tech-badge text-[10px] px-2 py-0.5">{s}</span>
             ))}
             {skills.length > 4 && (
-              <span className="text-[10px] text-[#64B5F6] px-2 py-0.5">+{skills.length-4} more</span>
+              <span className="text-[10px] text-[#9CAFA7] px-2 py-0.5">+{skills.length-4} more</span>
             )}
           </div>
         )}
 
         <div className="pt-3 border-t" style={{ borderColor:'rgba(99,120,162,0.12)' }}>
           {cert.credentialId && (
-            <p className="text-[10px] text-[#64B5F6] font-mono mb-2 truncate">ID: {cert.credentialId}</p>
+            <p className="text-[10px] text-[#9CAFA7] font-mono mb-2 truncate">ID: {cert.credentialId}</p>
           )}
           {cert.link && cert.link !== '#' ? (
             <a href={cert.link} target="_blank" rel="noopener noreferrer"
@@ -208,7 +208,7 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
               <ExternalLink size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
             </a>
           ) : (
-            <span className="text-xs text-[#64B5F6] italic">No verify link</span>
+            <span className="text-xs text-[#9CAFA7] italic">No verify link</span>
           )}
         </div>
       </div>
@@ -243,7 +243,7 @@ export default function CertificationsPage() {
             {[
               { name:'IBM', color:'#1F70C1', bg:'rgba(31,112,193,0.1)', border:'rgba(31,112,193,0.3)' },
               { name:'NVIDIA', color:'#76B900', bg:'rgba(118,185,0,0.1)', border:'rgba(118,185,0,0.3)' },
-              { name:'Code with Harry', color:'#818CF8', bg:'rgba(129,140,248,0.1)', border:'rgba(129,140,248,0.3)' },
+              { name:'Code with Harry', color:'#34D399', bg:'rgba(52,211,153,0.1)', border:'rgba(52,211,153,0.3)' },
             ].map(issuer => (
               <span key={issuer.name} style={{
                 display:'inline-flex', alignItems:'center', gap:6,
@@ -252,7 +252,7 @@ export default function CertificationsPage() {
                 border: `1px solid ${issuer.border}`,
                 borderRadius:10,
                 fontSize:13, fontWeight:700, color: issuer.color,
-                fontFamily:'"Plus Jakarta Sans",sans-serif',
+                fontFamily:'"Inter",sans-serif',
               }}>
                 <Award size={13} /> {issuer.name}
               </span>
@@ -270,7 +270,7 @@ export default function CertificationsPage() {
               {certs.filter(c=>c.link && c.link!=='#').length} Verifiable Online
             </span>
             <span className="achievement-chip">
-              <span className="chip-dot" style={{ background:'#818CF8' }} />
+              <span className="chip-dot" style={{ background:'#34D399' }} />
               AI · ML · Data Science · LLMs
             </span>
           </div>
@@ -312,10 +312,10 @@ export default function CertificationsPage() {
           {/* Add placeholder card */}
           {editMode && (
             <button onClick={() => setModal('add')}
-              className="glass-card h-full min-h-[280px] flex flex-col items-center justify-center gap-3 border-2 border-dashed transition-colors hover:border-blue-500/40"
+              className="glass-card h-full min-h-[280px] flex flex-col items-center justify-center gap-3 border-2 border-dashed transition-colors hover:border-emerald-500/40"
               style={{ borderColor:'rgba(99,120,162,0.2)' }}>
-              <Plus size={28} className="text-[#64B5F6]" />
-              <span className="text-xs text-[#64B5F6] font-mono">Add Certification</span>
+              <Plus size={28} className="text-[#9CAFA7]" />
+              <span className="text-xs text-[#9CAFA7] font-mono">Add Certification</span>
             </button>
           )}
         </div>
@@ -324,8 +324,8 @@ export default function CertificationsPage() {
         <div className="mt-14 glass-card p-8 text-center max-w-2xl mx-auto"
           style={{ background:'linear-gradient(135deg,rgba(59,130,246,0.08),rgba(139,92,246,0.08))' }}>
           <Award className="w-10 h-10 text-[#F59E0B] mx-auto mb-3" />
-          <h3 className="text-xl font-800 text-[#E8F0FE] mb-2">Always Learning</h3>
-          <p className="text-[#8EA4C8] text-sm">
+          <h3 className="text-xl font-800 text-[#ECF2EF] mb-2">Always Learning</h3>
+          <p className="text-[#9CAFA7] text-sm">
             Continuously exploring AI/ML, backend engineering, and cloud technologies.
           </p>
         </div>
