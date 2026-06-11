@@ -1,7 +1,47 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Camera, Edit2, Save, X, Plus, Trash2, MapPin, Mail, ExternalLink, Check } from 'lucide-react'
+import { Camera, Edit2, Save, X, Plus, Trash2, MapPin, Mail, ExternalLink, Check, Trophy, Award, Code2, GitPullRequest } from 'lucide-react'
+import { ContainerScroll, CardsContainer, CardTransformed } from '@/components/ui/animated-cards-stack'
+
+const MILESTONES = [
+  {
+    id: 'gsoc',
+    icon: Trophy,
+    tag: 'Google Summer of Code 2026',
+    title: 'Selected #1 Globally',
+    desc: 'Top-ranked contributor worldwide at the PEcAn Project — refactoring the Trait-Meta-analysis pipeline under mentor Mike Dietze (Boston University).',
+    bg: 'rgba(16,185,129,0.16)',
+    color: '#34D399',
+  },
+  {
+    id: 'oss',
+    icon: GitPullRequest,
+    tag: 'Open Source',
+    title: '15+ Merged PRs · 5+ Orgs',
+    desc: '~3000+ lines of code merged across Zulip, JabRef, FreeCAD and CircuitVerse — from caching layers to parser bug fixes.',
+    bg: 'rgba(34,211,238,0.14)',
+    color: '#22D3EE',
+  },
+  {
+    id: 'leetcode',
+    icon: Code2,
+    tag: 'Problem Solving',
+    title: '244+ LeetCode · 1416 Rating',
+    desc: '191 active days, 29-day max streak and the 100 Days Badge 2026 — consistent daily practice in Python and Java.',
+    bg: 'rgba(129,140,248,0.14)',
+    color: '#A5B4FC',
+  },
+  {
+    id: 'certs',
+    icon: Award,
+    tag: 'Certifications',
+    title: 'NVIDIA · IBM Certified',
+    desc: 'Application development with Large Language Models (NVIDIA) and AI fundamentals — diffusion models, NLP, ML (IBM).',
+    bg: 'rgba(244,114,182,0.12)',
+    color: '#F9A8D4',
+  },
+]
 
 const DEFAULT_ABOUT = {
   name: 'Om Shripad Kapale',
@@ -477,6 +517,54 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
+
+      {/* ── Milestones — scroll-stacked cards ── */}
+      <section className="px-4 pt-20">
+        <div className="text-center">
+          <span className="section-badge">Milestones</span>
+          <h2 className="section-heading mt-5" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
+            Moments That Define the Journey
+          </h2>
+          <span className="accent-line" />
+          <p className="hook-subtext mt-2">Keep scrolling — each milestone stacks into place.</p>
+        </div>
+        <ContainerScroll className="container h-[300vh]">
+          <div className="sticky left-0 top-0 h-svh w-full py-12">
+            <CardsContainer className="mx-auto size-full h-[320px] w-[92vw] max-w-[460px]">
+              {MILESTONES.map((m, index) => (
+                <CardTransformed
+                  arrayLength={MILESTONES.length}
+                  key={m.id}
+                  index={index + 2}
+                  variant="dark"
+                  className="items-start justify-evenly !border-white/10 text-left"
+                  style={{ background: m.bg, backdropFilter: 'blur(14px)' }}
+                  role="article"
+                  aria-label={m.title}
+                >
+                  <div className="flex flex-col items-start justify-start space-y-4">
+                    <div
+                      className="flex size-14 items-center justify-center rounded-xl"
+                      style={{ background: 'rgba(5,8,7,0.55)', border: '1px solid var(--border-md)' }}
+                    >
+                      <m.icon size={24} style={{ color: m.color }} />
+                    </div>
+                    <div>
+                      <h4 className="font-mono text-[11px] uppercase tracking-widest" style={{ color: m.color }}>
+                        {m.tag}
+                      </h4>
+                      <h3 className="font-display text-2xl text-white">{m.title}</h3>
+                    </div>
+                  </div>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                    {m.desc}
+                  </p>
+                </CardTransformed>
+              ))}
+            </CardsContainer>
+          </div>
+        </ContainerScroll>
+      </section>
     </div>
   )
 }

@@ -3,8 +3,10 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Github, Zap, ShieldCheck } from 'lucide-react'
+import { Menu, X, Github, Zap, ShieldCheck, Home, Briefcase, User, Mail } from 'lucide-react'
 import { useAdmin } from '@/lib/admin'
+import { NavBar } from '@/components/ui/tubelight-navbar'
+import { ShiftingDropDown } from '@/components/ui/animated-shifting-tab-component'
 
 const NAV = [
   { name: 'Home',     path: '/' },
@@ -15,6 +17,16 @@ const NAV = [
   { name: 'About',    path: '/about' },
   { name: 'Stuff',    path: '/stuff' },
   { name: 'Contact',  path: '/contact' },
+]
+
+/* Primary destinations live in the tubelight nav; the rest move
+   into the ShiftingDropDown "Explore" panel. */
+const PRIMARY_NAV = [
+  { name: 'Home',     url: '/',                  icon: Home },
+  { name: 'Projects', url: '/projects',          icon: Briefcase },
+  { name: 'GitHub',   url: '/github-activities', icon: Github },
+  { name: 'About',    url: '/about',             icon: User },
+  { name: 'Contact',  url: '/contact',           icon: Mail },
 ]
 
 export default function Header() {
@@ -119,26 +131,10 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop nav links */}
-          <div style={{ display:'flex', alignItems:'center', gap:2 }} className="desktop-nav">
-            {NAV.map(item => {
-              const active = isActive(item.path)
-              return (
-                <Link key={item.path} href={item.path} style={{
-                  position:'relative',
-                  padding:'7px 13px',
-                  borderRadius:8,
-                  fontSize:13,
-                  fontWeight: active ? 600 : 500,
-                  fontFamily:'Inter,sans-serif',
-                  textDecoration:'none',
-                  transition:'all 150ms ease',
-                  ...(active ? activeStyle : inactiveStyle),
-                }}>
-                  {item.name}
-                </Link>
-              )
-            })}
+          {/* Desktop nav: tubelight pills + shifting dropdown */}
+          <div style={{ display:'flex', alignItems:'center', gap:10 }} className="desktop-nav">
+            <NavBar items={PRIMARY_NAV} fixed={false} />
+            <ShiftingDropDown />
             {admin && (
               <span style={{
                 display:'inline-flex', alignItems:'center', gap:4,

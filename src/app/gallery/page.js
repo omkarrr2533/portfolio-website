@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Upload, X, ZoomIn, Calendar, Tag, Plus, Trash2, FolderOpen, Image } from 'lucide-react'
+import ScrollExpandMedia from '@/components/ui/scroll-expansion-hero'
 
 const CATEGORIES = ['All', 'Events', 'Achievements', 'Travel', 'Projects', 'Blogs']
 
@@ -181,8 +182,17 @@ export default function GalleryPage() {
   const filtered = filter === 'All' ? items : items.filter(i => i.category === filter)
 
   return (
-    /* FIXED: was #F8FAFC (light), now uses dark theme */
-    <div className="min-h-screen pt-24 pb-16" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-screen pb-16" style={{ background: 'var(--bg)' }}>
+      {/* Scroll-expansion hero — the media grows as you scroll, then the gallery fades in */}
+      <ScrollExpandMedia
+        mediaType="image"
+        mediaSrc="https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1280&auto=format&fit=crop"
+        bgImageSrc="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop"
+        title="Life in Frames"
+        date="Beyond the Code"
+        scrollToExpand="Scroll to expand"
+        textBlend
+      >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 animate-fade-in">
           <span className="section-badge mb-4 block w-fit mx-auto">// photo gallery</span>
@@ -251,6 +261,7 @@ export default function GalleryPage() {
           </div>
         )}
       </div>
+      </ScrollExpandMedia>
 
       {showUpload && <UploadModal onClose={() => setShowUpload(false)} onUpload={add} />}
       {selected && <Lightbox item={selected} onClose={() => setSelected(null)} onDelete={remove} />}

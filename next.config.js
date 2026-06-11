@@ -12,6 +12,7 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.githubusercontent.com' },
       { protocol: 'https', hostname: 'github.com' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },   // ← ADD THIS
+      { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
   reactStrictMode: true,
