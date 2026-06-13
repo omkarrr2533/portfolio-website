@@ -189,10 +189,11 @@ function ProjectCard({ project, index, onEdit, onDelete, isCustom }) {
       max={6}
       scale={1.015}
       glareColor={`${langColor}22`}
-      className="card group h-full"
+      className="card group h-full project-card"
       style={{
         overflow:'hidden',
         borderTop:`2px solid ${langColor}55`,
+        '--lang': langColor,
       }}
     >
       {isCustom && (

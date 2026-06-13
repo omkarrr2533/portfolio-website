@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import SmartImg from '@/components/ui/SmartImg'
 import {
   Github, Linkedin, Mail, ArrowRight, ArrowUpRight,
@@ -147,146 +147,195 @@ function SectionHeading({ eyebrow, title, sub }) {
 /* ─────────────────────────────────────────────────────────
    HERO
 ───────────────────────────────────────────────────────── */
+const FLOAT_CHIPS = [
+  { label: '#1', sub: 'GSoC Rank', pos: { top: '6%', left: '-7%' }, delay: 1.5 },
+  { label: '15+', sub: 'Merged PRs', pos: { bottom: '20%', left: '-9%' }, delay: 1.7 },
+  { label: '244+', sub: 'LeetCode', pos: { top: '14%', right: '-8%' }, delay: 1.9 },
+  { label: '5+', sub: 'OSS Orgs', pos: { bottom: '8%', right: '-6%' }, delay: 2.1 },
+]
+
 function Hero() {
   const name = 'Om Kapale'
+  const heroRef = useRef(null)
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
+  const photoY = useTransform(scrollYProgress, [0, 1], [0, 90])
+  const photoScale = useTransform(scrollYProgress, [0, 1], [1, 0.9])
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 50])
+  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   const letterContainer = {
-    visible: { transition: { staggerChildren: 0.055, delayChildren: 0.35 } },
+    visible: { transition: { staggerChildren: 0.05, delayChildren: 0.3 } },
   }
   const letter = {
-    hidden: { opacity: 0, y: 60 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1.1, ease: [0.2, 0.65, 0.3, 0.9] } },
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.2, 0.65, 0.3, 0.9] } },
   }
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
+    <section ref={heroRef} className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
       <WovenCanvas />
       {/* readability scrim over the weave */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 70% 55% at 50% 50%, rgba(5,8,7,0.55), rgba(5,8,7,0.85) 90%)' }}
+        style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 45%, rgba(5,8,7,0.45), rgba(5,8,7,0.88) 92%)' }}
         aria-hidden="true"
       />
 
-      <div className="relative z-10 text-center px-4 pt-24 pb-16 max-w-4xl mx-auto">
-        {/* GSoC badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.7, ease: EASE }}
-          className="mb-8 flex justify-center"
-        >
-          <span className="available-badge">
-            <span className="available-dot" />
-            GSoC 2026 · PEcAn Project · Selected #1 Globally
-          </span>
-        </motion.div>
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-5 pt-28 pb-20 grid items-center gap-10 lg:gap-6 lg:grid-cols-[1.05fr_0.95fr]">
 
-        {/* Name — letter by letter */}
-        <motion.h1
-          initial="hidden"
-          animate="visible"
-          variants={letterContainer}
-          className="font-display text-white"
-          style={{
-            fontSize: 'clamp(56px, 11vw, 120px)',
-            lineHeight: 1.02,
-            textShadow: '0 0 60px rgba(52,211,153,0.22)',
-          }}
-        >
-          {name.split(' ').map((word, wi) => (
-            <span key={wi} className="inline-block whitespace-nowrap">
-              {word.split('').map((ch, i) => (
-                <motion.span key={i} variants={letter} className="inline-block">
-                  {ch}
-                </motion.span>
-              ))}
-              {wi < name.split(' ').length - 1 && <span>&nbsp;</span>}
-            </span>
-          ))}
-        </motion.h1>
-
-        {/* Role line */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.9 }}
-          className="mt-6 font-mono text-[11px] sm:text-xs tracking-[0.35em] uppercase"
-          style={{ color: '#34D399' }}
-        >
-          Backend Developer&nbsp;&nbsp;·&nbsp;&nbsp;Open Source Contributor
-        </motion.p>
-
-        {/* Bio */}
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.35, duration: 0.9, ease: EASE }}
-          className="mx-auto mt-6 max-w-xl text-base sm:text-lg leading-relaxed"
-          style={{ color: 'var(--text-secondary)' }}
-        >
-          Final-year CSE student weaving scalable backends with Java, Spring Boot
-          &amp; Python — and contributing across the open-source ecosystem.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.6, duration: 0.9, ease: EASE }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-4"
-        >
-          <LiquidButton
-            size="xl"
-            className="rounded-full font-semibold"
-            onClick={() => document.getElementById('gsoc')?.scrollIntoView({ behavior: 'smooth' })}
+        {/* ── Left: copy ── */}
+        <motion.div style={{ y: textY, opacity: fade }} className="text-center lg:text-left order-2 lg:order-1">
+          {/* GSoC badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.7, ease: EASE }}
+            className="mb-7 flex justify-center lg:justify-start"
           >
-            Explore My Work <ArrowRight size={16} />
-          </LiquidButton>
-          <a href="/resume.pdf" download className="btn btn-secondary btn-lg" style={{ borderRadius: 999 }}>
-            <Download size={15} /> Resume
-          </a>
+            <span className="available-badge">
+              <span className="available-dot" />
+              GSoC 2026 · Selected #1 Globally
+            </span>
+          </motion.div>
+
+          {/* Name — letter by letter */}
+          <motion.h1
+            initial="hidden"
+            animate="visible"
+            variants={letterContainer}
+            className="font-display text-white"
+            style={{ fontSize: 'clamp(48px, 8vw, 92px)', lineHeight: 1.0, textShadow: '0 0 60px rgba(52,211,153,0.22)' }}
+          >
+            {name.split(' ').map((word, wi) => (
+              <span key={wi} className="inline-block whitespace-nowrap">
+                {word.split('').map((ch, i) => (
+                  <motion.span key={i} variants={letter} className="inline-block">{ch}</motion.span>
+                ))}
+                {wi < name.split(' ').length - 1 && <span>&nbsp;</span>}
+              </span>
+            ))}
+          </motion.h1>
+
+          {/* Role line */}
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 1.0, duration: 0.9 }}
+            className="mt-5 font-mono text-[11px] sm:text-xs tracking-[0.32em] uppercase"
+            style={{ color: '#34D399' }}
+          >
+            Backend Developer&nbsp;&nbsp;·&nbsp;&nbsp;Open Source Contributor
+          </motion.p>
+
+          {/* Bio */}
+          <motion.p
+            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.25, duration: 0.9, ease: EASE }}
+            className="mx-auto lg:mx-0 mt-5 max-w-md text-base sm:text-lg leading-relaxed"
+            style={{ color: 'var(--text-secondary)' }}
+          >
+            Final-year CSE student weaving scalable backends with Java, Spring Boot
+            &amp; Python — and contributing across the open-source ecosystem.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5, duration: 0.9, ease: EASE }}
+            className="mt-9 flex flex-wrap items-center justify-center lg:justify-start gap-4"
+          >
+            <LiquidButton size="xl" className="rounded-full font-semibold"
+              onClick={() => document.getElementById('gsoc')?.scrollIntoView({ behavior: 'smooth' })}>
+              Explore My Work <ArrowRight size={16} />
+            </LiquidButton>
+            <a href="/resume.pdf" download className="btn btn-secondary btn-lg" style={{ borderRadius: 999 }}>
+              <Download size={15} /> Resume
+            </a>
+          </motion.div>
+
+          {/* Socials */}
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 1.8, duration: 0.9 }}
+            className="mt-9 flex items-center justify-center lg:justify-start gap-3"
+          >
+            {SOCIALS.map((s) => (
+              <a key={s.label} href={s.url}
+                target={s.url.startsWith('mailto') ? '_self' : '_blank'} rel="noopener noreferrer" aria-label={s.label}
+                className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-200 hover:-translate-y-0.5"
+                style={{ borderColor: 'var(--border-md)', color: 'var(--text-secondary)', background: 'rgba(10,16,14,0.6)', backdropFilter: 'blur(8px)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(16,185,129,0.45)'; e.currentTarget.style.color = '#34D399' }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-md)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+              >
+                <s.icon size={17} />
+              </a>
+            ))}
+          </motion.div>
         </motion.div>
 
-        {/* Socials */}
+        {/* ── Right: portrait ── */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.9, duration: 0.9 }}
-          className="mt-10 flex items-center justify-center gap-3"
+          style={{ y: photoY, scale: photoScale, opacity: fade }}
+          className="relative mx-auto order-1 lg:order-2 w-full max-w-[330px] sm:max-w-[370px]"
         >
-          {SOCIALS.map((s) => (
-            <a
-              key={s.label}
-              href={s.url}
-              target={s.url.startsWith('mailto') ? '_self' : '_blank'}
-              rel="noopener noreferrer"
-              aria-label={s.label}
-              className="flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-200 hover:-translate-y-0.5"
-              style={{
-                borderColor: 'var(--border-md)',
-                color: 'var(--text-secondary)',
-                background: 'rgba(10,16,14,0.6)',
-                backdropFilter: 'blur(8px)',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(16,185,129,0.45)'; e.currentTarget.style.color = '#34D399' }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-md)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
-            >
-              <s.icon size={17} />
-            </a>
-          ))}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.86, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 1, ease: EASE }}
+            className="relative"
+          >
+            {/* glow */}
+            <div className="absolute -inset-6 rounded-[40px] blur-3xl opacity-70 featured-glow pointer-events-none"
+              style={{ background: 'radial-gradient(circle at 50% 40%, rgba(16,185,129,0.45), rgba(34,211,238,0.18), transparent 70%)' }}
+              aria-hidden="true" />
+
+            {/* portrait frame */}
+            <div className="hero-portrait relative">
+              <SmartImg
+                candidates={['/images/headshot.jpg', '/images/profile.jpg']}
+                alt="Om Kapale"
+                className="relative w-full"
+                style={{ aspectRatio: '4 / 5', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+              />
+              {/* subtle inner gradient for legibility of overlapping chips */}
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(180deg, transparent 60%, rgba(5,8,7,0.35))', borderRadius: 'inherit' }} />
+            </div>
+
+            {/* floating stat chips */}
+            {FLOAT_CHIPS.map((c) => (
+              <motion.div
+                key={c.sub}
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: c.delay, duration: 0.6, ease: EASE }}
+                className="absolute hidden sm:flex animate-float"
+                style={{ ...c.pos, animationDelay: `${c.delay}s` }}
+              >
+                <div className="flex flex-col items-center rounded-2xl px-3.5 py-2"
+                  style={{ background: 'rgba(6,11,9,0.82)', border: '1px solid rgba(16,185,129,0.3)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 28px rgba(0,0,0,0.5)' }}>
+                  <span className="font-mono font-extrabold text-base" style={{ color: '#34D399' }}>{c.label}</span>
+                  <span className="font-mono text-[9px] tracking-wide" style={{ color: 'var(--text-muted)' }}>{c.sub}</span>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
       </div>
 
       {/* Scroll cue */}
       <motion.div
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 flex flex-col items-center gap-1.5"
-        style={{ color: 'var(--text-faint)' }}
+        style={{ opacity: fade }}
+        className="absolute bottom-7 left-1/2 z-10 -translate-x-1/2 flex flex-col items-center gap-1.5"
       >
-        <span className="font-mono text-[9px] tracking-[0.3em]">SCROLL</span>
-        <ChevronDown size={14} />
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex flex-col items-center gap-1.5"
+          style={{ color: 'var(--text-faint)' }}
+        >
+          <span className="font-mono text-[9px] tracking-[0.3em]">SCROLL</span>
+          <ChevronDown size={14} />
+        </motion.div>
       </motion.div>
     </section>
   )
