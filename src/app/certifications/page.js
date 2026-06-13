@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Award, ExternalLink, Calendar, Building, Plus, Edit2, Trash2, Save, X, FileText, Sparkles, ShieldCheck } from 'lucide-react'
+import { Award, ExternalLink, Calendar, Building, Plus, Edit2, Trash2, Save, X, FileText, Sparkles, ShieldCheck, Eye } from 'lucide-react'
 import Reveal from '@/components/ui/Reveal'
 import TiltCard from '@/components/ui/TiltCard'
+import { useAdmin } from '@/lib/admin'
 
 const EASE = [0.22, 1, 0.36, 1]
 
@@ -23,7 +24,7 @@ const REAL_CERTS = [
     issuer:'IBM', date:'August 2025',
     credentialId:'33511d2d-4bbf-4716-a021-4548025fa128',
     link:'https://www.credly.com/badges/33511d2d-4bbf-4716-a021-4548025fa128',
-    pdf:'/certificates/ibm-ai-fundamentals.pdf',
+    pdf:'/certificates/ibm-ai-fundamentals.pdf', image:'/images/certs/ibm.jpg',
     skills:['AI Fundamentals','Machine Learning','Deep Learning','NLP'],
     color:'from-blue-600 to-cyan-500', accent:'#1F70C1',
   },
@@ -32,7 +33,7 @@ const REAL_CERTS = [
     issuer:'NVIDIA', date:'August 2025',
     credentialId:'RpH1b8OtRK2Kg4KNsOyO4g',
     link:'https://learn.nvidia.com/certificates?id=RpH1b8OtRK2Kg4KNsOyO4g',
-    pdf:'/certificates/nvidia-rapid-llm.pdf',
+    pdf:'/certificates/nvidia-rapid-llm.pdf', image:'/images/certs/nvidia-rapid.jpg',
     skills:['LLM Fundamentals','Prompt Engineering','Few-Shot Learning','Fine-Tuning','API Integration','Docker','Cloud Deployment'],
     color:'from-green-500 to-emerald-600', accent:'#76B900',
   },
@@ -40,7 +41,7 @@ const REAL_CERTS = [
     id:'c3', title:'The Ultimate Job Ready Data Science Course',
     issuer:'Code with Harry', date:'October 2025',
     credentialId:'CWH-THE-ULTIMATE-JOB-READY-DATA-SCIENCE-COURSE-JGXUEIGY',
-    link:'#', pdf:'/certificates/data-science-course.pdf',
+    link:'#', pdf:'/certificates/data-science-course.pdf', image:'/images/certs/data-science.jpg',
     skills:['Python','NumPy','Pandas','Matplotlib','Seaborn','Statistics','Data Analysis'],
     color:'from-purple-500 to-pink-500', accent:'#8B5CF6',
   },
@@ -55,18 +56,20 @@ const COLOR_OPTIONS = [
   { label:'Red',    value:'from-red-500 to-pink-500',      accent:'#EF4444' },
 ]
 
-// Resolve the best "verify / view" destination for a cert
+// Whether a cert is verifiable/viewable at all (used for the stats count)
 function verifyHref(cert) {
   if (cert.link && cert.link !== '#') return cert.link
   if (cert.pdf) return cert.pdf
   if (cert.image) return cert.image
   return null
 }
-function verifyLabel(cert) {
-  if (cert.link && cert.link !== '#') return 'Verify Certificate'
-  if (cert.pdf) return 'View Certificate'
-  if (cert.image) return 'View Certificate'
-  return null
+// The actual certificate artwork to show in the in-page preview modal
+function previewSrc(cert) {
+  return cert.image || cert.pdf || null
+}
+// A real external verification URL (Credly / NVIDIA), if any — not a local file
+function externalLink(cert) {
+  return cert.link && cert.link !== '#' ? cert.link : null
 }
 
 const CERTS_KEY = 'certifications_v2'
@@ -206,8 +209,8 @@ function EditModal({ cert, onSave, onClose }) {
 }
 
 // ── Featured certificate spotlight ────────────────
-function FeaturedCert({ cert }) {
-  const href = verifyHref(cert)
+function FeaturedCert({ cert, onPreview }) {
+  const canPreview = !!previewSrc(cert)
   return (
     <Reveal y={40} duration={0.75} className="mb-14">
       <div className="relative">
@@ -224,9 +227,19 @@ function FeaturedCert({ cert }) {
             <TiltCard max={5} glareColor="rgba(118,185,0,0.18)"
               className="relative p-5 sm:p-8 flex items-center justify-center"
               style={{ background:'linear-gradient(135deg, rgba(118,185,0,0.06), rgba(10,16,14,0.4))', minHeight:300 }}>
-              <div className="relative w-full max-w-[440px] rounded-xl overflow-hidden"
+              <div className="relative w-full max-w-[440px] rounded-xl overflow-hidden cursor-pointer group/cert"
+                onClick={() => canPreview && onPreview?.()}
                 style={{ aspectRatio:'1 / 1', border:'1px solid rgba(236,242,239,0.14)', boxShadow:'0 20px 60px rgba(0,0,0,0.55)' }}>
                 <CertImage cert={cert} />
+                {canPreview && (
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/cert:opacity-100 transition-opacity"
+                    style={{ background:'rgba(5,8,7,0.4)' }}>
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-700"
+                      style={{ background:'rgba(5,8,7,0.85)', border:'1px solid rgba(236,242,239,0.2)', color:'#ECF2EF', backdropFilter:'blur(6px)' }}>
+                      <Eye size={13} /> Click to preview
+                    </span>
+                  </div>
+                )}
               </div>
             </TiltCard>
 
@@ -261,12 +274,19 @@ function FeaturedCert({ cert }) {
                 </p>
               )}
 
-              {href && (
-                <a href={href} target="_blank" rel="noopener noreferrer"
-                  className="btn-primary w-fit text-sm py-2.5 px-5">
-                  {verifyLabel(cert)} <ExternalLink size={14}/>
-                </a>
-              )}
+              <div className="flex flex-wrap items-center gap-3">
+                {canPreview && (
+                  <button onClick={onPreview} className="btn-primary w-fit text-sm py-2.5 px-5">
+                    <Eye size={14}/> View Certificate
+                  </button>
+                )}
+                {externalLink(cert) && (
+                  <a href={externalLink(cert)} target="_blank" rel="noopener noreferrer"
+                    className="btn-secondary w-fit text-sm py-2.5 px-5">
+                    Verify Credential <ExternalLink size={14}/>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -276,9 +296,10 @@ function FeaturedCert({ cert }) {
 }
 
 // ── Cert card ─────────────────────────────────────
-function CertCard({ cert, editMode, onEdit, onDelete }) {
+function CertCard({ cert, editMode, onEdit, onDelete, onPreview }) {
   const skills = Array.isArray(cert.skills) ? cert.skills : []
-  const href = verifyHref(cert)
+  const ext = externalLink(cert)
+  const canPreview = !!previewSrc(cert)
   return (
     <TiltCard className="group glass-card glass-card-lift overflow-hidden h-full" max={8}
       glareColor="rgba(52,211,153,0.16)" style={{ borderRadius:16 }}>
@@ -287,12 +308,24 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
       <div className={`h-1.5 w-full bg-gradient-to-r ${cert.color}`} />
 
       {/* Badge / image area */}
-      <div className="relative h-40 overflow-hidden">
+      <div className="relative h-40 overflow-hidden cursor-pointer"
+        onClick={() => canPreview && onPreview?.()}>
         <CertImage cert={cert} className="transition-transform duration-500 group-hover:scale-[1.06]" />
         <div className="absolute inset-0" style={{ background:'linear-gradient(180deg, transparent 55%, rgba(5,8,7,0.55))' }} />
 
+        {/* Hover preview affordance */}
+        {canPreview && (
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[5]"
+            style={{ background:'rgba(5,8,7,0.35)' }}>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-700"
+              style={{ background:'rgba(5,8,7,0.85)', border:'1px solid rgba(236,242,239,0.2)', color:'#ECF2EF', backdropFilter:'blur(6px)' }}>
+              <Eye size={12} /> Preview
+            </span>
+          </div>
+        )}
+
         {/* Issuer chip */}
-        <span className="absolute bottom-2.5 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-700"
+        <span className="absolute bottom-2.5 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-700 z-[6]"
           style={{ background:'rgba(5,8,7,0.7)', border:'1px solid rgba(236,242,239,0.15)', color:'#ECF2EF', backdropFilter:'blur(6px)' }}>
           <Award size={10} style={{ color: cert.accent }} /> {cert.issuer}
         </span>
@@ -336,33 +369,106 @@ function CertCard({ cert, editMode, onEdit, onDelete }) {
           </div>
         )}
 
-        <div className="pt-3 border-t" style={{ borderColor:'rgba(99,120,162,0.12)' }}>
-          {cert.credentialId && (
-            <p className="text-[10px] text-[#9CAFA7] font-mono mb-2 truncate">ID: {cert.credentialId}</p>
-          )}
-          {href ? (
-            <a href={href} target="_blank" rel="noopener noreferrer"
+        <div className="pt-3 border-t flex items-center justify-between gap-2" style={{ borderColor:'rgba(99,120,162,0.12)' }}>
+          {ext ? (
+            <a href={ext} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-600 transition-colors group/link"
               style={{ color: cert.accent }}>
-              {cert.pdf && (!cert.link || cert.link === '#') ? <FileText size={11}/> : null}
-              {verifyLabel(cert)}
+              Verify Credential
               <ExternalLink size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
             </a>
-          ) : (
-            <span className="text-xs text-[#9CAFA7] italic">No verify link</span>
-          )}
+          ) : <span />}
+          {canPreview ? (
+            <button onClick={onPreview}
+              className="inline-flex items-center gap-1.5 text-xs font-600 transition-colors shrink-0"
+              style={{ color: cert.accent }}>
+              {cert.pdf && !cert.image ? <FileText size={11}/> : <Eye size={12}/>} View Certificate
+            </button>
+          ) : !ext && <span className="text-xs text-[#9CAFA7] italic">No link</span>}
         </div>
       </div>
     </TiltCard>
   )
 }
 
+// ── Certificate preview modal — shows the real certificate (image, else PDF) ──
+function CertPreviewModal({ cert, onClose }) {
+  // Prefer an image; if it 404s, fall back to the bundled PDF.
+  const [imgFailed, setImgFailed] = useState(false)
+  const showImg = !!cert.image && !imgFailed
+  const pdf = cert.pdf || ''
+  const link = externalLink(cert)
+  const openHref = pdf || cert.image || null   // reliable "open" target
+
+  return (
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 300 }}>
+      <div onClick={e => e.stopPropagation()} className="animate-scale-in"
+        style={{
+          width:'100%', maxWidth: 920, maxHeight:'92vh', display:'flex', flexDirection:'column',
+          background:'var(--bg-card)', border:'1px solid rgba(118,185,0,0.25)', borderRadius:18,
+          boxShadow:'0 0 50px rgba(0,0,0,0.7), 0 0 30px rgba(118,185,0,0.12)', overflow:'hidden',
+        }}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3.5"
+          style={{ borderBottom:'1px solid rgba(236,242,239,0.08)', background:'rgba(5,8,7,0.5)' }}>
+          <div className="min-w-0">
+            <p className="font-mono text-[10px] tracking-widest mb-0.5" style={{ color: cert.accent }}>
+              {cert.issuer.toUpperCase()}
+            </p>
+            <h3 className="text-sm font-700 text-[#ECF2EF] truncate">{cert.title}</h3>
+          </div>
+          <button onClick={onClose} className="text-[#9CAFA7] hover:text-white shrink-0 ml-3"><X size={18}/></button>
+        </div>
+
+        {/* Body */}
+        <div style={{ flex:1, minHeight:0, background:'#0a0f0d', display:'flex', alignItems:'center', justifyContent:'center' }}>
+          {showImg ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={cert.image} alt={cert.title} onError={() => setImgFailed(true)}
+              style={{ maxWidth:'100%', maxHeight:'78vh', objectFit:'contain' }} />
+          ) : pdf ? (
+            <iframe
+              src={`${pdf}#toolbar=0&navpanes=0&view=FitH`}
+              title={cert.title}
+              style={{ width:'100%', height:'min(78vh, 760px)', border:0, background:'#fff' }}
+            />
+          ) : (
+            <div className="text-center p-12">
+              <Award className="w-14 h-14 mx-auto mb-3" style={{ color: cert.accent }} />
+              <p className="text-sm text-[#9CAFA7]">Certificate preview coming soon.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        {(openHref || link) && (
+          <div className="px-5 py-3 flex items-center justify-end gap-2 flex-wrap" style={{ borderTop:'1px solid rgba(236,242,239,0.08)' }}>
+            {openHref && (
+              <a href={openHref} target="_blank" rel="noopener noreferrer" className="btn-secondary text-xs py-2 px-4">
+                Open in new tab <ExternalLink size={12}/>
+              </a>
+            )}
+            {link && (
+              <a href={link} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs py-2 px-4">
+                Verify Credential <ExternalLink size={12}/>
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ═══════════════════════════════════════════════
 export default function CertificationsPage() {
   const { certs, update, remove, add } = useCerts()
+  const admin = useAdmin()
   const [editMode, setEditMode] = useState(false)
   const [modal, setModal] = useState(null) // null | 'add' | cert object
+  const [preview, setPreview] = useState(null) // cert object | null
 
+  const editing = admin && editMode
   const featured = certs.find(c => c.featured)
   const rest = certs.filter(c => !c.featured)
 
@@ -423,25 +529,27 @@ export default function CertificationsPage() {
 
       <div className="container mx-auto px-4 sm:px-6">
 
-        {/* Controls */}
-        <div className="flex items-center justify-end mb-8 flex-wrap gap-3">
-          <div className="flex gap-2">
-            <button onClick={() => setEditMode(v=>!v)}
-              className={`text-sm font-mono flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
-                         : 'btn-secondary'
-              }`}
-            >
-              {editMode ? <><Save size={12}/> Done Editing</> : <><Edit2 size={12}/> Edit</>}
-            </button>
-            <button onClick={() => setModal('add')} className="btn-primary text-sm py-2 px-4">
-              <Plus size={15}/> Add Cert
-            </button>
+        {/* Controls — admin only */}
+        {admin && (
+          <div className="flex items-center justify-end mb-8 flex-wrap gap-3">
+            <div className="flex gap-2">
+              <button onClick={() => setEditMode(v=>!v)}
+                className={`text-sm font-mono flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                  editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
+                           : 'btn-secondary'
+                }`}
+              >
+                {editMode ? <><Save size={12}/> Done Editing</> : <><Edit2 size={12}/> Edit</>}
+              </button>
+              <button onClick={() => setModal('add')} className="btn-primary text-sm py-2 px-4">
+                <Plus size={15}/> Add Cert
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Featured certificate */}
-        {featured && <FeaturedCert cert={featured} />}
+        {featured && <FeaturedCert cert={featured} onPreview={() => setPreview(featured)} />}
 
         {/* Section label */}
         <Reveal className="mb-6">
@@ -463,15 +571,16 @@ export default function CertificationsPage() {
             >
               <CertCard
                 cert={cert}
-                editMode={editMode}
+                editMode={editing}
                 onEdit={() => setModal(cert)}
                 onDelete={() => remove(cert.id)}
+                onPreview={() => setPreview(cert)}
               />
             </motion.div>
           ))}
 
           {/* Add placeholder card */}
-          {editMode && (
+          {editing && (
             <button onClick={() => setModal('add')}
               className="glass-card h-full min-h-[280px] flex flex-col items-center justify-center gap-3 border-2 border-dashed transition-colors hover:border-emerald-500/40"
               style={{ borderColor:'rgba(99,120,162,0.2)' }}>
@@ -494,8 +603,11 @@ export default function CertificationsPage() {
         </Reveal>
       </div>
 
-      {/* Modal */}
-      {modal && (
+      {/* Certificate preview modal */}
+      {preview && <CertPreviewModal cert={preview} onClose={() => setPreview(null)} />}
+
+      {/* Edit / add modal — admin only */}
+      {admin && modal && (
         <EditModal
           cert={modal === 'add' ? null : modal}
           onClose={() => setModal(null)}

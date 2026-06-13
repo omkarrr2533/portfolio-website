@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Camera, Edit2, Save, X, Plus, Trash2, MapPin, Mail, ExternalLink, Check, Trophy, Award, Code2, GitPullRequest } from 'lucide-react'
 import { ContainerScroll, CardsContainer, CardTransformed } from '@/components/ui/animated-cards-stack'
 import SmartImg from '@/components/ui/SmartImg'
+import { useAdmin } from '@/lib/admin'
 
 const MILESTONES = [
   {
@@ -172,16 +173,19 @@ function SectionTitle({ children }) {
 
 export default function AboutPage() {
   const { data, update, photo, savePhoto } = useAbout()
-  const [editMode, setEditMode] = useState(false)
+  const admin = useAdmin()
+  const [rawEdit, setRawEdit] = useState(false)
+  const editMode = admin && rawEdit   // editing is only ever active for an authenticated admin
   const photoRef = useRef(null)
 
   useEffect(() => {
+    if (!admin) return
     const handler = (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'E') setEditMode(v => !v)
+      if (e.ctrlKey && e.shiftKey && e.key === 'E') setRawEdit(v => !v)
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [])
+  }, [admin])
 
   const addExperience = () => {
     const next = [...data.experience, {
@@ -206,16 +210,18 @@ export default function AboutPage() {
       <div className="page-hook-banner" style={{ paddingTop: 96 }}>
         <div className="container mx-auto px-4 sm:px-6" style={{ maxWidth: 860 }}>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
-            <button onClick={() => setEditMode(v=>!v)}
-              className={`text-xs font-mono flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
-                editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
-                         : 'text-[#9CAFA7] bg-white/5 border border-white/10 hover:border-emerald-500/30'
-              }`}
-            >
-              {editMode ? <><Save size={11}/> Editing</> : <><Edit2 size={11}/> Edit</>}
-            </button>
-          </div>
+          {admin && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 24 }}>
+              <button onClick={() => setRawEdit(v=>!v)}
+                className={`text-xs font-mono flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+                  editMode ? 'text-green-400 bg-green-500/10 border border-green-500/30'
+                           : 'text-[#9CAFA7] bg-white/5 border border-white/10 hover:border-emerald-500/30'
+                }`}
+              >
+                {editMode ? <><Save size={11}/> Editing</> : <><Edit2 size={11}/> Edit</>}
+              </button>
+            </div>
+          )}
 
           <span className="section-badge" style={{ marginBottom: 18, display: 'inline-flex' }}>// about me</span>
 

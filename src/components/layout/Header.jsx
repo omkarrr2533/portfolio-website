@@ -7,6 +7,7 @@ import { Menu, X, Github, Zap, ShieldCheck, Home, Briefcase, User, Mail } from '
 import { useAdmin } from '@/lib/admin'
 import { NavBar } from '@/components/ui/tubelight-navbar'
 import { ShiftingDropDown } from '@/components/ui/animated-shifting-tab-component'
+import Logo from '@/components/ui/Logo'
 
 const NAV = [
   { name: 'Home',     path: '/' },
@@ -114,14 +115,7 @@ export default function Header() {
 
           {/* Logo */}
           <Link href="/" style={{ display:'flex', alignItems:'center', gap:10, textDecoration:'none' }}>
-            <div style={{
-              width:36, height:36, borderRadius:10,
-              background:'linear-gradient(135deg,#10B981,#0D9488)',
-              display:'flex', alignItems:'center', justifyContent:'center',
-              fontFamily:'"Playfair Display",Georgia,serif', fontWeight:700, fontSize:15, color:'#04150F',
-              boxShadow:'0 0 18px rgba(16,185,129,0.4)',
-              flexShrink:0,
-            }}>OK</div>
+            <Logo size={38} />
             <div className="desktop-nav">
               <p style={{ fontFamily:'Inter,sans-serif', fontWeight:700, fontSize:15, color:'#ECF2EF', lineHeight:1, letterSpacing:'0.01em' }}>Om Kapale</p>
               <div style={{ display:'flex', alignItems:'center', gap:5, marginTop:3 }}>
