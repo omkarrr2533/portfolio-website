@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
+import { motion } from 'framer-motion'
 import {
   ExternalLink, Github, Search, Code2, X, Star, GitFork,
   RefreshCw, Globe, Lock, Plus, Edit2, Trash2, Save,
@@ -8,6 +9,9 @@ import {
 } from 'lucide-react'
 import { AdminOnly, useAdmin } from '@/lib/admin'
 import { CardStack } from '@/components/ui/card-stack'
+import TiltCard from '@/components/ui/TiltCard'
+
+const EASE = [0.22, 1, 0.36, 1]
 
 /* Fan-stack showcase data for the flagship projects */
 const SHOWCASE = [
@@ -181,11 +185,13 @@ function ProjectCard({ project, index, onEdit, onDelete, isCustom }) {
   const admin = useAdmin()
 
   return (
-    <div
-      className="card card-lift animate-slide-up"
+    <TiltCard
+      max={6}
+      scale={1.015}
+      glareColor={`${langColor}22`}
+      className="card group h-full"
       style={{
-        overflow:'hidden', position:'relative',
-        animationDelay:`${index*45}ms`, animationFillMode:'both',
+        overflow:'hidden',
         borderTop:`2px solid ${langColor}55`,
       }}
     >
@@ -235,7 +241,7 @@ function ProjectCard({ project, index, onEdit, onDelete, isCustom }) {
           </div>
         )}
 
-        <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:10, borderTop:'1px solid #F1F5F9' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10, paddingTop:10, borderTop:'1px solid rgba(236,242,239,0.08)' }}>
           {project.language && (
             <span style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color:'#9CAFA7' }}>
               <span style={{ width:8, height:8, borderRadius:'50%', background:langColor, display:'inline-block' }}/>
@@ -258,7 +264,7 @@ function ProjectCard({ project, index, onEdit, onDelete, isCustom }) {
           </div>
         </div>
       </div>
-    </div>
+    </TiltCard>
   )
 }
 
@@ -507,14 +513,21 @@ export default function ProjectsPage() {
           <>
             <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))', gap:16 }}>
               {filtered.map((project,i)=>(
-                <ProjectCard
+                <motion.div
                   key={project.id||project.name}
-                  project={project}
-                  index={i}
-                  isCustom={project.isCustom}
-                  onEdit={p=>setModal(p)}
-                  onDelete={remove}
-                />
+                  initial={{ opacity:0, y:34 }}
+                  whileInView={{ opacity:1, y:0 }}
+                  viewport={{ once:true, margin:'-40px' }}
+                  transition={{ delay:Math.min(i,8)*0.06, duration:0.5, ease:EASE }}
+                >
+                  <ProjectCard
+                    project={project}
+                    index={i}
+                    isCustom={project.isCustom}
+                    onEdit={p=>setModal(p)}
+                    onDelete={remove}
+                  />
+                </motion.div>
               ))}
             </div>
             <p style={{ textAlign:'center', fontSize:11, fontFamily:'JetBrains Mono,monospace', color:'#CBD5E1', marginTop:28 }}>
