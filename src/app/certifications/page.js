@@ -24,7 +24,7 @@ const REAL_CERTS = [
     issuer:'IBM', date:'August 2025',
     credentialId:'33511d2d-4bbf-4716-a021-4548025fa128',
     link:'https://www.credly.com/badges/33511d2d-4bbf-4716-a021-4548025fa128',
-    pdf:'/certificates/ibm-ai-fundamentals.pdf',
+    pdf:'/certificates/ibm-ai-fundamentals.pdf', image:'/images/certs/ibm.jpg',
     skills:['AI Fundamentals','Machine Learning','Deep Learning','NLP'],
     color:'from-blue-600 to-cyan-500', accent:'#1F70C1',
   },
@@ -33,7 +33,7 @@ const REAL_CERTS = [
     issuer:'NVIDIA', date:'August 2025',
     credentialId:'RpH1b8OtRK2Kg4KNsOyO4g',
     link:'https://learn.nvidia.com/certificates?id=RpH1b8OtRK2Kg4KNsOyO4g',
-    pdf:'/certificates/nvidia-rapid-llm.pdf',
+    pdf:'/certificates/nvidia-rapid-llm.pdf', image:'/images/certs/nvidia-rapid.jpg',
     skills:['LLM Fundamentals','Prompt Engineering','Few-Shot Learning','Fine-Tuning','API Integration','Docker','Cloud Deployment'],
     color:'from-green-500 to-emerald-600', accent:'#76B900',
   },
@@ -41,7 +41,7 @@ const REAL_CERTS = [
     id:'c3', title:'The Ultimate Job Ready Data Science Course',
     issuer:'Code with Harry', date:'October 2025',
     credentialId:'CWH-THE-ULTIMATE-JOB-READY-DATA-SCIENCE-COURSE-JGXUEIGY',
-    link:'#', pdf:'/certificates/data-science-course.pdf',
+    link:'#', pdf:'/certificates/data-science-course.pdf', image:'/images/certs/data-science.jpg',
     skills:['Python','NumPy','Pandas','Matplotlib','Seaborn','Statistics','Data Analysis'],
     color:'from-purple-500 to-pink-500', accent:'#8B5CF6',
   },
@@ -391,12 +391,14 @@ function CertCard({ cert, editMode, onEdit, onDelete, onPreview }) {
   )
 }
 
-// ── Certificate preview modal — shows the real certificate (PDF or image) ──
+// ── Certificate preview modal — shows the real certificate (image, else PDF) ──
 function CertPreviewModal({ cert, onClose }) {
-  const src = previewSrc(cert)
-  const isPdf = !!src && src.toLowerCase().endsWith('.pdf')
-  const [imgOk, setImgOk] = useState(true)
+  // Prefer an image; if it 404s, fall back to the bundled PDF.
+  const [imgFailed, setImgFailed] = useState(false)
+  const showImg = !!cert.image && !imgFailed
+  const pdf = cert.pdf || ''
   const link = externalLink(cert)
+  const openHref = pdf || cert.image || null   // reliable "open" target
 
   return (
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 300 }}>
@@ -420,35 +422,29 @@ function CertPreviewModal({ cert, onClose }) {
 
         {/* Body */}
         <div style={{ flex:1, minHeight:0, background:'#0a0f0d', display:'flex', alignItems:'center', justifyContent:'center' }}>
-          {!src ? (
-            <div className="text-center p-12">
-              <Award className="w-14 h-14 mx-auto mb-3" style={{ color: cert.accent }} />
-              <p className="text-sm text-[#9CAFA7]">Certificate preview coming soon.</p>
-            </div>
-          ) : isPdf ? (
+          {showImg ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={cert.image} alt={cert.title} onError={() => setImgFailed(true)}
+              style={{ maxWidth:'100%', maxHeight:'78vh', objectFit:'contain' }} />
+          ) : pdf ? (
             <iframe
-              src={`${src}#toolbar=0&navpanes=0&view=FitH`}
+              src={`${pdf}#toolbar=0&navpanes=0&view=FitH`}
               title={cert.title}
               style={{ width:'100%', height:'min(78vh, 760px)', border:0, background:'#fff' }}
             />
-          ) : imgOk ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={src} alt={cert.title} onError={() => setImgOk(false)}
-              style={{ maxWidth:'100%', maxHeight:'78vh', objectFit:'contain' }} />
           ) : (
             <div className="text-center p-12">
               <Award className="w-14 h-14 mx-auto mb-3" style={{ color: cert.accent }} />
-              <p className="text-sm text-[#9CAFA7] mb-1">Image not added yet.</p>
-              <p className="text-xs text-[#5F7169] font-mono">{src}</p>
+              <p className="text-sm text-[#9CAFA7]">Certificate preview coming soon.</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        {(src || link) && (
+        {(openHref || link) && (
           <div className="px-5 py-3 flex items-center justify-end gap-2 flex-wrap" style={{ borderTop:'1px solid rgba(236,242,239,0.08)' }}>
-            {src && (
-              <a href={src} target="_blank" rel="noopener noreferrer" className="btn-secondary text-xs py-2 px-4">
+            {openHref && (
+              <a href={openHref} target="_blank" rel="noopener noreferrer" className="btn-secondary text-xs py-2 px-4">
                 Open in new tab <ExternalLink size={12}/>
               </a>
             )}
