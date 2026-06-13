@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { motion, useInView } from 'framer-motion'
+import SmartImg from '@/components/ui/SmartImg'
 import {
   Github, Linkedin, Mail, ArrowRight, ArrowUpRight,
   Download, ChevronDown, Code2, GitPullRequest,
@@ -571,13 +571,11 @@ function AboutStrip() {
               style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.35), rgba(34,211,238,0.2))' }}
               aria-hidden="true"
             />
-            <Image
-              src="/images/profile.jpg"
+            <SmartImg
+              candidates={['/images/portrait-full.jpg', '/images/profile.jpg']}
               alt="Om Shripad Kapale"
-              width={640}
-              height={640}
-              className="relative rounded-3xl object-cover"
-              style={{ border: '1px solid var(--border-bright)', aspectRatio: '1 / 1' }}
+              className="relative w-full rounded-3xl object-cover"
+              style={{ border: '1px solid var(--border-bright)', aspectRatio: '3 / 4', objectPosition: 'center top' }}
             />
             <div
               className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-4 py-1.5 font-mono text-[10px] font-bold tracking-widest"

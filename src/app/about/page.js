@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Camera, Edit2, Save, X, Plus, Trash2, MapPin, Mail, ExternalLink, Check, Trophy, Award, Code2, GitPullRequest } from 'lucide-react'
 import { ContainerScroll, CardsContainer, CardTransformed } from '@/components/ui/animated-cards-stack'
+import SmartImg from '@/components/ui/SmartImg'
 
 const MILESTONES = [
   {
@@ -257,31 +258,37 @@ export default function AboutPage() {
               textAlign: 'center',
               position: 'sticky', top: 88,
             }}>
-              {/* Avatar */}
+              {/* Portrait */}
               <div className="relative mx-auto mb-5 cursor-pointer group"
-                style={{ width: 120, height: 120 }}
+                style={{ width: '100%', maxWidth: 230, aspectRatio: '4 / 5' }}
                 onClick={() => editMode && photoRef.current?.click()}>
                 <div style={{
-                  position: 'absolute', inset: -3, borderRadius: '50%',
+                  position: 'absolute', inset: -3, borderRadius: 22,
                   background: 'linear-gradient(135deg, #10B981, #22D3EE, #0D9488)',
                   padding: 3,
                 }}>
                   <div style={{
-                    width: '100%', height: '100%', borderRadius: '50%',
+                    width: '100%', height: '100%', borderRadius: 19,
                     background: 'rgba(10,16,14,0.95)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    overflow: 'hidden', fontSize: 32, fontWeight: 800,
+                    overflow: 'hidden', fontSize: 44, fontWeight: 800,
                     color: '#34D399',
                     fontFamily: 'Playfair Display, sans-serif',
                   }}>
                     {photo
-                      ? <img src={photo} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      : 'OK'
+                      ? <img src={photo} alt="Om Kapale" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : <SmartImg
+                          candidates={['/images/headshot.jpg', '/images/profile.jpg']}
+                          alt="Om Kapale"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                          fallback={<span>OK</span>}
+                        />
                     }
                   </div>
                 </div>
                 {editMode && (
-                  <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: 'rgba(0,0,0,0.6)', borderRadius: 19 }}>
                     <Camera size={20} className="text-white" />
                   </div>
                 )}

@@ -1,12 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import {
   Github, Star, GitFork, GitPullRequest, Eye,
   TrendingUp, Code2, Users, RefreshCw, ExternalLink,
   Award, CheckCircle, Clock, BookOpen, Activity,
   GitCommit, GitBranch, Zap, Globe, Lock, ArrowRight,
 } from 'lucide-react'
+import CountUp from '@/components/ui/CountUp'
+import TiltCard from '@/components/ui/TiltCard'
+
+const EASE = [0.22, 1, 0.36, 1]
 
 const LANG_COLOR = {
   JavaScript: '#F1E05A', TypeScript: '#3178C6', Python: '#3572A5',
@@ -21,14 +26,21 @@ const Skel = ({ h = 'h-4', w = 'w-full', className = '' }) => (
 // ── Contribution calendar ────────────────────────
 function ContribCalendar({ weeks, total }) {
   const mock = !weeks?.length
-  const data = mock
-    ? Array.from({ length: 52 }, () => ({
+  // Generate random mock data on the client only — avoids SSR hydration
+  // mismatches (server and client would otherwise roll different numbers).
+  const [mockData, setMockData] = useState([])
+  useEffect(() => {
+    if (weeks?.length) return
+    setMockData(
+      Array.from({ length: 52 }, () => ({
         contributionDays: Array.from({ length: 7 }, (_, d) => ({
           contributionCount: Math.floor(Math.random() * (d % 3 === 0 ? 2 : 8)),
           date: '',
-        }))
+        })),
       }))
-    : weeks
+    )
+  }, [weeks])
+  const data = weeks?.length ? weeks : mockData
 
   const level = (n) => n === 0 ? 0 : n <= 2 ? 1 : n <= 5 ? 2 : n <= 9 ? 3 : 4
 
@@ -150,29 +162,31 @@ function PRCard({ pr, index }) {
 function RepoCard({ repo, rank }) {
   const langColor = LANG_COLOR[repo.language] || '#8b949e'
   return (
-    <a href={repo.url} target="_blank" rel="noopener noreferrer"
-      className="glass-card p-4 flex items-start gap-3 group hover:border-emerald-500/30 transition-all">
-      <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-800 shrink-0"
-        style={{ background: 'rgba(59,130,246,0.1)', color: '#34D399' }}>
-        #{rank}
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-mono text-sm font-700 text-[#34D399] group-hover:text-white truncate mb-0.5">{repo.name}</p>
-        <p className="text-xs text-[#9CAFA7] line-clamp-1 mb-2">{repo.description || 'No description'}</p>
-        <div className="flex items-center gap-3 text-xs text-[#9CAFA7]">
-          {repo.language && (
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full" style={{ background: langColor }} />
-              {repo.language}
-            </span>
-          )}
-          <span className="flex items-center gap-1"><Star size={10} />{repo.stars}</span>
-          <span className="flex items-center gap-1"><GitFork size={10} />{repo.forks}</span>
-          {repo.isPrivate ? <Lock size={10} /> : <Globe size={10} />}
+    <TiltCard max={5} scale={1.01} glareColor={`${langColor}28`} style={{ borderRadius: 14 }}>
+      <a href={repo.url} target="_blank" rel="noopener noreferrer"
+        className="glass-card p-4 flex items-start gap-3 group hover:border-emerald-500/30 transition-all h-full">
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-800 shrink-0"
+          style={{ background: 'rgba(59,130,246,0.1)', color: '#34D399' }}>
+          #{rank}
         </div>
-      </div>
-      <ExternalLink size={13} className="text-[#9CAFA7] group-hover:text-[#34D399] shrink-0" />
-    </a>
+        <div className="flex-1 min-w-0">
+          <p className="font-mono text-sm font-700 text-[#34D399] group-hover:text-white truncate mb-0.5">{repo.name}</p>
+          <p className="text-xs text-[#9CAFA7] line-clamp-1 mb-2">{repo.description || 'No description'}</p>
+          <div className="flex items-center gap-3 text-xs text-[#9CAFA7]">
+            {repo.language && (
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full" style={{ background: langColor }} />
+                {repo.language}
+              </span>
+            )}
+            <span className="flex items-center gap-1"><Star size={10} />{repo.stars}</span>
+            <span className="flex items-center gap-1"><GitFork size={10} />{repo.forks}</span>
+            {repo.isPrivate ? <Lock size={10} /> : <Globe size={10} />}
+          </div>
+        </div>
+        <ExternalLink size={13} className="text-[#9CAFA7] group-hover:text-[#34D399] shrink-0" />
+      </a>
+    </TiltCard>
   )
 }
 
@@ -390,27 +404,37 @@ export default function GitHubActivitiesPage() {
             ))}
           </div>
         ) : stats ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 animate-slide-up">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
             {statItems.map((s, i) => (
-              <div key={s.label} className="glass-card p-5 text-center hover:border-emerald-500/20 transition-colors"
-                style={{ animationDelay: `${i * 60}ms` }}>
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: i * 0.07, duration: 0.5, ease: EASE }}
+                whileHover={{ y: -4 }}
+                className="glass-card p-5 text-center hover:border-emerald-500/30 transition-colors"
+              >
                 <s.icon size={20} className="mx-auto mb-2" style={{ color: s.accent }} />
-                <p className="text-2xl font-800 font-mono" style={{ color: '#ECF2EF' }}>{s.value}</p>
-<p className="text-xs mt-1" style={{ color: '#9CAFA7' }}>{s.label}</p>
-              </div>
+                <p className="text-2xl font-800 font-mono" style={{ color: '#ECF2EF' }}>
+                  <CountUp to={s.value} />
+                </p>
+                <p className="text-xs mt-1" style={{ color: '#9CAFA7' }}>{s.label}</p>
+              </motion.div>
             ))}
           </div>
         ) : null}
 
         {/* Tabs */}
         <div className="flex gap-1 mb-8 p-1 rounded-xl w-fit"
-          style={{ background: '#F1F5F9', border: '1px solid #E2E8F0' }}>
+          style={{ background: 'rgba(10,16,14,0.8)', border: '1px solid rgba(236,242,239,0.1)' }}>
           {TABS.map(t => (
             <button key={t} onClick={() => setActiveTab(t)}
               className="px-4 py-2 rounded-lg text-sm font-600 transition-all capitalize"
               style={{
                 background: activeTab === t ? 'rgba(16,185,129,0.15)' : 'transparent',
                 color: activeTab === t ? '#10B981' : '#9CAFA7',
+                boxShadow: activeTab === t ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
               }}>
               {t}
             </button>
@@ -439,7 +463,15 @@ export default function GitHubActivitiesPage() {
                   <Star size={16} className="text-[#F59E0B]" /> Most Starred Repositories
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {topRepos.slice(0, 4).map((r, i) => <RepoCard key={r.id} repo={r} rank={i + 1} />)}
+                  {topRepos.slice(0, 4).map((r, i) => (
+                    <motion.div key={r.id}
+                      initial={{ opacity: 0, y: 24 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-40px' }}
+                      transition={{ delay: i * 0.07, duration: 0.5, ease: EASE }}>
+                      <RepoCard repo={r} rank={i + 1} />
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             )}
@@ -553,7 +585,15 @@ export default function GitHubActivitiesPage() {
               </h2>
               {topRepos.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {topRepos.map((r, i) => <RepoCard key={r.id} repo={r} rank={i + 1} />)}
+                  {topRepos.map((r, i) => (
+                    <motion.div key={r.id}
+                      initial={{ opacity: 0, y: 24 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-40px' }}
+                      transition={{ delay: Math.min(i, 8) * 0.05, duration: 0.5, ease: EASE }}>
+                      <RepoCard repo={r} rank={i + 1} />
+                    </motion.div>
+                  ))}
                 </div>
               ) : (
                 <div className="glass-card p-8 text-center text-[#9CAFA7]">
